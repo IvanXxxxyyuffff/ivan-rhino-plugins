@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>VoronoiTexture</AssemblyName>
+    <RootNamespace>VoronoiTexture</RootNamespace>
+    <LangVersion>10.0</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\out\rhino8\</OutputPath>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Product>泰森多边形纹 (Voronoi Texture)</Product>
+    <Company>IVAN</Company>
+    <Version>1.0.0</Version>
+    <NoWarn>CS0618</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RhinoCommon" Version="8.30.26103.11001" ExcludeAssets="runtime" />
+    <Compile Include="..\src\**\*.cs" />
+  </ItemGroup>
+
+  <Target Name="CopyRhp" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)VoronoiTexture.rhp" ContinueOnError="true" />
+  </Target>
+
+</Project>

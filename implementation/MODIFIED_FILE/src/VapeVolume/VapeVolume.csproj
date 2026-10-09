@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- 一个工程，两个目标：Rhino 7 跑 .NET Framework 4.8，Rhino 8 跑 .NET 7 -->
+    <TargetFrameworks>net7.0-windows;net48</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>VapeVolume</AssemblyName>
+    <RootNamespace>VapeVolume</RootNamespace>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <DebugType>none</DebugType>
+    <Version>1.3.0</Version>
+    <Product>VapeVolume</Product>
+    <AssemblyTitle>烟油容量计算器 (VapeVolume) for Rhino 7 / 8</AssemblyTitle>
+    <!--
+      共用控件文件 shared\PanelTheme.cs 里的 IvanTile.Selected 是「由调用方赋值」的公共字段，
+      只有用到图块选择器的插件才会写它；本面板不用 IvanTile，编进来会报 CS0649（未赋值）。
+      该文件是四插件共用原件、不允许改，这里就地屏蔽这一条噪声警告。
+    -->
+    <NoWarn>$(NoWarn);CS0649</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    Rhino 8（.NET 7）：编译基线选 8.19.25132.1001 —— 这是最早在 NuGet 包里提供 lib/net7.0 的版本，
+    用最老的 net7.0 基线编译以兼容尽可能多的 Rhino 8.x。
+    IncludeAssets="compile" = 运行期由 Rhino 自己提供 RhinoCommon，不随插件分发。
+  -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-windows'">
+    <PackageReference Include="RhinoCommon" Version="8.19.25132.1001" IncludeAssets="compile" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    Rhino 7（.NET Framework 4.8）：基线选 7.0.20314.3001（Rhino 7.0 GA）。
+    这里必须用「尽可能老」的基线：Rhino 的插件加载器会拒绝「比当前 Rhino 更新」的 SDK 编译出来的插件，
+    用 7.38 编译会导致 7.37 及更早的 Rhino 7 报「该插件与这个版本的 Rhino 不兼容」。
+    基线取最老 ⇒ 所有 7.x 都能加载。
+  -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <PackageReference Include="RhinoCommon" Version="7.0.20314.3001" IncludeAssets="compile" PrivateAssets="all" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <!--
+    面板改用与另外四个插件完全同一套的 WinForms 自绘控件（IvanUi / PanelTheme.cs）。
+    直接从 shared\PanelTheme.cs 编进来（源文件与 stripe\src、halftone\src 下的副本逐字节一致），
+    不再自带任何界面控件实现。
+  -->
+  <ItemGroup>
+    <Compile Include="..\..\shared\PanelTheme.cs" Link="UI\PanelTheme.cs" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0-windows'">
+    <!-- Rhino 8（net7）：面板是 WinForms 自绘控件，需要 WinForms 引用 -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <!--
+      Rhino 8 (net7) 加载器在解析 deps.json 时按 "runtime" 项里的文件名去找程序集：
+      - 写 .dll：Rhino 当作 net7 程序集（AssemblyLoadContext）加载，能读到 [Guid] 特性
+      - 写 .rhp：Rhino 当作 native 插件加载，读不到 [Guid]，会被自动登记成零 ID，
+                 再加载同目录其它 .rhp 时全部弹「ID 已被使用」
+      所以 net7 输出保持 .dll，再复制一份成 .rhp 给 Rhino 注册表 FileName 用。
+    -->
+  </PropertyGroup>
+
+  <!-- 两个目标框架都额外输出一份 .rhp：Rhino 按 .rhp 注册加载；.dll 保留供运行时解析 -->
+  <Target Name="CopyRhp" AfterTargets="Build">
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(TargetDir)VapeVolume.rhp" ContinueOnError="true" />
+  </Target>
+
+</Project>

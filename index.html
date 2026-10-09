@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>IVAN CENTER · Liquid Glass UI 预览</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wallpaper" aria-hidden="true"><div class="ribbon one"></div><div class="ribbon two"></div><div class="ribbon three"></div></div>
+  <div class="design-toolbar">
+    <div class="design-label"><span class="design-dot"></span> UI DESIGN <span class="toolbar-line"></span><span>LIQUID GLASS · 01</span></div>
+    <div class="design-actions"><span class="preview-note">独立预览 · 未连接 Rhino</span><button type="button" id="iconBoardButton" class="text-button">图标一览</button><div class="theme-switch" role="group" aria-label="预览主题"><button type="button" data-theme="light" aria-pressed="true">浅色</button><button type="button" data-theme="dark" aria-pressed="false">深色</button></div></div>
+  </div>
+  <main class="app-window" id="appWindow">
+    <aside class="sidebar">
+      <div class="brand"><span id="brandIcon"></span><div><strong>IVAN CENTER</strong><span>Rhino 插件套件</span></div></div>
+      <div class="side-heading">工作台</div>
+      <button type="button" class="nav-main selected" id="homeButton"><span class="ui-icon" data-glyph="grid"></span>插件中心<span class="nav-count">5</span></button>
+      <div class="side-heading panels-heading">面板预览</div>
+      <nav class="panel-nav" id="panelNav" aria-label="插件面板预览"></nav>
+      <div class="sidebar-bottom"><div class="compatibility-mark">R<span>7 / 8</span></div><div><strong>为 Rhino 设计</strong><span>双版本插件套件</span></div></div>
+    </aside>
+    <section class="main-content">
+      <header class="window-bar"><span>IVAN 插件中心</span><div class="window-controls"><button type="button" id="minimizeButton" aria-label="最小化预览"><span class="ui-icon" data-glyph="minus"></span></button><button type="button" id="resizeButton" aria-label="切换预览尺寸"><span class="ui-icon" data-glyph="square"></span></button><button type="button" id="exitButton" aria-label="退出预览"><span class="ui-icon" data-glyph="close"></span></button></div></header>
+      <div class="content-inner">
+        <div class="page-heading"><div><div class="eyebrow">YOUR CREATIVE TOOLKIT</div><h1>插件中心<span class="heading-dot">.</span></h1><p>安装、更新与管理你的曲面创作工具。</p></div><button type="button" class="button primary install-all" id="installAll"><span class="ui-icon" data-glyph="download"></span>全部安装 / 更新</button></div>
+        <div class="list-toolbar"><div class="collection-label">全部插件 <span>05</span></div><label class="search-field"><span class="ui-icon" data-glyph="search"></span><input type="search" id="pluginSearch" placeholder="搜索插件" aria-label="搜索插件"></label></div>
+        <div class="plugin-list" id="pluginList"></div>
+        <div class="empty-search" id="emptySearch" hidden><span class="ui-icon" data-glyph="search"></span><strong>没有匹配的插件</strong><p>试试插件名称或英文命令。</p></div>
+        <section class="installation-footer"><div class="footer-top"><div class="ready-label"><span class="status-dot"></span><span id="overallStatus">演示状态 · 5 个插件已安装</span></div><div class="footer-actions"><button type="button" id="openDirectory" class="text-button"><span class="ui-icon" data-glyph="folder"></span>打开安装目录</button><button type="button" id="uninstallAll" class="text-button danger-text">全部卸载</button></div></div><div class="progress-line" id="installProgress" hidden><div></div></div><details class="log-details"><summary><span class="ui-icon" data-glyph="terminal"></span>安装日志<span class="log-tag">只读演示</span><span class="ui-icon summary-chevron" data-glyph="chevron"></span></summary><pre id="logOutput">[UI PREVIEW] 五个插件已载入设计预览。
+不执行安装、卸载或 Rhino 命令。</pre></details></section>
+      </div>
+    </section>
+  </main>
+  <div class="design-caption"><span>折射边缘 · 磨砂材质 · 轻量动效</span><span>仅确认视觉与交互，原安装器及插件保持不变。</span></div>
+  <div class="overlay" id="panelOverlay" hidden>
+    <div class="preview-shell" role="dialog" aria-modal="true" aria-labelledby="panelTitle">
+      <section class="viewport"><header><span class="viewport-label"><span class="status-dot"></span>造型示意</span><button type="button" id="fixtureButton" class="fixture-button">示例：多重曲面 · 2 面</button></header><div class="viewport-art" id="viewportArt"></div><div class="viewport-description"><span id="visualEnglish"></span><h2 id="visualTitle"></h2><p id="visualDescription"></p></div><footer><span class="axis-mark"><i>X</i><i>Y</i><i>Z</i></span><span>效果示意 · 非 Rhino 计算结果</span></footer></section>
+      <section class="parameter-panel"><header class="panel-header"><span id="panelHeaderIcon"></span><div><div class="panel-overline">PARAMETERS <span id="panelIndex"></span></div><h2 id="panelTitle"></h2></div><button type="button" id="closePanel" class="round-button" aria-label="关闭参数面板"><span class="ui-icon" data-glyph="close"></span></button></header><div class="panel-scroll" id="panelBody"></div><footer class="panel-footer"><div class="panel-status" id="panelStatus" role="status" aria-live="polite">未选择物件</div><div class="panel-footer-buttons"><button type="button" id="cancelPanel" class="button secondary">取消</button><button type="button" id="generateButton" class="button primary">生成<span class="ui-icon" data-glyph="arrow"></span></button></div></footer></section>
+    </div>
+  </div>
+  <div class="overlay" id="iconsOverlay" hidden><section class="icons-dialog" role="dialog" aria-modal="true" aria-labelledby="iconsTitle"><header><div><div class="eyebrow">ONE FAMILY. FIVE TOOLS.</div><h2 id="iconsTitle">同一种材质，各自的性格。</h2></div><button type="button" class="round-button" id="closeIcons" aria-label="关闭图标一览"><span class="ui-icon" data-glyph="close"></span></button></header><div class="icon-family" id="iconFamily"></div><footer>统一晶体底板、顶光与折射边缘；通过符号和色相区分插件，不只依赖颜色。</footer></section></div>
+  <div class="confirm-overlay" id="confirmOverlay" hidden><section class="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle"><div class="confirm-symbol"><span class="ui-icon" data-glyph="trash"></span></div><h2 id="confirmTitle">卸载插件？</h2><p id="confirmDescription"></p><div><button type="button" class="button secondary" id="confirmCancel">取消</button><button type="button" class="button danger" id="confirmAccept">演示卸载</button></div></section></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <div class="closed-state" id="closedState" hidden><span id="closedIcon"></span><h1>预览已关闭</h1><p>原安装器和插件未受影响。</p><button type="button" class="button primary" id="reopenButton">重新打开预览</button></div>
+  <script src="icons.js"></script><script src="panels-data.js"></script><script src="art.js"></script><script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>IVAN-CENTER</AssemblyName>
+    <RootNamespace>IvanCenter</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\out\center\</OutputPath>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <NoWarn>CS0618</NoWarn>
+    <Product>IVAN CENTER 插件中心</Product>
+    <AssemblyTitle>IVAN CENTER</AssemblyTitle>
+    <Version>1.0.0</Version>
+    <Company>IVAN</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="payload\StripeOnSurface-rh7.rhp" LogicalName="p_stripe7" />
+    <EmbeddedResource Include="payload\StripeOnSurface-rh8.rhp" LogicalName="p_stripe8" />
+    <EmbeddedResource Include="payload\StripeOnSurface.dll" LogicalName="p_stripe8_dll" />
+    <EmbeddedResource Include="payload\StripeOnSurface.deps.json" LogicalName="j_stripe8_deps" />
+    <EmbeddedResource Include="payload\StripeOnSurface.runtimeconfig.json" LogicalName="j_stripe8_rt" />
+    <EmbeddedResource Include="payload\HalftoneDots-rh7.rhp" LogicalName="p_half7" />
+    <EmbeddedResource Include="payload\HalftoneDots-rh8.rhp" LogicalName="p_half8" />
+    <EmbeddedResource Include="payload\HalftoneDots.dll" LogicalName="p_half8_dll" />
+    <EmbeddedResource Include="payload\HalftoneDots.deps.json" LogicalName="j_half8_deps" />
+    <EmbeddedResource Include="payload\HalftoneDots.runtimeconfig.json" LogicalName="j_half8_rt" />
+    <EmbeddedResource Include="payload\VapeVolume-Rhino7.rhp" LogicalName="p_vape7" />
+    <EmbeddedResource Include="payload\VapeVolume-Rhino8.rhp" LogicalName="p_vape8" />
+    <EmbeddedResource Include="payload\VapeVolume.dll" LogicalName="p_vape8_dll" />
+    <EmbeddedResource Include="payload\VapeVolume.deps.json" LogicalName="j_vape8_deps" />
+    <EmbeddedResource Include="payload\VapeVolume.runtimeconfig.json" LogicalName="j_vape8_rt" />
+    <EmbeddedResource Include="payload\RadialDots-rh7.rhp" LogicalName="p_rad7" />
+    <EmbeddedResource Include="payload\RadialDots-rh8.rhp" LogicalName="p_rad8" />
+    <EmbeddedResource Include="payload\RadialDots.dll" LogicalName="p_rad8_dll" />
+    <EmbeddedResource Include="payload\RadialDots.deps.json" LogicalName="j_rad8_deps" />
+    <EmbeddedResource Include="payload\RadialDots.runtimeconfig.json" LogicalName="j_rad8_rt" />
+    <EmbeddedResource Include="payload\VoronoiTexture-rh7.rhp" LogicalName="p_vor7" />
+    <EmbeddedResource Include="payload\VoronoiTexture-rh8.rhp" LogicalName="p_vor8" />
+    <EmbeddedResource Include="payload\VoronoiTexture.dll" LogicalName="p_vor8_dll" />
+    <EmbeddedResource Include="payload\VoronoiTexture.deps.json" LogicalName="j_vor8_deps" />
+    <EmbeddedResource Include="payload\VoronoiTexture.runtimeconfig.json" LogicalName="j_vor8_rt" />
+    <EmbeddedResource Include="payload\MeshFix-rh7.rhp" LogicalName="p_mesh7" />
+    <EmbeddedResource Include="payload\MeshFix-rh8.rhp" LogicalName="p_mesh8" />
+    <EmbeddedResource Include="payload\MeshFix.dll" LogicalName="p_mesh8_dll" />
+    <EmbeddedResource Include="payload\MeshFix.deps.json" LogicalName="j_mesh8_deps" />
+    <EmbeddedResource Include="payload\MeshFix.runtimeconfig.json" LogicalName="j_mesh8_rt" />
+    <EmbeddedResource Include="payload\DiamondFacet-rh7.rhp" LogicalName="p_dia7" />
+    <EmbeddedResource Include="payload\DiamondFacet-rh8.rhp" LogicalName="p_dia8" />
+    <EmbeddedResource Include="payload\DiamondFacet.dll" LogicalName="p_dia8_dll" />
+    <EmbeddedResource Include="payload\DiamondFacet.deps.json" LogicalName="j_dia8_deps" />
+    <EmbeddedResource Include="payload\DiamondFacet.runtimeconfig.json" LogicalName="j_dia8_rt" />
+  </ItemGroup>
+
+</Project>

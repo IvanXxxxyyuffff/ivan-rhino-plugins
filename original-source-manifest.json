@@ -1,0 +1,347 @@
+[
+  {
+    "path": "C:\\zcode_build\\asmcheck\\asmcheck.csproj",
+    "sha256": "B92C1460C898F9E577828C3C4AACB378BB9C4F266ED2BE549AF09BF130B03E5A",
+    "length": 236
+  },
+  {
+    "path": "C:\\zcode_build\\asmcheck\\Program.cs",
+    "sha256": "2A033A6021F74529F05726816D3F22EF58FB68C58ABFBEECFD0639DEECCCDCFC",
+    "length": 950
+  },
+  {
+    "path": "C:\\zcode_build\\dmprobe\\dmprobe.csproj",
+    "sha256": "EEA3FACEFD67FB05D593CB4DB0BBEDD1DEDFCE5C6B0FC7C721F5E49F4631BCCB",
+    "length": 618
+  },
+  {
+    "path": "C:\\zcode_build\\dmprobe\\Program.cs",
+    "sha256": "E7F4B4A6B36C42EADB222D3F2DDFE21C6B4F47D4CD613BFAFB19E6B871D2B8B2",
+    "length": 2830
+  },
+  {
+    "path": "C:\\zcode_build\\halftone\\Rhino7\\HalftoneDots.csproj",
+    "sha256": "F531A3CE763B3D37FCE5A2BDBC0D3D1DD316A3B6FCDCD393FF8BADF718538F2E",
+    "length": 1314
+  },
+  {
+    "path": "C:\\zcode_build\\halftone\\Rhino8\\HalftoneDots.csproj",
+    "sha256": "130E74DD60E95020C95421049CDA1F7568F31EC6F04DD27A7CCF6C8C606E01FC",
+    "length": 1103
+  },
+  {
+    "path": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs",
+    "sha256": "1D9D32E7D1EB6BDBB11252E35F2A1756C28258E117996A0F03297F68F1A2CD0B",
+    "length": 39829
+  },
+  {
+    "path": "C:\\zcode_build\\halftone\\src\\HalftoneGlobal.cs",
+    "sha256": "4EDC0396EA817945307F10E4416C456C44887875965ED072EA30B10ED50D4859",
+    "length": 21526
+  },
+  {
+    "path": "C:\\zcode_build\\halftone\\src\\HalftonePlugin.cs",
+    "sha256": "ABF8E48A681722442B0385936F90E2D84A444D71978E1D843B2AFA46A37FEBB2",
+    "length": 25275
+  },
+  {
+    "path": "C:\\zcode_build\\halftone\\src\\HalftoneSelfTest.cs",
+    "sha256": "BCB01B00D17BA0FB32F692C2C1FEF722E37996FDE26B8C622BBB4FAE384FD4D4",
+    "length": 31741
+  },
+  {
+    "path": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs",
+    "sha256": "0EB92D649FEC6FAC432675BD1289AC1783D02759F06F574D5B4446F5917BD5BB",
+    "length": 26022
+  },
+  {
+    "path": "C:\\zcode_build\\halftone\\src\\PanelTheme.cs",
+    "sha256": "E30B4B025DDBF4F6D1E2DD0CD168776FE5E1FEAF80DEAA7A50EA735AF5C2F3DE",
+    "length": 47280
+  },
+  {
+    "path": "C:\\zcode_build\\iconmake\\iconmake.csproj",
+    "sha256": "B8474AA7A0CB82FD484319CA140B66375986C2D407DD56E96E2754B942C09637",
+    "length": 665
+  },
+  {
+    "path": "C:\\zcode_build\\iconmake\\Program.cs",
+    "sha256": "829C77F83374E3972D58C78BB34ADABD271F1B356D4846FC7A54336000838E7B",
+    "length": 6928
+  },
+  {
+    "path": "C:\\zcode_build\\radialdots\\Rhino7\\RadialDots.csproj",
+    "sha256": "A051C7BC0AFF2A1C09473E154CB1130D7BCE2077DDA1D2EB2F78465744990445",
+    "length": 1311
+  },
+  {
+    "path": "C:\\zcode_build\\radialdots\\Rhino8\\RadialDots.csproj",
+    "sha256": "FE8A8B80CF74E5520D71AA3F58D79FAE30791B6A6221BDD7EAADEE234B8FE8A8",
+    "length": 1100
+  },
+  {
+    "path": "C:\\zcode_build\\radialdots\\src\\PanelTheme.cs",
+    "sha256": "E30B4B025DDBF4F6D1E2DD0CD168776FE5E1FEAF80DEAA7A50EA735AF5C2F3DE",
+    "length": 47280
+  },
+  {
+    "path": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs",
+    "sha256": "9FB3614AA6CEE33E20BBFE6F529F3F8B35D828470695D2793E62091F544CB8C1",
+    "length": 25717
+  },
+  {
+    "path": "C:\\zcode_build\\radialdots\\src\\RadialDotsPlugin.cs",
+    "sha256": "9208D28DB8A16B3012907417E47FC8AE540915B6CCAA477C21839383A41D8C66",
+    "length": 9664
+  },
+  {
+    "path": "C:\\zcode_build\\radialdots\\src\\RadialDotsSelfTest.cs",
+    "sha256": "6A534337BFF57CD434092D164F1667706837BF162901AC98318F37D9AED5C410",
+    "length": 24036
+  },
+  {
+    "path": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs",
+    "sha256": "FD608AA9542BD0F871D7ACE11259D7D059CA95B9F1F8CDFA9209A1C59828235A",
+    "length": 14675
+  },
+  {
+    "path": "C:\\zcode_build\\rhpcheck\\Program.cs",
+    "sha256": "60F30AAE7A7D69970E79345E84568770734DBC3A27E64D916E8302D70DD88BD3",
+    "length": 3621
+  },
+  {
+    "path": "C:\\zcode_build\\rhpcheck\\rhpcheck.csproj",
+    "sha256": "190277BAC7DD368E35CE87C35171AE4CD0FA1B87DDD9C4428B77C19C45525B88",
+    "length": 261
+  },
+  {
+    "path": "C:\\zcode_build\\shared\\PanelTheme.cs",
+    "sha256": "E30B4B025DDBF4F6D1E2DD0CD168776FE5E1FEAF80DEAA7A50EA735AF5C2F3DE",
+    "length": 47280
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Commands\\VapePickTargetCommand.cs",
+    "sha256": "F6155797CE6F5E5890C67BE87D44145176D62ECF6C95CF5A93A007C95251DDD4",
+    "length": 2103
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Commands\\VapeVolumeCommand.cs",
+    "sha256": "09E631DF6EF345EFA445F0D206BEF71FDFCBD125D5AFE09F66C1A30F0B3552C8",
+    "length": 1578
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Commands\\VapeVolumeSelfTestCommand.cs",
+    "sha256": "202C1774F36121E15A649361ED969C770AE10D253B67350E99E509DAEC0A55DB",
+    "length": 2546
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Commands\\VapeVolumeWatchCommand.cs",
+    "sha256": "E2ECC61F6491A51CC64915AE78B94F2A0BC34D7F9E2CBC563E07213F7965F1B0",
+    "length": 2410
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Core\\CoilPreviewConduit.cs",
+    "sha256": "3DFF0ECD8BF8FC65DC00CAEADE9DA08395A058696245ED6D8D8FCA480BC8053B",
+    "length": 8089
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Core\\LiveAnnotation.cs",
+    "sha256": "89C74F54D355133200C96EC6C186CD624C47FFFCF2C2EA90BFF75A2C1D710515",
+    "length": 26197
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Core\\Units.cs",
+    "sha256": "1D3BEF25E8A8811C68FD9830AE18F7978170EEE2DFC1A71545D1C6A05D224050",
+    "length": 8407
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeEngine.cs",
+    "sha256": "BCD714CE65CC000C6F4E1E07952D8356B36C4A07E3E09E8CEF6338E4CAB66D97",
+    "length": 43047
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeHudConduit.cs",
+    "sha256": "BBB088200289421410D283440C46E062177F7F27286A7898F7462D7BF23E0354",
+    "length": 6988
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSelfTest.cs",
+    "sha256": "15C84A594B5DE74E97E44635CE966FF1277C9573D653CEC6CB789690D16C2C5D",
+    "length": 8894
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs",
+    "sha256": "AF35E464856CBAED3AA4E623B027476A2C13F2E85605DF0D3A97064EA8B5757F",
+    "length": 6755
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs",
+    "sha256": "B1A3E0D12E26D8F8F9DBDE0A06D8BE14FFC857F3FD0D920BDA970DE817BAD774",
+    "length": 34856
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\VapeVolume.csproj",
+    "sha256": "31B852EC03A3C63E83E2F79DFBFF820BF4CA6B423DF3684A103DB9111B7D7A85",
+    "length": 2814
+  },
+  {
+    "path": "C:\\zcode_build\\src\\VapeVolume\\VapeVolumePlugIn.cs",
+    "sha256": "D78464FBAC0F16CACED938AEA3E8CCE5CA2652D90F808E0038C5C6CF98E69513",
+    "length": 3287
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\center\\app.ico",
+    "sha256": "D8A11EC0911D58C271665CEBF757DFA0B2876281534D1C34300AE9F2465224E1",
+    "length": 114921
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\center\\app.manifest",
+    "sha256": "B38DF5375B85D87D429156D7F406A8FA70A479EAE2EF10D9FB1C82A05A80585D",
+    "length": 791
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\center\\Center.csproj",
+    "sha256": "10D20F4C83303175909E22AE4AD0EEB6F63361CDB8194BC3AFD24A3333C0BB9D",
+    "length": 3307
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\center\\CenterForm.cs",
+    "sha256": "95DAC247B7D19B66BFCCA020C8F40D22E2D1E749E2F6AA0DD1ABDB9E04E1A7CB",
+    "length": 21323
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\center\\Installer.cs",
+    "sha256": "D2C86FC25EEA83FF02833FA4C90D40DCE806A9F694265CA1EAA8394703C60C2B",
+    "length": 48382
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\center\\PanelTheme.cs",
+    "sha256": "E30B4B025DDBF4F6D1E2DD0CD168776FE5E1FEAF80DEAA7A50EA735AF5C2F3DE",
+    "length": 47280
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\harness\\Harness.cs",
+    "sha256": "9CE20881F619C9342B9184DD569172956E2E55BDBC34BFAF2586108AECA08701",
+    "length": 31895
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\harness\\Harness.csproj",
+    "sha256": "ED826A83D80D6640A432C3D29E317A84CEE0199453C43D70AA67CB8732E80EC7",
+    "length": 1027
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\Rhino7\\StripeOnSurface.csproj",
+    "sha256": "47BF019E43B673404A7A2DF779C3E6FDA42D82EDCB2A47D48FAD4F25D25B5DF9",
+    "length": 1443
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\Rhino8\\StripeOnSurface.csproj",
+    "sha256": "2097255FB8A1F5D6093190875556E4EA55CC217AB34DC1E06084E39FCBB0F8FA",
+    "length": 1164
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\setup\\app.manifest",
+    "sha256": "B38DF5375B85D87D429156D7F406A8FA70A479EAE2EF10D9FB1C82A05A80585D",
+    "length": 791
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\setup\\Setup.cs",
+    "sha256": "60D98FC3F1FB850C077C4D383EAB97270222FFAE7856911725CF8F8C5887A7F6",
+    "length": 21431
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\setup\\Setup.csproj",
+    "sha256": "65EE8A89657EC9FD3EC386814FA5B7FA5FC09B76F454309C74F0041A72730085",
+    "length": 1293
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\src\\Engraver.cs",
+    "sha256": "9D1CDE2DF2A49903530C85465B36577DFDF3E19FB6AFA8D78E6F6FC9CF04A238",
+    "length": 2874
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\src\\PanelTheme.cs",
+    "sha256": "E30B4B025DDBF4F6D1E2DD0CD168776FE5E1FEAF80DEAA7A50EA735AF5C2F3DE",
+    "length": 47280
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\src\\Plugin.cs",
+    "sha256": "7FF8261529FBE4E23D0DCD9FD4A65B586B499138E97EE276F732FC0E14528964",
+    "length": 5708
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\src\\PreviewConduit.cs",
+    "sha256": "97D677903840290AF7F1AC1F8D168B8249923177739CC5FF3CD014E3BC05E823",
+    "length": 1038
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\src\\SelfTest.cs",
+    "sha256": "63A24548ED1E9E537CC7F1F3B38264A425EBEFF2ED1C2CB926969034519C201D",
+    "length": 74307
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\src\\StripeCommand.cs",
+    "sha256": "77C1F85DAB0EBF8F28A93BFA3A85C01B4AD719A361DE111085A12F9FAF5D8C9E",
+    "length": 4167
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\src\\StripePanel.cs",
+    "sha256": "72602973690492342258EBED819F690CC9656B64796BBA96FFFF138712C6C710",
+    "length": 11055
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\src\\StripePattern.cs",
+    "sha256": "7E6E735C4827DF182DE690A638FFFC67D5D2161889D3D76AFFD353398F4159B8",
+    "length": 85645
+  },
+  {
+    "path": "C:\\zcode_build\\stripe\\src\\StripeSession.cs",
+    "sha256": "23639E5958E529387A60A027C5D47E9DD0262C6D2FD607C60C22DEA1CBE8CD7B",
+    "length": 8481
+  },
+  {
+    "path": "C:\\zcode_build\\voronoi\\Rhino7\\VoronoiTexture.csproj",
+    "sha256": "CF42F737A08DC16CC8EB5CFBFE7C6A1FEB6EB65255FF804D49204414E3262219",
+    "length": 1320
+  },
+  {
+    "path": "C:\\zcode_build\\voronoi\\Rhino8\\VoronoiTexture.csproj",
+    "sha256": "25DAA67E825DD001AB6EFB4697E6D4DBA6BA64BA4078A5CF268BD9293436E146",
+    "length": 1109
+  },
+  {
+    "path": "C:\\zcode_build\\voronoi\\src\\PanelTheme.cs",
+    "sha256": "E30B4B025DDBF4F6D1E2DD0CD168776FE5E1FEAF80DEAA7A50EA735AF5C2F3DE",
+    "length": 47280
+  },
+  {
+    "path": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs",
+    "sha256": "68965BA534C66941CD27B182277D664A20BE27567E11F0604DC5FA36533C751A",
+    "length": 97095
+  },
+  {
+    "path": "C:\\zcode_build\\voronoi\\src\\VoronoiPlugin.cs",
+    "sha256": "16A0CA1A83B7A07482D35A293774FBA0B3E5F4B819B261ADFB9EF253EB746AEE",
+    "length": 30290
+  },
+  {
+    "path": "C:\\zcode_build\\voronoi\\src\\VoronoiSelfTest.cs",
+    "sha256": "6DAEA41F1604DA717745172ED17FE73C97BB3E3B6BDF61C4FB554796A9BE4EAF",
+    "length": 67910
+  },
+  {
+    "path": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs",
+    "sha256": "3D22555C5EC51A8AF39F13A1274A5D9C0955F1250F3773D9976F38AE5DF9BD38",
+    "length": 25338
+  },
+  {
+    "path": "C:\\zcode_build\\DESIGN-CONSISTENCY.md",
+    "sha256": "B1710DEE4F55C32511B9DFF8100D8F65E6817F2C58F30144A69550631CA57BE7",
+    "length": 12442
+  },
+  {
+    "path": "C:\\zcode_build\\PROJECT-STATE.md",
+    "sha256": "6BAD714B7D9C6A52C03CBF804170F54E9CE93492F0D57C1EE616EF3BFF23D7EF",
+    "length": 37890
+  }
+]

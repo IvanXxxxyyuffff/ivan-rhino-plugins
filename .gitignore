@@ -1,0 +1,51 @@
+# ===== 编译产物 / 二进制（不进仓库）=====
+**/out/
+**/bin/
+**/obj/
+**/payload/
+**/dist/
+*.rhp
+*.exe
+*.dll
+*.pdb
+*.deps.json
+*.runtimeconfig.json
+*.zip
+*.3dm
+*.patch
+*.ico
+
+# ===== 本机运行/验证证据（不进仓库）=====
+/implementation/BASELINE/
+/implementation/BASELINE_LATEST/
+/implementation/INSTALLED_BASELINE/
+/implementation/*.log
+/implementation/*.txt
+/implementation/*.json
+/implementation/*.png
+/implementation/*.jsonl
+/implementation/**/*.log
+/implementation/**/*.png
+/implementation/**/*.jpg
+/implementation/**/*.done
+/implementation/**/*.bak
+/implementation/**/*.flag
+/implementation/**/rhino_pid.txt
+/implementation/**/_harness.txt
+/implementation/**/rc.json
+/implementation/**/rc2.json
+/implementation/**/ri.json
+/VERIFICATION.txt
+
+# ===== 系统 / 编辑器 =====
+Thumbs.db
+desktop.ini
+.vs/
+.idea/
+*.user
+*.suo
+
+# ===== Python / 运行时缓存 =====
+__pycache__/
+*.pyc
+*.pid

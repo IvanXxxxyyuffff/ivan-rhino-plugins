@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Liquid Glass launcher app icon">
+  <defs>
+    <linearGradient id="app-glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".24"/><stop offset=".48" stop-color="#263b59" stop-opacity=".88"/><stop offset="1" stop-color="#263b59" stop-opacity=".98"/></linearGradient>
+    <linearGradient id="app-edge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".98"/><stop offset=".48" stop-color="#9ec4e4" stop-opacity=".6"/><stop offset="1" stop-color="#4d9ed2" stop-opacity=".86"/></linearGradient>
+    <filter id="app-shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="5"/><feOffset dy="3"/><feComponentTransfer><feFuncA type="linear" slope=".22"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect x="6" y="6" width="116" height="116" rx="33" fill="url(#app-glass)" stroke="url(#app-edge)" stroke-width="1.7" filter="url(#app-shadow)"/>
+  <path d="M21 43c2.1-12.8 9.8-20.2 21.8-21.1h42.4c12 .9 19.7 8.3 21.8 21.1" fill="none" stroke="#fff" stroke-opacity=".84" stroke-width="2.1" stroke-linecap="round"/>
+  <g stroke="#fff" stroke-opacity=".82" stroke-width="1.5">
+    <path d="M51 52 64 64 77 52M51 76 64 64 77 76" fill="none" stroke="#fff" stroke-opacity=".58" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="41" y="40" width="19" height="19" rx="7" fill="#58b8c6"/><rect x="68" y="40" width="19" height="19" rx="7" fill="#8d77cb"/>
+    <rect x="41" y="68" width="19" height="19" rx="7" fill="#d7a452"/><rect x="68" y="68" width="19" height="19" rx="7" fill="#4d9ed2"/>
+    <circle cx="64" cy="64" r="9.5" fill="#263b59" stroke-width="2.6"/>
+    <path d="M60.8 64h6.4M64 60.8v6.4" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/>
+    <path d="M45.5 45.5 51 43.8M72.5 45.5 78 43.8M45.5 73.5 51 71.8M72.5 73.5 78 71.8" stroke="#fff" stroke-width="1.1" stroke-linecap="round" opacity=".7"/>
+  </g>
+</svg>

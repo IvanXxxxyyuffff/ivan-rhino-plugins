@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Voronoi liquid glass icon">
+  <defs>
+    <linearGradient id="vor-glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".76"/><stop offset=".5" stop-color="#eaf5ff" stop-opacity=".37"/><stop offset="1" stop-color="#c08a36" stop-opacity=".13"/></linearGradient>
+    <linearGradient id="vor-edge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".98"/><stop offset="1" stop-color="#c08a36" stop-opacity=".72"/></linearGradient>
+    <linearGradient id="vor-cell" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe6a9"/><stop offset=".42" stop-color="#c08a36"/><stop offset="1" stop-color="#9a6827"/></linearGradient>
+    <filter id="vor-shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="5"/><feOffset dy="3"/><feComponentTransfer><feFuncA type="linear" slope=".2"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect x="6" y="6" width="116" height="116" rx="33" fill="url(#vor-glass)" stroke="url(#vor-edge)" stroke-width="1.7" filter="url(#vor-shadow)"/>
+  <path d="M21 43c2.1-12.8 9.8-20.2 21.8-21.1h42.4c12 .9 19.7 8.3 21.8 21.1" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="2.1" stroke-linecap="round"/>
+  <g stroke="#fff" stroke-opacity=".83" stroke-width="2.2" stroke-linejoin="round">
+    <path d="M64 34 78 42 75 56 64 62 52 55 51 42Z" fill="url(#vor-cell)"/>
+    <path d="M51 42 52 55 43 66 31 61 35 46Z" fill="#d7a64f"/>
+    <path d="M52 55 64 62 63 78 49 85 40 76 43 66Z" fill="#b77f2d"/>
+    <path d="M64 62 75 56 88 64 84 78 73 86 63 78Z" fill="#d3a452"/>
+    <path d="M78 42 91 47 96 60 88 64 75 56Z" fill="#c08a36"/>
+  </g>
+  <path d="M58 39 65 35" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="2" stroke-linecap="round"/>
+</svg>

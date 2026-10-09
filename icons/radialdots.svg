@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Radial dots liquid glass icon">
+  <defs>
+    <linearGradient id="rad-glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".76"/><stop offset=".5" stop-color="#eaf5ff" stop-opacity=".37"/><stop offset="1" stop-color="#8b69bc" stop-opacity=".13"/></linearGradient>
+    <linearGradient id="rad-edge" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".98"/><stop offset="1" stop-color="#8b69bc" stop-opacity=".72"/></linearGradient>
+    <radialGradient id="rad-dot" cx="25%" cy="20%"><stop stop-color="#e8dbff"/><stop offset=".44" stop-color="#a78bd3"/><stop offset="1" stop-color="#7654ad"/></radialGradient>
+    <filter id="rad-shadow" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur in="SourceAlpha" stdDeviation="5"/><feOffset dy="3"/><feComponentTransfer><feFuncA type="linear" slope=".2"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect x="6" y="6" width="116" height="116" rx="33" fill="url(#rad-glass)" stroke="url(#rad-edge)" stroke-width="1.7" filter="url(#rad-shadow)"/>
+  <path d="M21 43c2.1-12.8 9.8-20.2 21.8-21.1h42.4c12 .9 19.7 8.3 21.8 21.1" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="2.1" stroke-linecap="round"/>
+  <g fill="url(#rad-dot)">
+    <circle cx="78" cy="64" r="3.1"/><circle cx="75.3" cy="70.5" r="3.1"/><circle cx="69" cy="75.3" r="3.1"/><circle cx="62" cy="77.4" r="3.1"/><circle cx="55" cy="74.8" r="3.1"/><circle cx="50.2" cy="69" r="3.1"/><circle cx="49.6" cy="61.6" r="3.1"/><circle cx="53.5" cy="55.7" r="3.1"/><circle cx="59" cy="50.7" r="3.1"/><circle cx="66.6" cy="50.7" r="3.1"/><circle cx="73" cy="54.5" r="3.1"/><circle cx="77.4" cy="59.2" r="3.1"/>
+    <circle cx="89" cy="64" r="2.65"/><circle cx="85.7" cy="76.5" r="2.65"/><circle cx="77.5" cy="85.7" r="2.65"/><circle cx="64" cy="89" r="2.65"/><circle cx="51.5" cy="85.7" r="2.65"/><circle cx="42.3" cy="77.5" r="2.65"/><circle cx="39" cy="64" r="2.65"/><circle cx="42.3" cy="51.5" r="2.65"/><circle cx="50.5" cy="42.3" r="2.65"/><circle cx="64" cy="39" r="2.65"/><circle cx="76.5" cy="42.3" r="2.65"/><circle cx="85.7" cy="51.5" r="2.65"/>
+    <circle cx="101" cy="64" r="2.25"/><circle cx="96.1" cy="82.5" r="2.25"/><circle cx="82.5" cy="96.1" r="2.25"/><circle cx="64" cy="101" r="2.25"/><circle cx="45.5" cy="96.1" r="2.25"/><circle cx="31.9" cy="82.5" r="2.25"/><circle cx="27" cy="64" r="2.25"/><circle cx="31.9" cy="45.5" r="2.25"/><circle cx="45.5" cy="31.9" r="2.25"/><circle cx="64" cy="27" r="2.25"/><circle cx="82.5" cy="31.9" r="2.25"/><circle cx="96.1" cy="45.5" r="2.25"/>
+    <circle cx="64" cy="64" r="5.1"/>
+  </g>
+  <circle cx="62.3" cy="62.2" r="1.5" fill="#fff" opacity=".8"/>
+</svg>

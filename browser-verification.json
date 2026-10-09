@@ -1,0 +1,282 @@
+{
+  "timestamp": "2026-09-30T08:40:21.382Z",
+  "previewOnly": true,
+  "backendConnected": false,
+  "checks": [
+    {
+      "name": "five plugin rows",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no horizontal overflow at 1280px",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "dark theme applied",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "search exact match",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "search empty state",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stripe correct selection buttons",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "stripe panel visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stripe parameter defaults present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stripe illustrative SVG present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stripe generation disabled before selection",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stripe red to green selection",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stripe numeric/slider sync",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "stripe closes without invisible overlay",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "halftone correct selection buttons",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "halftone panel visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "halftone parameter defaults present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "halftone illustrative SVG present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "halftone generation disabled before selection",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "halftone red to green selection",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "halftone numeric/slider sync",
+      "ok": true,
+      "detail": "8.5"
+    },
+    {
+      "name": "halftone closes without invisible overlay",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "voronoi correct selection buttons",
+      "ok": true,
+      "detail": "2"
+    },
+    {
+      "name": "voronoi panel visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "voronoi parameter defaults present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "voronoi illustrative SVG present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "voronoi generation disabled before selection",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "voronoi red to green selection",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "voronoi numeric/slider sync",
+      "ok": true,
+      "detail": "18.5"
+    },
+    {
+      "name": "voronoi closes without invisible overlay",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "radialdots correct selection buttons",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "radialdots panel visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "radialdots parameter defaults present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "radialdots illustrative SVG present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "radialdots numeric/slider sync",
+      "ok": true,
+      "detail": "10"
+    },
+    {
+      "name": "radialdots closes without invisible overlay",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "vape correct selection buttons",
+      "ok": true,
+      "detail": "1"
+    },
+    {
+      "name": "vape panel visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "vape parameter defaults present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "vape illustrative SVG present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "vape generation disabled before selection",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "vape red to green selection",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "vape numeric/slider sync",
+      "ok": true,
+      "detail": "1.1"
+    },
+    {
+      "name": "vape closes without invisible overlay",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "five plugin icon family",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no horizontal overflow at 390px",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile panel fits",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "reduced motion transition",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "zero browser runtime errors",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "original installer UI and shared theme unchanged",
+      "ok": true,
+      "detail": "69 files compared; concurrent differences=8"
+    }
+  ],
+  "errors": [],
+  "originalSourceFiles": 69,
+  "changedOriginalFiles": [
+    "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs",
+    "C:\\zcode_build\\radialdots\\src\\RadialDotsSelfTest.cs",
+    "C:\\zcode_build\\stripe\\src\\StripePattern.cs",
+    "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs",
+    "C:\\zcode_build\\voronoi\\src\\VoronoiPlugin.cs",
+    "C:\\zcode_build\\voronoi\\src\\VoronoiSelfTest.cs",
+    "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs",
+    "C:\\zcode_build\\PROJECT-STATE.md"
+  ],
+  "originalSnapshotNote": "Eight original project files changed concurrently after the initial snapshot. This UI-preview task and its workers wrote only E:/IVAN-LiquidGlass-preview. Concurrent source changes were not reverted. No all-original-files-unchanged claim is made.",
+  "screenshots": [
+    "00-first-look.png",
+    "01-launcher-light.png",
+    "02-launcher-dark.png",
+    "03-panel-stripe.png",
+    "04-panel-halftone.png",
+    "05-panel-voronoi.png",
+    "06-panel-radialdots.png",
+    "07-panel-vape.png",
+    "08-icon-family.png",
+    "09-mobile.png",
+    "detail-halftone.png",
+    "detail-radialdots.png",
+    "detail-stripe.png",
+    "detail-vape.png",
+    "detail-voronoi.png"
+  ]
+}

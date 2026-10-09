@@ -1,0 +1,69 @@
+{
+  "scope": "standalone UI preview only; actual project is read-only",
+  "changed_field": "index.html script[src=art.js] added before app.js",
+  "records": [
+    {
+      "label": "BASELINE",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "-c",
+        "from pathlib import Path;import sys;print('art.js script reference='+str('src=\"art.js\"' in Path(sys.argv[1]).read_text(encoding='utf-8')))",
+        "E:\\IVAN-LiquidGlass-preview\\index.baseline.html"
+      ],
+      "stdout": "art.js script reference=False\n",
+      "stderr": "",
+      "exit": 0,
+      "sha256": "fadd5925038d4f50c111bf5d2463bb21e405c9e22f4f2f261ed8ae01f70f3b90"
+    },
+    {
+      "label": "MODIFIED",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "-c",
+        "from pathlib import Path;import sys;print('art.js script reference='+str('src=\"art.js\"' in Path(sys.argv[1]).read_text(encoding='utf-8')))",
+        "E:\\IVAN-LiquidGlass-preview\\index.html"
+      ],
+      "stdout": "art.js script reference=True\n",
+      "stderr": "",
+      "exit": 0,
+      "sha256": "1a7760d87522131902f87d0a725c6cef227c5972da966118cad8bbf1f9d8ee42"
+    },
+    {
+      "label": "ROLLBACK_EXECUTION",
+      "command": [
+        "C:\\Program Files\\Git\\bin\\bash.exe",
+        "E:/IVAN-LiquidGlass-preview/ROLLBACK.sh",
+        "E:/IVAN-LiquidGlass-preview/rollback-test.html"
+      ],
+      "stdout": "ROLLBACK restored pristine UI preview HTML\n",
+      "stderr": "",
+      "exit": 0
+    },
+    {
+      "label": "ROLLBACK",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+        "-X",
+        "utf8",
+        "-c",
+        "from pathlib import Path;import sys;print('art.js script reference='+str('src=\"art.js\"' in Path(sys.argv[1]).read_text(encoding='utf-8')))",
+        "E:\\IVAN-LiquidGlass-preview\\rollback-test.html"
+      ],
+      "stdout": "art.js script reference=False\n",
+      "stderr": "",
+      "exit": 0,
+      "sha256": "fadd5925038d4f50c111bf5d2463bb21e405c9e22f4f2f261ed8ae01f70f3b90"
+    }
+  ],
+  "rollback_hash_matches": true,
+  "roles": {
+    "MODIFIED_FILE": "E:\\IVAN-LiquidGlass-preview\\index.html",
+    "DIFF_FILE": "E:\\IVAN-LiquidGlass-preview\\UI-PREVIEW.patch",
+    "VERIFICATION": "E:\\IVAN-LiquidGlass-preview\\VERIFICATION.txt",
+    "ROLLBACK": "E:\\IVAN-LiquidGlass-preview\\ROLLBACK.sh"
+  }
+}

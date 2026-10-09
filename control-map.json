@@ -1,0 +1,140 @@
+{
+  "root": "C:\\zcode_build",
+  "panels": {
+    "stripe": {
+      "panelSource": "C:\\zcode_build\\stripe\\src\\StripePanel.cs",
+      "settingsSource": "C:\\zcode_build\\stripe\\src\\StripePattern.cs",
+      "controls": {
+        "pick:target": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [44, 51] } },
+        "Width": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [59, 198, 234] }, "settings": { "file": "C:\\zcode_build\\stripe\\src\\StripePattern.cs", "lines": [10, 12] } },
+        "Spacing": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [60, 198, 234] }, "settings": { "file": "C:\\zcode_build\\stripe\\src\\StripePattern.cs", "lines": [10, 13] } },
+        "AngleDeg": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [61, 198, 234] }, "settings": { "file": "C:\\zcode_build\\stripe\\src\\StripePattern.cs", "lines": [10, 14] } },
+        "Margin": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [62, 198, 234] }, "settings": { "file": "C:\\zcode_build\\stripe\\src\\StripePattern.cs", "lines": [10, 15] } },
+        "CornerRadius": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [63, 198, 234] }, "settings": { "file": "C:\\zcode_build\\stripe\\src\\StripePattern.cs", "lines": [10, 18] } },
+        "ConformToBoundary": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [76, 85] }, "settings": { "file": "C:\\zcode_build\\stripe\\src\\StripePattern.cs", "lines": [10, 17] } },
+        "RoundedEnds": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [87, 92] }, "settings": { "file": "C:\\zcode_build\\stripe\\src\\StripePattern.cs", "lines": [10, 16] } },
+        "LivePreview": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [15, 70, 74] } },
+        "info": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [95, 97, 282, 290] } },
+        "primaryLabel": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [100, 102] } },
+        "secondaryLabel": { "ui": { "file": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [104, 106] } }
+      }
+    },
+    "halftone": {
+      "panelSource": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs",
+      "settingsSource": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs",
+      "controls": {
+        "pick:target": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [76, 83] } },
+        "pick:gradient": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [85, 89] } },
+        "MaxDia": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [96, 363, 399] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [10, 12] } },
+        "MinDia": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [97, 363, 399] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [10, 13] } },
+        "Pitch": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [98, 363, 399] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [10, 14] } },
+        "Margin": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [99, 363, 399] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [10, 15] } },
+        "Rotation": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [100, 363, 399] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [10, 18] } },
+        "Falloff": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [101, 363, 399] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [10, 19] } },
+        "OnlyFace": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [105, 129] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [28, 33] } },
+        "faceHint": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [125, 129, 482, 488] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [28, 33] } },
+        "ArrayMode": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [133, 147] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [16, 36] } },
+        "centerModeHint": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [142, 145] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [16] } },
+        "Shape": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [150, 157] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [17, 37] } },
+        "chooseCenter": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [159, 166] } },
+        "useSurfaceCenter": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [168, 178] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [23, 24] } },
+        "centerInfo": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [180, 185, 330, 333] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [23, 24] } },
+        "UsePickedCenter": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [189, 202] }, "settings": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "lines": [23, 24] } },
+        "LivePreview": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [207, 211] } },
+        "info": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [215, 217, 490, 496] } },
+        "primaryLabel": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [220, 222] } },
+        "secondaryLabel": { "ui": { "file": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [224, 226] } }
+      }
+    },
+    "voronoi": {
+      "panelSource": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs",
+      "settingsSource": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs",
+      "controls": {
+        "pick:target": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [89, 96] } },
+        "pick:gradient": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [97, 100] } },
+        "CellSize": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [108, 401, 447] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [10, 12] } },
+        "Depth": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [109, 401, 447] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [10, 13] } },
+        "EdgeWidth": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [110, 401, 447] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [10, 14] } },
+        "Shape": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [111, 401, 447] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [10, 15] } },
+        "Relax": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [112, 401, 447] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [10, 22] } },
+        "Seed": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [113, 401, 447] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [10, 23] } },
+        "EdgeFade": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [114, 401, 447] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [10, 24] } },
+        "Step": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [115, 401, 447] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [10, 25] } },
+        "CellShape": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [119, 142] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [16, 18] } },
+        "shapeHint": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [144, 147, 566, 571] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [16, 18] } },
+        "DomePower": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [150, 152, 552, 563] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [19, 21] } },
+        "OnlyFace": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [159, 188, 520, 543] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [29, 34] } },
+        "faceHint": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [184, 188, 537, 543] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [29, 34] } },
+        "PerCell": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [191, 207, 545, 550] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [35, 36] }, "relatedSettings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [37, 38] } },
+        "cellHint": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [208, 212, 545, 550] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [35, 38] } },
+        "GradientAmount": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [233, 253, 254, 272] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [42, 49] } },
+        "clearGradient": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [217, 231] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [43, 45] } },
+        "gradientHint": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [273, 277, 493, 499] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [43, 49] } },
+        "LivePreview": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [282, 289] } },
+        "NurbOutput": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [290, 294] }, "settings": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "lines": [39, 40] } },
+        "info": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [296, 298, 573, 581] } },
+        "primaryLabel": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [301, 303] } },
+        "secondaryLabel": { "ui": { "file": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [305, 307] } }
+      }
+    },
+    "radialdots": {
+      "panelSource": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs",
+      "settingsSource": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs",
+      "controls": {
+        "OuterR": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [71, 74, 260, 293] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [8, 10] } },
+        "InnerR": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [71, 75, 260, 293] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [8, 11] } },
+        "Pitch": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [75, 260, 293] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [8, 12] } },
+        "MaxDia": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [76, 260, 293] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [8, 13] } },
+        "MinDia": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [77, 260, 293] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [8, 14] } },
+        "Peak": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [78, 260, 293] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [8, 15] } },
+        "Falloff": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [79, 260, 293] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [8, 16] } },
+        "Layout": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [83, 98] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [17, 29] } },
+        "Stagger": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [100, 103] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [18] } },
+        "layoutHint": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [105, 110] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [17, 18] } },
+        "Shape": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [114, 129] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [19, 30] } },
+        "Rotation": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [132, 260, 293] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [20] } },
+        "Jitter": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [133, 260, 293] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [21] } },
+        "Merge": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [135, 138] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [23] } },
+        "shapeHint": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [140, 145, 341, 348] }, "settings": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsCore.cs", "lines": [19, 30] } },
+        "LivePreview": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [149, 155] } },
+        "info": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [158, 160, 358, 365] } },
+        "primaryLabel": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [163, 165] } },
+        "secondaryLabel": { "ui": { "file": "C:\\zcode_build\\radialdots\\src\\RadialDotsUi.cs", "lines": [167, 169] } }
+      }
+    },
+    "vape": {
+      "panelSource": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs",
+      "settingsSource": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs",
+      "controls": {
+        "pick:target": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [442, 450] } },
+        "capacity": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [34, 35, 354, 830] } },
+        "formula": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [36, 358, 472, 475, 837, 854] } },
+        "rateHint": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [38, 363, 474, 475, 743, 761] } },
+        "targetStatus": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [135, 571] } },
+        "CupMode": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [380, 386, 505] }, "settings": { "file": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs", "lines": [45, 46] } },
+        "WallMm": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [411, 420, 588, 617] }, "settings": { "file": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs", "lines": [48, 49] } },
+        "RatePercent": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [388, 401, 743, 757] }, "settings": { "file": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs", "lines": [39, 40] } },
+        "RateAuto": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [403, 409, 750, 757] }, "settings": { "file": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs", "lines": [42, 43] } },
+        "CoilEnabled": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [421, 425] }, "settings": { "file": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs", "lines": [51, 52] } },
+        "CoilDiameterMm": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [426, 433] }, "settings": { "file": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs", "lines": [54, 55] } },
+        "CoilAxisIndex": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [434, 440] }, "settings": { "file": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs", "lines": [57, 58] } },
+        "coilInfo": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [41, 364, 489, 490, 676, 700] } },
+        "detail": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [39, 359, 491, 493, 629, 635] } },
+        "note": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [40, 360, 493, 494, 571, 642] } },
+        "status": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [42, 367, 494, 495, 457, 464] } },
+        "primaryLabel": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [452, 465] } },
+        "secondaryLabel": { "ui": { "file": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [466, 467] } }
+      }
+    }
+  },
+  "conditions": {
+    "halftone.scope": { "source": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [107, 115], "settingsSource": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "settingsLines": [32, 33], "meaning": "隐藏参考面组，除非 targetFaces > 1" },
+    "halftone.centerModeHint": { "source": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [142, 145], "settingsSource": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "settingsLines": [16], "meaning": "同心环/螺旋/抖动网格索取圆心（ArrayMode 为 3、4、5）" },
+    "halftone.UsePickedCenter": { "source": "C:\\zcode_build\\halftone\\src\\HalftoneUi.cs", "lines": [189, 202], "settingsSource": "C:\\zcode_build\\halftone\\src\\HalftoneCore.cs", "settingsLines": [23, 24], "meaning": "仅在 CenterPoints 非空时显示" },
+    "voronoi.DomePower": { "source": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [150, 152, 552, 563], "settingsSource": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "settingsLines": [16, 21], "meaning": "CellShape != 1 时禁用" },
+    "voronoi.OnlyFace": { "source": "C:\\zcode_build\\voronoi\\src\\VoronoiUi.cs", "lines": [172, 176, 520, 527], "settingsSource": "C:\\zcode_build\\voronoi\\src\\VoronoiCore.cs", "settingsLines": [29, 34], "meaning": "FaceCount <= 1 时禁用；参考面组仍显示" },
+    "stripe.RoundedEnds": { "source": "C:\\zcode_build\\stripe\\src\\StripePanel.cs", "lines": [76, 92], "settingsSource": "C:\\zcode_build\\stripe\\src\\StripePattern.cs", "settingsLines": [16, 17], "meaning": "ConformToBoundary 为 true 时禁用" },
+    "vape.WallMm": { "source": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [588, 617], "settingsSource": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs", "settingsLines": [45, 49], "meaning": "CupMode 为 false 时禁用" },
+    "vape.RatePercent": { "source": "C:\\zcode_build\\src\\VapeVolume\\UI\\VolumeDialog.cs", "lines": [403, 409, 750, 757], "settingsSource": "C:\\zcode_build\\src\\VapeVolume\\Core\\VolumeSettings.cs", "settingsLines": [42, 43], "meaning": "RateAuto 为 true 时禁用" }
+  }
+}
