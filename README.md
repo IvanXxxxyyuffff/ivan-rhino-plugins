@@ -1,10 +1,24 @@
 # IVAN 插件中心 · Rhino 7/8 插件合集
 
+**简体中文** | [English](README.en.md) | [日本語](README.ja.md) | [繁體中文](README.zh-TW.md)
+
 一套运行在 **Rhino 7 / Rhino 8** 上的 .NET 插件合集：**7 个参数化建模插件** + 一个玻璃拟态风格的**插件中心**（安装器 / 启动器）。
 每个插件都是「一条命令 + 一个参数面板 + 实时预览 + 无头自检」，**不依赖任何第三方包**（只用 RhinoCommon / WinForms）。
 
 > 界面与交互遵循仓库内的《设计一致性规范》：统一的玻璃卡片面板、语义控件（滑块 + 数字框联动）、
 > 拾取按钮「选到=绿 / 没选或选错=红」、150/200/300ms 三档动效、同一套线性图标家族。
+
+## 下载 / 安装
+
+| 版本 | 下载 | 说明 |
+|---|---|---|
+| **v1.0.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.0.0/IVAN-CENTER.exe) | Windows x64 安装器（2.7 MB，md5 `23b3034dc7da712527ab8eefc183c528`） |
+
+1. **先关闭 Rhino**，双击运行安装器 → 自动装到 `%LOCALAPPDATA%\IVAN\plugins`（注册 7 个插件 + 写入工具条）
+2. 打开 Rhino：工具条上出现 7 个按钮，点按钮开面板即可用
+3. 也可以从源码自行构建（见下）
+
+> 安装包不含 Rhino 本体，需要已安装 Rhino 7 或 Rhino 8。插件界面目前为**简体中文**。
 
 ## 插件一览
 
@@ -51,7 +65,7 @@ dotnet build implementation/MODIFIED_FILE/voronoi/Rhino7/VoronoiTexture.csproj -
 python -X utf8 implementation/native-gate.py build-panels
 ```
 
-产物落在各插件的 `out/rhino7|rhino8/`（`.rhp` 可直接拖进 Rhino 或用插件中心安装）。
+产物落在各插件的 `out/rhino7|rhino8/`（`.rhp` 可直接拖进 Rhino，或用插件中心安装）。
 
 ## 安装 / 自检
 
