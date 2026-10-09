@@ -671,3 +671,33 @@ pwsh -File run-native-selftests.ps1                # 7 个自检一轮跑全（�
 python -X utf8 final-ui-audit.py --output <名>.json # UI 审计
 pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 / payload / 注册表 / RUI / 交付 hash）
 ```
+
+## 16. 开源发布（2026-10-09，用户口径：「这个项目完全开源到github上」+「把EXE安装包也发布上去」+「仓库上支持简体中文 英文 日文 繁体中文」）
+
+### 仓库
+- **https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins**（public，MIT）
+- 本地 `E:\IVAN-LiquidGlass-preview` 已 `git init`（分支 `main`，跟踪 `origin/main`）→ 以后更新就三步：`git add -A` → `git commit -m "…"` → `git push`
+- 提交：`69d585e` 首次开源（185 文件）→ `a643512` README 四语言 + v1.0.0 下载入口
+
+### Release
+- **v1.0.0**：https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/tag/v1.0.0
+- 附件 `IVAN-CENTER.exe`：**2679808 字节，md5 `23b3034dc7da712527ab8eefc183c528`**（上传后**下载回来重算 md5 核对过**，不是只看上传返回码）
+- Release 说明页四语言（简中 / English / 日本語 / 繁體中文）；仓库简介中英双语、homepage 指向 `releases/latest`；topics：rhino, rhino3d, rhinoceros, grasshopper, cad, csharp, dotnet, voronoi, subd, winforms
+
+### 四语言 README
+`README.md`（简中，默认）/ `README.en.md` / `README.ja.md` / `README.zh-TW.md`，四份顶部互相链接，内容一致（下载/安装、7 插件对照表、仓库结构、构建、安装自检、文档索引、许可）。
+⚠ **插件 UI 自身仍是简体中文**（面板文案与提示）——「界面也能切四种语言」是另一件事：要给 7 个面板 + 安装器做 i18n 文案表 + 语言切换 + 重绘。
+
+### 进仓库 / 不进仓库（`.gitignore` 口径）
+- **进**：`implementation/MODIFIED_FILE/**` 源码（56 个 `.cs` + 17 个 `.csproj` + 40 个脚本）、`implementation/*.ps1|*.py` 工具链、三份 md 文档、根目录 UI 原型（html/js/css/icons/截图）、`LICENSE`、四份 README
+- **不进**：`**/out|bin|obj|payload|dist`、`*.rhp|exe|dll|pdb|deps.json|runtimeconfig.json|zip|3dm|patch|ico`、`implementation/BASELINE*` 与 `INSTALLED_BASELINE`、`implementation/*.log|txt|json|png|jsonl`、`__pycache__`、`*.pid`
+- ⚠ **`implementation/BASELINE/` 是 `final-ui-audit.py` 的对比基线，本地必须留着**（它不是垃圾）
+- 仓库净体积 ≈ 8.4 MB；远端核对：224 条目 / 56 `.cs` / 17 `.csproj`
+
+### 发布通道（本机没有 gh CLI）
+用 **Git Credential Manager 里存的 PAT**（`git credential fill` 取，账号 `IvanXxxxyyuffff`）+ GitHub REST API（`curl.exe`，走本机代理 `http://127.0.0.1:7897`）：
+- 建仓库 `POST /user/repos`；建 release `POST /repos/{o}/{r}/releases`；传附件 `POST https://uploads.github.com/repos/{o}/{r}/releases/{id}/assets?name=…`
+  ⚠ URL 里的 `?` 在 PowerShell 里要转义（反引号 + `?`），否则 curl 收到的是被吞掉参数的 URL（实测第一次就是这么失败的）
+- 改说明 / 改简介：`PATCH /repos/{o}/{r}/releases/{id}`、`PATCH /repos/{o}/{r}`
+- 请求体一律 `[IO.File]::WriteAllText(path, json, UTF8 无 BOM)` + `curl --data-binary "@file"`；响应 `[IO.File]::ReadAllText(path, UTF8) | ConvertFrom-Json`
+  （直接管道 `curl | ConvertFrom-Json` 遇到中文会炸：PowerShell 按 ANSI 解码 UTF-8 字节）
