@@ -151,22 +151,28 @@ namespace WaterRipplePattern
                 Check(sb, ref pass, ref fail, Math.Abs(sp1 - sp2) > 1e-6, "定向条带：方向散布 > 0 时条带摆动（同 u 不同 v 不再相同）");
             }
 
-            // 同心：方向散布 = 0 时关于主方向轴对称（椭圆环），改主方向会转动这套环
+            // 同心：**正圆环**（用户实测反馈：以前半径按 1.45 拉成椭圆了）+ 主方向 = 涟漪源偏移方向
             {
                 var t = s.Clone(); t.WaveMode = 2; t.Spread = 0.0; t.WaveCount = 1; t.Direction = 0.0;
-                bool sym = true;
-                for (int i = 1; i <= 12; i++)
+                double worstCirc = 0;
+                double h0 = WaterRippleCore.WaveField(7.3, 0.0, t, k, 0, 0);
+                for (int i = 0; i < 24; i++)
                 {
-                    double u = i * 1.3, v = i * 0.9;
-                    double h1 = WaterRippleCore.WaveField(u, v, t, k, 0, 0);
-                    double h2 = WaterRippleCore.WaveField(u, -v, t, k, 0, 0);
-                    if (Math.Abs(h1 - h2) > 1e-12) sym = false;
+                    double a = i * Math.PI / 12.0;
+                    double hh = WaterRippleCore.WaveField(7.3 * Math.Cos(a), 7.3 * Math.Sin(a), t, k, 0, 0);
+                    worstCirc = Math.Max(worstCirc, Math.Abs(hh - h0));
                 }
-                Check(sb, ref pass, ref fail, sym, "同心涟漪（散布 0）：关于主方向轴对称（环是规则椭圆环）");
+                Check(sb, ref pass, ref fail, worstCirc < 1e-12,
+                    string.Format(CultureInfo.InvariantCulture, "同心涟漪（主方向 0、散布 0）：与源等距的点高度完全相同 → 环是正圆（最差差 {0:0.######}）", worstCirc));
+
+                var t0 = t.Clone(); t0.Direction = 0.0;
                 var t90 = t.Clone(); t90.Direction = 90.0;
-                double b1 = WaterRippleCore.WaveField(9.0, 2.0, t, k, 0, 0);
-                double b2 = WaterRippleCore.WaveField(9.0, 2.0, t90, k, 0, 0);
-                Check(sb, ref pass, ref fail, Math.Abs(b1 - b2) > 1e-6, "同心涟漪：主方向改 90° → 环的朝向跟着转（长轴换方向）");
+                double c0a = WaterRippleCore.WaveField(0.0, 6.0, t0, k, 0, 0);
+                double c0b = WaterRippleCore.WaveField(0.0, -6.0, t0, k, 0, 0);
+                Check(sb, ref pass, ref fail, Math.Abs(c0a - c0b) < 1e-12, "同心涟漪：主方向 0° → 源就在中心（±方向完全对称）");
+                double c9a = WaterRippleCore.WaveField(0.0, 6.0, t90, k, 0, 0);
+                double c9b = WaterRippleCore.WaveField(0.0, -6.0, t90, k, 0, 0);
+                Check(sb, ref pass, ref fail, Math.Abs(c9a - c9b) > 1e-6, "同心涟漪：主方向改 90° → 源沿该方向偏移（±方向不再对称）");
                 var tsp = t.Clone(); tsp.Spread = 60.0;
                 double c1 = WaterRippleCore.WaveField(9.0, 2.0, tsp, k, 0, 0);
                 double c2 = WaterRippleCore.WaveField(9.0, 2.0, t, k, 0, 0);

@@ -9,7 +9,8 @@ $map = @(
   @{ Folder='radialdots'; Name='RadialDots'; Rh7='RadialDots.rhp' },
   @{ Folder='meshfix'; Name='MeshFix'; Rh7='MeshFix.rhp' },
   @{ Folder='diamondfacet'; Name='DiamondFacet'; Rh7='DiamondFacet.rhp' },
-  @{ Folder='waterripple'; Name='WaterRipple'; Rh7='WaterRipple.rhp' }
+  @{ Folder='waterripple'; Name='WaterRipple'; Rh7='WaterRipple.rhp' },
+  @{ Folder='surfaceunify'; Name='SurfaceUnify'; Rh7='SurfaceUnify.rhp' }
 )
 foreach ($m in $map) {
   $base = Join-Path $C $m.Folder

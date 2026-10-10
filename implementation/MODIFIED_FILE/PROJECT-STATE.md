@@ -741,3 +741,43 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - 水波纹自检 **100/0**（含三波形接线 30 项、固定边界硬锁、过渡宽度/平滑度、SubD crease 前后对照、图标渲染）
 - 8 插件全量回归 **ALL-PASS**（112.8s：Voronoi 150 / Stripe 55 / Halftone 23 / RadialDots 37+1 / MeshFix 14 / DiamondFacet 86 / WaterRipple 100 / VapeVolume 3）
 - 安装 8/8 逐字节一致（INSTALL-VERIFY PASS）；安装器 `IVAN-CENTER.exe` 3025408 bytes / md5 `4a7932421e68dfc91d64618c63f9f648`
+
+## 18. 第 9 个插件「多重曲面转单一曲面 SurfaceUnify」（2026-10-10 第二轮）
+
+用户口径：把各种复杂的多重曲面全部转成**单一的开放式曲面**，边界完全逼近原多重曲面、内部尽可能拟合原曲面；随后用户给了实测文件 `D:\UserData\Desktop\2234.3dm` 验证贴合情况，并另报「插件 8 的同心涟漪不是圆是椭圆」+「unify 图标不好看、和别的插件不像」。
+
+### 算法（自研，无第三方依赖）
+1. 输入：Brep（曲面 / 多重曲面 / 挤出体）或 Mesh；曲线 / 细分物件 / 点明确拒绝；闭合体（无裸边）拒绝并说明原因。
+2. 片状网格：Mesh 输入先 `Duplicate()` 再 `Weld`（**绝不动用户文档里的几何**）；Brep 输入按 diag/60 网格化后 `Weld`（不焊接 → 多重曲面的内部接缝会被 `GetNakedEdges` 当成边界）。
+3. 裸边环 → 外环（鞋带面积最大）+ 内孔候选；拟合平面 + 主轴坐标系；外环取 4 角 = **对角极值**（矩形取到真角点），去重 + 每段弧长 ≥5% 周长校验，不合格退化成弧长四等分。
+4. 4 条边按弧长等分采样 → **3D 双线性 Coons 基面**：边界点 = 原边界采样点 → 边界天然完全逼近；Brep 输入再把边界点吸附回真实边（消掉网格弦差）。
+5. 贴合：**先沿基面法向打射线**（`Intersection.MeshRay`，±法向取最近命中；命中点用 `Brep.ClosestPoint` 精修到精确曲面），射线打不到再退回最近点。**这是凹袋 / 兜形 / 槽形壳体能不能贴合的关键**。
+6. 拉普拉斯光顺（边界保形 = 边界点不参与）→ `NurbsSurface.CreateThroughPoints(flat, nu, nv, 3, 3, false, false)` 插值出单一 NURBS 面。
+7. 内孔：孔环投影到结果面（`ClosestPoint` → 曲面上的点 → `PolylineCurve`）→ `BrepFace.Split` → 取面积最大的那块（带孔那片）。
+8. 偏差：结果面 25×25 采样 → 到原曲面 / 网格的最近距离（最大 + RMS）；**孔洞区域不参与统计**（那里没材料）；测量用自己宽容差（≥ 对角线一半），不受面板「最大贴合距离」影响。报告里给最大 / 平均 / 边界偏差 + 面积比 + 未贴合点数 + 折叠单元数。
+9. 预览 = 输出：结果面着色 + 线框，原边界画红线对比；写文档到图层「单一曲面」，对象名带偏差。
+
+### 本轮踩的坑（都已修）
+1. **`NurbsSurface.CreateThroughPoints` 参数顺序是 `(points, uCount, vCount, uDegree, vDegree, uClosed, vClosed)`** —— count 在前、degree 在后；传反直接返回 null（XML 的 `<param>` 顺序就是实参顺序）。点序 = u 慢变（`points[i*vCount+j]`），用四角校验 `CornersMatch` 兜底。
+2. `BoundingBox.Diagonal` 是 **Vector3d**（要 `.Length`）；`Point3d − Point3d` = Vector3d，所以 `a + b − c` 会算成 Vector3d → 逐分量写。
+3. `BrepFace.Split(IEnumerable<Curve>, double)` 返回 **Brep**（内含多张面），不是 `Brep[]`；取单面用 `BrepFace.DuplicateFace(false)`。
+4. `File3dmObjectTable.Add` 在 **Rhino 7 只有 `Add(File3dmObject)`**（2 参重载是 Rhino 8 才有）→ 自检里改成只读报数，另存走 Probe 命令的 `RhinoDoc.WriteFile`。
+5. **Coons 基面的法向朝向由边界环走向决定、可能是反的** → 必须与壳体平均顶点法向对齐，否则「法向一致」守卫会把所有射线命中判成「贴到背面」全拒（实测碗形 140 点全被拒）。
+6. **只找最近点会给凹袋扣一个「盖子」**：实测面积比 0.155 / 最大偏差 11.1% → 改成射线贴合 + 自动贴合范围 0.25→**0.75 对角线**后，碗形用例偏差 8.8→0.21、面积比 0.69→0.99。
+7. 自检里比较「两个参数结果是否不同」用的**几何签名权重必须不可分离**：可分离权重（如 `1+0.001x+0.002y`）下，一整周期正弦起伏在对称采样点上正负相消 → 平坦面与波浪面算出同一个签名（假通过）→ 改用含 `x·y` 与 `z²` 交叉项的权重。
+8. 编译偶发 `0xC0000005`（access violation，随机落在不同项目）→ `native-gate.py build-panels` 遇错即停，改成逐个构建 + 重试 3 次。
+9. 水波纹自检原来把同心涟漪写成「椭圆环」并断言轴对称 → 用户实测反馈「不是圆是椭圆」；改成**正圆**：等距点高度必须完全相同（最差差 < 1e-12）；主方向改为「涟漪源偏移方向」，**0° = 源居中**（`mag = 0.25·(1−cos a)·λ`，0° 时偏移恰好为 0），角度越大源越靠外。
+10. 图标：第一版（透镜 + iso 线）被用户判「不好看、和别的插件不像」，子代理第二版（透视桶状）读起来像垃圾桶 → 最终版 = **一张带 S 形曲边的整片曲面（透视收分 + 两条 iso 肋线 + 白高光）**，与家族（渐变填充 + 深色描边）一致；kind `unify`，强调色玫红 `#A8456F`。
+
+### 用户实测（2234.3dm）
+- 目标 1：18 张面 / 46 条边 / **只有 2 条裸边 = 一圈袋口** → 形状是**兜袋**（开口一圈波浪边、内部凹）。修复前 面积比 0.155 / 最大偏差 9.83（对角线的 11.1%）→ 修复后 **面积比 0.996 / 平均偏差 2.35 / 最大 8.74 / 边界 0.07**；残余偏差集中在**袋口卷边**（卷边相对开口平面是倒扣，高度场参数化天然覆盖不到；报告里给出折叠单元数 16）。
+- 目标 2（单张曲面、1 条裸边）：偏差 0.24（对角线 0.57%）、边界 0.054、面积比 0.857。
+- 默认控制点数 12 → **16**（16 时目标 1 面积比 0.996）。
+- 结果另存：`D:\UserData\Desktop\2234-单一曲面.3dm`（原目标灰 + 单一曲面玫红）；诊断命令 `SurfaceUnifyProbe`（报告 `%LOCALAPPDATA%\IVAN\logs\SurfaceUnifyProbe.txt`，支持 flag 文件无人值守：`open/save/capture/report/grid/fit/smooth/lock/holes/snap`）。
+
+### 本轮验证
+- SurfaceUnify 自检 **114/0**（12 个用例：纯函数 / 平面多重曲面 / 半圆柱网格 / L 形折板 / 带内孔板 / 拒绝 / 参数生效 / 面板接线 / 写文档 / 确定性 / 用户文件 / 碗形兜袋）
+- 水波纹自检 **101/0**（同心涟漪改正圆后 101 项）
+- **9 插件全量回归 ALL-PASS（140.4s）**：Voronoi 150 / Stripe 55 / Halftone 23 / RadialDots 37+1 / MeshFix 14 / DiamondFacet 86 / WaterRipple 101 / SurfaceUnify 114 / VapeVolume 3
+- 安装 9/9 逐字节一致（INSTALL-VERIFY PASS）；安装器 `IVAN-CENTER.exe` 3435520 bytes / md5 `ddf66a708a37a431e7ba337c1f2dad9f`
+- 图标：9 份 PanelTheme.cs md5 完全一致 + iconmake 方法体逐 token 一致；`ICONS-strip.png`（128px）/ `ICONS-strip-16.png`（16px 工具条尺寸放大 5 倍）已交付桌面

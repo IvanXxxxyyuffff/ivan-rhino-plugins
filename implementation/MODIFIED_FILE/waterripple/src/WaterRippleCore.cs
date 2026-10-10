@@ -212,12 +212,15 @@ namespace WaterRipplePattern
             }
             else if (s.WaveMode == 2)            // ---- 同心涟漪
             {
-                // 主方向 = 椭圆长轴方向（环沿该方向拉长）→ 图案仍然居中
-                double along = x * ca + y * sa;
-                double across = -x * sa + y * ca;
-                double ea = along / 1.45, eb = across;
-                double r = Math.Sqrt(ea * ea + eb * eb);
-                double th = Math.Atan2(eb, ea);
+                // 同心涟漪 = **正圆环**（用户实测反馈：以前把半径按 1.45 拉成了椭圆，不是圆）。
+                // 主方向 = 涟漪源偏移方向：**0° = 源就在中心**（默认，图案居中）；角度偏得越远，
+                // 源沿该方向挪得越远（最多半个波长）→ 参数照样有作用，环永远是正圆。
+                double lam = 2.0 * Math.PI / k;
+                double mag = 0.25 * (1.0 - Math.Cos(a)) * lam;
+                double ox = Math.Cos(a) * mag, oy = Math.Sin(a) * mag;
+                double rx = x - ox, ry = y - oy;
+                double r = Math.Sqrt(rx * rx + ry * ry);
+                double th = Math.Atan2(ry, rx);
                 h = Math.Sin(k * r + seedPh);
                 double amp = 1.0;
                 for (int i = 1; i < n && i <= 3; i++)       // 波数 = 叠加几列涟漪（干涉）

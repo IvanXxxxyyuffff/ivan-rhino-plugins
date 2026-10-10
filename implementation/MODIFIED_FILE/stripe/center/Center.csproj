@@ -66,6 +66,11 @@
     <EmbeddedResource Include="payload\WaterRipple.dll" LogicalName="p_rip8_dll" />
     <EmbeddedResource Include="payload\WaterRipple.deps.json" LogicalName="j_rip8_deps" />
     <EmbeddedResource Include="payload\WaterRipple.runtimeconfig.json" LogicalName="j_rip8_rt" />
+    <EmbeddedResource Include="payload\SurfaceUnify-rh7.rhp" LogicalName="p_unf7" />
+    <EmbeddedResource Include="payload\SurfaceUnify-rh8.rhp" LogicalName="p_unf8" />
+    <EmbeddedResource Include="payload\SurfaceUnify.dll" LogicalName="p_unf8_dll" />
+    <EmbeddedResource Include="payload\SurfaceUnify.deps.json" LogicalName="j_unf8_deps" />
+    <EmbeddedResource Include="payload\SurfaceUnify.runtimeconfig.json" LogicalName="j_unf8_rt" />
   </ItemGroup>
 
 </Project>

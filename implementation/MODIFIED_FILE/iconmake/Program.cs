@@ -39,6 +39,7 @@ namespace IconMake
                     else if (string.Equals(kind, "meshfix", StringComparison.OrdinalIgnoreCase)) GlassDrawMeshFix(g, side, accent);
                     else if (string.Equals(kind, "diamond", StringComparison.OrdinalIgnoreCase)) GlassDrawDiamond(g, side, accent);
                     else if (string.Equals(kind, "ripple", StringComparison.OrdinalIgnoreCase)) GlassDrawRipple(g, side, accent);
+                    else if (string.Equals(kind, "unify", StringComparison.OrdinalIgnoreCase)) GlassDrawUnify(g, side, accent);
                     else GlassDrawStripe(g, side, accent);
                 }
                 return bitmap;
@@ -59,6 +60,7 @@ namespace IconMake
             if (string.Equals(kind, "meshfix", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 32, 138, 96);
             if (string.Equals(kind, "diamond", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 92, 76, 208);
             if (string.Equals(kind, "ripple", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 22, 132, 152);
+            if (string.Equals(kind, "unify", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 168, 69, 111);
             if (string.Equals(kind, "app", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 38, 59, 89);
             return Color.FromArgb(255, 8, 127, 150);
         }
@@ -555,6 +557,76 @@ namespace IconMake
                 hi.StartCap = LineCap.Round; hi.EndCap = LineCap.Round;
                 g.DrawLine(hi, cx - w * 0.30f, ys[1] - amp * 0.80f, cx - w * 0.08f, ys[1] - amp * 0.92f);
                 g.DrawLine(hi, cx + w * 0.16f, ys[2] - amp * 0.80f, cx + w * 0.36f, ys[2] - amp * 0.90f);
+            }
+        }
+        /// <summary>多重曲面转单一曲面：一张带 S 形曲边的整片曲面（透视收分 + 两条 iso 肋线）</summary>
+        private static void GlassDrawUnify(Graphics g, int size, Color accent)
+        {
+            float s = size;
+            float x0 = s * 0.17f, x1 = s * 0.83f;
+            float w = x1 - x0;
+            float midY = s * 0.50f;
+            float amp = s * 0.098f;
+            float half = s * 0.140f;
+            float stroke = Math.Max(1.0f, s * 0.062f);
+            int n = 48;
+            var top = new PointF[n + 1];
+            var bot = new PointF[n + 1];
+            for (int i = 0; i <= n; i++)
+            {
+                float t = i / (float)n;
+                float x = x0 + w * t;
+                float y = midY - (float)Math.Sin(t * 2.0 * Math.PI) * amp;
+                float hh = half * (0.80f + 0.40f * t);
+                top[i] = new PointF(x, y - hh);
+                bot[n - i] = new PointF(x, y + hh);
+            }
+            using (var sheet = new GraphicsPath())
+            {
+                sheet.StartFigure();
+                sheet.AddCurve(top);
+                sheet.AddCurve(bot);
+                sheet.CloseFigure();
+
+                var box = new RectangleF(x0, midY - amp - half * 1.25f, w, amp * 2f + half * 2.5f);
+                using (LinearGradientBrush fill = new LinearGradientBrush(box,
+                    GlassBlend(accent, Color.White, 0.44f), GlassBlend(accent, Color.Black, 0.20f), 90f))
+                    g.FillPath(fill, sheet);
+
+                using (Pen rib = new Pen(Color.FromArgb(160, 14, 26, 38), Math.Max(0.42f, s * 0.022f)))
+                {
+                    rib.StartCap = LineCap.Round;
+                    rib.EndCap = LineCap.Round;
+                    for (int k = 1; k <= 2; k++)
+                    {
+                        float t = k / 3.0f;
+                        float x = x0 + w * t;
+                        float y = midY - (float)Math.Sin(t * 2.0 * Math.PI) * amp;
+                        float hh = half * (0.80f + 0.40f * t) - s * 0.030f;
+                        g.DrawLine(rib, new PointF(x, y - hh), new PointF(x, y + hh));
+                    }
+                }
+
+                using (Pen dark = new Pen(Color.FromArgb(196, 14, 26, 38), stroke + Math.Max(0.7f, s * 0.028f)))
+                using (Pen main = new Pen(accent, stroke))
+                {
+                    dark.LineJoin = LineJoin.Round; main.LineJoin = LineJoin.Round;
+                    dark.StartCap = LineCap.Round; dark.EndCap = LineCap.Round;
+                    main.StartCap = LineCap.Round; main.EndCap = LineCap.Round;
+                    g.DrawPath(dark, sheet);
+                    g.DrawPath(main, sheet);
+                }
+            }
+
+            using (Pen hi = new Pen(Color.FromArgb(168, 255, 255, 255), Math.Max(0.5f, s * 0.028f)))
+            {
+                hi.StartCap = LineCap.Round;
+                hi.EndCap = LineCap.Round;
+                g.DrawBezier(hi,
+                    new PointF(x0 + w * 0.22f, midY + amp * 0.42f - half * 0.34f),
+                    new PointF(x0 + w * 0.34f, midY + amp * 0.05f - half * 0.34f),
+                    new PointF(x0 + w * 0.44f, midY + amp * 0.10f - half * 0.34f),
+                    new PointF(x0 + w * 0.54f, midY + amp * 0.46f - half * 0.34f));
             }
         }
 

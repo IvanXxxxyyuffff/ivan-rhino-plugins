@@ -184,6 +184,23 @@ namespace IvanCenter
                 Deps8Name = "WaterRipple.deps.json", Runtime8Name = "WaterRipple.runtimeconfig.json",
                 IconKind = "ripple"
             },
+            new PluginDef
+            {
+                Key = "SurfaceUnify",
+                Name = "多重曲面转单一曲面",
+                EnName = "SurfaceUnify",
+                Desc = "把复杂的多重曲面（或曲面 / 挤出体 / 网格）转成一张单一的开放式 NURBS 曲面：边界取原裸露边界并完全逼近，内部按控制点网格贴合原曲面（贴合强度、平滑度、最大贴合距离可调），内孔可投影到结果面做修剪保留；输出 1 张 NURBS 面，面板实时预览并给出最大/平均偏差与边界偏差",
+                Guid7 = "4E2B7A19-3C58-4D6E-8F01-9A2B3C4D5E60",
+                Guid8 = "7F3C8B2A-4D69-4E7F-9021-AB3C4D5E6F71",
+                Cmd = "SurfaceUnify",
+                ExtraCommands = "SurfaceUnifySelfTest;SurfaceUnifyPickTarget;SurfaceUnifyProbe",
+                Res7 = "p_unf7", Res8 = "p_unf8",
+                File7 = "SurfaceUnify-rh7.rhp", File8 = "SurfaceUnify.rhp",
+                Res8Dll = "p_unf8_dll",
+                Res8Deps = "j_unf8_deps", Res8Runtime = "j_unf8_rt",
+                Deps8Name = "SurfaceUnify.deps.json", Runtime8Name = "SurfaceUnify.runtimeconfig.json",
+                IconKind = "unify"
+            },
         };
 
         public static string RootDir

@@ -24,7 +24,8 @@ $defs = @(
   @{ Key='RadialDots';      Guid='F54E41C9-847C-4ED5-AE5C-FD905C55A1B6'; Res='RadialDots-rh8.rhp';       Installed='RadialDots.rhp';      Cmd='RadialDots' },
   @{ Key='MeshFix';         Guid='8B1E47D2-6A35-4C09-9F82-3D6E15A7B0C4'; Res='MeshFix-rh8.rhp';          Installed='MeshFix.rhp';         Cmd='MeshFix' },
   @{ Key='DiamondFacet';    Guid='D2F75B18-4E69-4A3C-8B51-7C0E29D6F3A8'; Res='DiamondFacet-rh8.rhp';     Installed='DiamondFacet.rhp';    Cmd='DiamondFacet' },
-  @{ Key='WaterRipple';     Guid='6C615EE9-EADB-4346-A6F5-633CA3FD7D16'; Res='WaterRipple-rh8.rhp';      Installed='WaterRipple.rhp';     Cmd='WaterRipple' }
+  @{ Key='WaterRipple';     Guid='6C615EE9-EADB-4346-A6F5-633CA3FD7D16'; Res='WaterRipple-rh8.rhp';      Installed='WaterRipple.rhp';     Cmd='WaterRipple' },
+  @{ Key='SurfaceUnify';    Guid='7F3C8B2A-4D69-4E7F-9021-AB3C4D5E6F71'; Res='SurfaceUnify-rh8.rhp';     Installed='SurfaceUnify.rhp';    Cmd='SurfaceUnify' }
 )
 
 $rhinos = @(Get-Process -Name Rhino -ErrorAction SilentlyContinue)
