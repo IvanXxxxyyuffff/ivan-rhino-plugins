@@ -15,7 +15,7 @@
 | **v1.2.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.2.0/IVAN-CENTER.exe) | Windows x64 安装器（3.3 MB，md5 `ddf66a708a37a431e7ba337c1f2dad9f`）
 | v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 上一版（8 插件，2.9 MB，md5 `4a7932421e68dfc91d64618c63f9f648`） | |
 
-1. **先关闭 Rhino**，双击运行安装器 → 自动装到 `%LOCALAPPDATA%\IVAN\plugins`（注册 9 个插件 + 写入工具条）
+1. **先关闭 Rhino**，双击运行安装器 → 自动装到 `%LOCALAPPDATA%\IVAN\plugins`（注册 10 个插件 + 写入工具条）
 2. 打开 Rhino：工具条上出现 9 个按钮，点按钮开面板即可用
 3. 也可以从源码自行构建（见下）
 
@@ -34,6 +34,7 @@
 | 7 | 钻石切面 **DiamondFacet** | `DiamondFacet` | 平面/闭合曲线边界内生成凹凸钻石切面：随机三角剖分 + 顶点随机高低，可固定边界；输出「仅线框 / 面」二选一，面模式可**每个三角切面细分出一张网格片**并细分 |
 | 8 | 水波纹 **WaterRipple** | `WaterRipple` | 曲面 / 多重曲面（当成一整个面）/ 闭合平面曲线边界上生成水波纹：**有机水波 / 定向条带 / 同心涟漪**三种波形可切换，波长、波高、波数、主方向、方向散布、波峰形状可调；**固定边界 + 边界过渡**（宽度 / 平滑度）；输出网格面，勾「一键平滑」转成**细分曲面（SubD）**（边界自动打 crease，角不收） |
 | 9 | 单一曲面 **SurfaceUnify** | `SurfaceUnify` | 把复杂的多重曲面（或曲面 / 挤出体 / 网格）转成**一张单一的开放式 NURBS 曲面**：边界取原裸露边界并完全逼近，内部按控制点网格**沿基面法向射线贴合**原曲面（控制点数 / 贴合强度 / 平滑度 / 最大贴合距离可调），内孔投影到结果面做修剪保留；面板实时预览 + 最大 / 平均偏差与边界偏差报告 |
+| 10 | 多边补面 **PatchFill** | `PatchFill` | 选一圈边界（N≥2，含曲面边）把洞补成**一张光滑 NURBS 面**：边界连续性 **G0 / G1 / G2** 三档（G2=曲率连续）、相邻面导数采样、内部曲线/点约束、**面积压力能量项**、**残差驱动的局部自适应插结**（XNURBS 没有的能力）、逐边缝隙 + 位掩码告警；实时预览 |
 
 每个插件都带自检命令（如 `VoronoiSelfTest`、`DiamondFacetSelfTest`），可在无界面下跑完整几何断言。
 
@@ -75,7 +76,7 @@ python -X utf8 implementation/native-gate.py build-panels
 ```bash
 pwsh -File implementation/refresh-payload-and-center.ps1   # 汇总 payload + 编插件中心 exe
 pwsh -File implementation/install-and-verify.ps1           # 静默安装 + 断言（注册表 / 工具条 / payload 逐字节一致）
-pwsh -File implementation/run-native-selftests.ps1         # 9 个插件自检一轮跑全（默认隐藏窗口，不弹窗）
+pwsh -File implementation/run-native-selftests.ps1         # 10 个插件自检一轮跑全（默认隐藏窗口，不弹窗）
 pwsh -File implementation/run-native-selftests.ps1 -Only Voronoi   # 单插件
 ```
 
