@@ -35,7 +35,7 @@ Also fixed / improved: concentric ripples are now perfect circles (main directio
 ## 繁體中文
 第 9 個外掛 **多重曲面轉單一曲面（SurfaceUnify）**：把複雜的多重曲面 / 曲面 / 擠出體 / 網格轉成**一張單一的開放式 NURBS 曲面** —— 邊界取原裸露邊界並完全逼近，內部沿基面法向**射線貼合**原曲面（凹袋 / 兜形殼體也不會變成扣一個蓋子），內孔投影到結果面做修剪保留；面板即時預覽並給出最大 / 平均 / 邊界偏差。指令：`SurfaceUnify`。另修正水波紋「同心漣漪」為正圓、重做第 9 個外掛圖示。
 '@
-$bodyObj = @{ tag_name = 'v1.2.0'; target_commitish = 'main'; name = 'v1.2.0 — 第 9 个插件「多重曲面转单一曲面」+ 水波纹同心涟漪改正圆 + 图标重做'; body = $notes; draft = $false; prerelease = $false }
+$bodyObj = @{ tag_name = 'v1.3.0'; target_commitish = 'main'; name = 'v1.3.0 — 第 10 个插件「多边补面 PatchFill」+ SurfaceUnify 交点精确 + G2 曲率连续'; body = $notes; draft = $false; prerelease = $false }
 $bodyFile = Join-Path $tmp 'release.json'
 [IO.File]::WriteAllText($bodyFile, ($bodyObj | ConvertTo-Json -Depth 5), [Text.UTF8Encoding]::new($false))
 

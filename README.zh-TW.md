@@ -12,7 +12,7 @@
 
 | 版本 | 下載 | 說明 |
 |---|---|---|
-| **v1.2.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.2.0/IVAN-CENTER.exe) | Windows x64 安裝器（3.3 MB，md5 `ddf66a708a37a431e7ba337c1f2dad9f`）
+| | **v1.3.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.3.0/IVAN-CENTER.exe) | Windows x64 安裝器（3.3 MB，md5 `ddf66a708a37a431e7ba337c1f2dad9f`）
 | v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 上一版（8 外掛，2.9 MB，md5 `4a7932421e68dfc91d64618c63f9f648`） | |
 
 1. **先關閉 Rhino**，再雙擊執行安裝器 → 自動安裝到 `%LOCALAPPDATA%\IVAN\plugins`（註冊 10 個外掛 + 寫入工具列）
