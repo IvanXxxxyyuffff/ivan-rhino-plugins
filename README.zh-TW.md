@@ -12,10 +12,11 @@
 
 | 版本 | 下載 | 說明 |
 |---|---|---|
-| **v1.1.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | Windows x64 安裝器（2.9 MB，md5 `4a7932421e68dfc91d64618c63f9f648`） |
+| **v1.2.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.2.0/IVAN-CENTER.exe) | Windows x64 安裝器（3.3 MB，md5 `ddf66a708a37a431e7ba337c1f2dad9f`）
+| v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 上一版（8 外掛，2.9 MB，md5 `4a7932421e68dfc91d64618c63f9f648`） | |
 
-1. **先關閉 Rhino**，再雙擊執行安裝器 → 自動安裝到 `%LOCALAPPDATA%\IVAN\plugins`（註冊 7 個外掛 + 寫入工具列）
-2. 開啟 Rhino：工具列上出現 7 個按鈕，點按鈕開面板即可使用
+1. **先關閉 Rhino**，再雙擊執行安裝器 → 自動安裝到 `%LOCALAPPDATA%\IVAN\plugins`（註冊 9 個外掛 + 寫入工具列）
+2. 開啟 Rhino：工具列上出現 9 個按鈕，點按鈕開面板即可使用
 3. 也可以從原始碼自行建置（見下）
 
 > 安裝包不含 Rhino 本體，需已安裝 Rhino 7 或 Rhino 8。外掛介面目前為**簡體中文**。
@@ -74,7 +75,7 @@ python -X utf8 implementation/native-gate.py build-panels
 ```bash
 pwsh -File implementation/refresh-payload-and-center.ps1   # 彙整 payload + 編譯外掛中心 exe
 pwsh -File implementation/install-and-verify.ps1           # 靜默安裝 + 斷言（登錄檔 / 工具列 / payload 逐位元組一致）
-pwsh -File implementation/run-native-selftests.ps1         # 7 個外掛自檢一輪跑完（預設隱藏視窗，不彈窗）
+pwsh -File implementation/run-native-selftests.ps1         # 9 個外掛自檢一輪跑完（預設隱藏視窗，不彈窗）
 pwsh -File implementation/run-native-selftests.ps1 -Only Voronoi   # 單一外掛
 ```
 

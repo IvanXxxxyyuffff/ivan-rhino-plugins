@@ -781,3 +781,8 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - **9 插件全量回归 ALL-PASS（140.4s）**：Voronoi 150 / Stripe 55 / Halftone 23 / RadialDots 37+1 / MeshFix 14 / DiamondFacet 86 / WaterRipple 101 / SurfaceUnify 114 / VapeVolume 3
 - 安装 9/9 逐字节一致（INSTALL-VERIFY PASS）；安装器 `IVAN-CENTER.exe` 3435520 bytes / md5 `ddf66a708a37a431e7ba337c1f2dad9f`
 - 图标：9 份 PanelTheme.cs md5 完全一致 + iconmake 方法体逐 token 一致；`ICONS-strip.png`（128px）/ `ICONS-strip-16.png`（16px 工具条尺寸放大 5 倍）已交付桌面
+- **Release v1.2.0**（9 插件版）：https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/tag/v1.2.0
+  附件 `IVAN-CENTER.exe` 3435520 bytes / md5 `ddf66a708a37a431e7ba337c1f2dad9f`（**上传后回下载重算核对过**）；v1.1.0（8 插件）/ v1.0.0（7 插件）保留为历史版本
+- 提交 `0cbdab4` 已推送到 `origin/main`
+- ⚠ **GCM 弹「Select an account」的根因与修法**：Windows 凭据里存了两个 github.com 账号（`x-access-token` + `IvanXxxxyyuffff`），不指定用户名时 GCM 每次都问 → `git config --global credential.https://github.com.username IvanXxxxyyuffff` 钉死后 1.0s 无弹窗返回；本机全局 `credential.helper` 还指向已不存在的 PortableGit 路径，要改成 `!"C:/Program Files/Git/mingw64/bin/git-credential-manager.exe"`（带空格必须用 `!` + 引号）。
+- 发布脚本：`implementation/github-release.ps1`（PAT 走 `git credential fill` + REST API，附件回下载核对 md5）

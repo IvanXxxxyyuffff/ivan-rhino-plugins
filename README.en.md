@@ -13,10 +13,11 @@ Every plugin is "one command + one parameter panel + live preview + headless sel
 
 | Version | Download | Notes |
 |---|---|---|
-| **v1.1.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | Windows x64 installer (2.9 MB, md5 `4a7932421e68dfc91d64618c63f9f648`) |
+| **v1.2.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.2.0/IVAN-CENTER.exe) | Windows x64 installer (3.3 MB, md5 `ddf66a708a37a431e7ba337c1f2dad9f`)
+| v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | Previous release (8 plugins, 2.9 MB, md5 `4a7932421e68dfc91d64618c63f9f648`) | |
 
-1. **Close Rhino first**, then run the installer → installs to `%LOCALAPPDATA%\IVAN\plugins` (registers 7 plugins + writes the toolbar)
-2. Open Rhino: 7 buttons appear on the toolbar — click one to open its panel
+1. **Close Rhino first**, then run the installer → installs to `%LOCALAPPDATA%\IVAN\plugins` (registers 9 plugins + writes the toolbar)
+2. Open Rhino: 9 buttons appear on the toolbar — click one to open its panel
 3. Or build from source (see below)
 
 > Rhino itself is not bundled; Rhino 7 or Rhino 8 must be installed. **The plugin UI is currently Simplified Chinese only.**

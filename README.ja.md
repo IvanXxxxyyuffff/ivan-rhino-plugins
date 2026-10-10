@@ -13,9 +13,10 @@
 
 | バージョン | ダウンロード | 備考 |
 |---|---|---|
-| **v1.1.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | Windows x64 インストーラー（2.9 MB、md5 `4a7932421e68dfc91d64618c63f9f648`） |
+| **v1.2.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.2.0/IVAN-CENTER.exe) | Windows x64 インストーラー（3.3 MB、md5 `ddf66a708a37a431e7ba337c1f2dad9f`）
+| v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 前バージョン（8 プラグイン、2.9 MB、md5 `4a7932421e68dfc91d64618c63f9f648`） | |
 
-1. **Rhino を終了してから**インストーラーを実行 → `%LOCALAPPDATA%\IVAN\plugins` にインストール（7 プラグインを登録し、ツールバーにボタンを追加）
+1. **Rhino を終了してから**インストーラーを実行 → `%LOCALAPPDATA%\IVAN\plugins` にインストール（9 プラグインを登録し、ツールバーにボタンを追加）
 2. Rhino を起動：ツールバーに 7 つのボタンが表示され、クリックでパネルが開きます
 3. ソースからビルドすることもできます（下記）
 
@@ -75,7 +76,7 @@ python -X utf8 implementation/native-gate.py build-panels
 ```bash
 pwsh -File implementation/refresh-payload-and-center.ps1   # payload を集約 + プラグインセンター exe をビルド
 pwsh -File implementation/install-and-verify.ps1           # サイレントインストール + 検証（レジストリ / ツールバー / payload がバイト一致）
-pwsh -File implementation/run-native-selftests.ps1         # 7 プラグインの自己テストを一括実行（非表示ウィンドウ）
+pwsh -File implementation/run-native-selftests.ps1         # 9 プラグインの自己テストを一括実行（非表示ウィンドウ）
 pwsh -File implementation/run-native-selftests.ps1 -Only Voronoi   # 単一プラグイン
 ```
 
