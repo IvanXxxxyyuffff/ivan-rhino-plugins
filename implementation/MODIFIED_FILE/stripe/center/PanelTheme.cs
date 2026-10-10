@@ -121,6 +121,7 @@ namespace IvanUi
                     else if (string.Equals(kind, "vape", StringComparison.OrdinalIgnoreCase)) GlassDrawVape(g, side, accent);
                     else if (string.Equals(kind, "meshfix", StringComparison.OrdinalIgnoreCase)) GlassDrawMeshFix(g, side, accent);
                     else if (string.Equals(kind, "diamond", StringComparison.OrdinalIgnoreCase)) GlassDrawDiamond(g, side, accent);
+                    else if (string.Equals(kind, "ripple", StringComparison.OrdinalIgnoreCase)) GlassDrawRipple(g, side, accent);
                     else GlassDrawStripe(g, side, accent);
                 }
                 return bitmap;
@@ -140,6 +141,7 @@ namespace IvanUi
             if (string.Equals(kind, "vape", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 44, 151, 211);
             if (string.Equals(kind, "meshfix", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 32, 138, 96);
             if (string.Equals(kind, "diamond", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 92, 76, 208);
+            if (string.Equals(kind, "ripple", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 22, 132, 152);
             if (string.Equals(kind, "app", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 38, 59, 89);
             return Color.FromArgb(255, 8, 127, 150);
         }
@@ -591,6 +593,49 @@ namespace IvanUi
                 for (int i = 0; i < 5; i++) outline[i] = ring[i];
                 outline[5] = ring[0];
                 g.DrawLines(edge, outline);
+            }
+        }
+
+        /// <summary>水波纹：三道错相的正弦水波 + 波峰高光（一眼是「水波纹」）</summary>
+        private static void GlassDrawRipple(Graphics g, int size, Color accent)
+        {
+            float cx = size * 0.5f;
+            float w = size * 0.64f;
+            float amp = size * 0.052f;
+            float stroke = Math.Max(1.0f, size * 0.062f);
+            float[] ys = { size * 0.33f, size * 0.50f, size * 0.67f };
+            float[] phase = { 0.0f, 0.55f, 1.1f };
+            using (var path = new GraphicsPath())
+            {
+                for (int k = 0; k < ys.Length; k++)
+                {
+                    int n = 36;
+                    var pts = new PointF[n + 1];
+                    for (int i = 0; i <= n; i++)
+                    {
+                        float t = i / (float)n;
+                        float x = cx - w * 0.5f + w * t;
+                        float y = ys[k] + (float)Math.Sin((t * 2.0 + phase[k]) * Math.PI) * amp;
+                        pts[i] = new PointF(x, y);
+                    }
+                    path.StartFigure();
+                    path.AddCurve(pts);
+                }
+                using (Pen dark = new Pen(Color.FromArgb(196, 14, 26, 38), stroke + Math.Max(0.7f, size * 0.028f)))
+                using (Pen main = new Pen(accent, stroke))
+                {
+                    dark.LineJoin = LineJoin.Round; main.LineJoin = LineJoin.Round;
+                    dark.StartCap = LineCap.Round; dark.EndCap = LineCap.Round;
+                    main.StartCap = LineCap.Round; main.EndCap = LineCap.Round;
+                    g.DrawPath(dark, path);
+                    g.DrawPath(main, path);
+                }
+            }
+            using (Pen hi = new Pen(Color.FromArgb(150, 255, 255, 255), Math.Max(0.6f, stroke * 0.32f)))
+            {
+                hi.StartCap = LineCap.Round; hi.EndCap = LineCap.Round;
+                g.DrawLine(hi, cx - w * 0.30f, ys[1] - amp * 0.80f, cx - w * 0.08f, ys[1] - amp * 0.92f);
+                g.DrawLine(hi, cx + w * 0.16f, ys[2] - amp * 0.80f, cx + w * 0.36f, ys[2] - amp * 0.90f);
             }
         }
 

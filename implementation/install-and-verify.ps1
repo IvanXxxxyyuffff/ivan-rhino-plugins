@@ -23,7 +23,8 @@ $defs = @(
   @{ Key='VoronoiTexture';  Guid='5D2A9F41-7C63-4E18-B095-8A4F1D6C3E72'; Res='VoronoiTexture-rh8.rhp';   Installed='VoronoiTexture.rhp';  Cmd='VoronoiTexture' },
   @{ Key='RadialDots';      Guid='F54E41C9-847C-4ED5-AE5C-FD905C55A1B6'; Res='RadialDots-rh8.rhp';       Installed='RadialDots.rhp';      Cmd='RadialDots' },
   @{ Key='MeshFix';         Guid='8B1E47D2-6A35-4C09-9F82-3D6E15A7B0C4'; Res='MeshFix-rh8.rhp';          Installed='MeshFix.rhp';         Cmd='MeshFix' },
-  @{ Key='DiamondFacet';    Guid='D2F75B18-4E69-4A3C-8B51-7C0E29D6F3A8'; Res='DiamondFacet-rh8.rhp';     Installed='DiamondFacet.rhp';    Cmd='DiamondFacet' }
+  @{ Key='DiamondFacet';    Guid='D2F75B18-4E69-4A3C-8B51-7C0E29D6F3A8'; Res='DiamondFacet-rh8.rhp';     Installed='DiamondFacet.rhp';    Cmd='DiamondFacet' },
+  @{ Key='WaterRipple';     Guid='6C615EE9-EADB-4346-A6F5-633CA3FD7D16'; Res='WaterRipple-rh8.rhp';      Installed='WaterRipple.rhp';     Cmd='WaterRipple' }
 )
 
 $rhinos = @(Get-Process -Name Rhino -ErrorAction SilentlyContinue)
@@ -48,9 +49,9 @@ if (-not $SkipInstall) {
     Copy-Item -LiteralPath $tempLog -Destination 'E:\IVAN-LiquidGlass-preview\implementation\DIAMOND-silent-install.log' -Force
     $reg = ([regex]::Matches($log, '已注册到 Rhino 8')).Count
     $btn = [regex]::Match($log, '生成工具条[^\r\n]*?（(\d+) 个按钮）')
-    Write-Output ("LOG 注册 {0}/7；工具条 {1} 个按钮；工具条登记 {2}" -f $reg, $(if ($btn.Success) { $btn.Groups[1].Value } else { '?' }), $(if ($log -match '工具条已登记') { 'OK' } else { 'MISSING' }))
-    if ($reg -ne 7) { $fail += "日志里注册数 $reg ≠ 7" }
-    if (-not $btn.Success -or $btn.Groups[1].Value -ne '7') { $fail += '工具条按钮数 ≠ 7' }
+    Write-Output ("LOG 注册 {0}/{1}；工具条 {2} 个按钮；工具条登记 {3}" -f $reg, $defs.Count, $(if ($btn.Success) { $btn.Groups[1].Value } else { '?' }), $(if ($log -match '工具条已登记') { 'OK' } else { 'MISSING' }))
+    if ($reg -ne $defs.Count) { $fail += "日志里注册数 $reg ≠ $($defs.Count)" }
+    if (-not $btn.Success -or $btn.Groups[1].Value -ne "$($defs.Count)") { $fail += "工具条按钮数 ≠ $($defs.Count)" }
   }
 }
 
@@ -64,7 +65,7 @@ foreach ($d in $defs) {
       ((Get-FileHash -LiteralPath $a -Algorithm SHA256).Hash -eq (Get-FileHash -LiteralPath $b -Algorithm SHA256).Hash)) { $same++ }
   else { $fail += "payload≠已安装：$($d.Key)" }
 }
-Write-Output ("PAYLOAD↔INSTALLED {0}/7 逐字节一致" -f $same)
+Write-Output ("PAYLOAD↔INSTALLED {0}/{1} 逐字节一致" -f $same, $defs.Count)
 
 # 注册表 + RUI
 $regOk = 0
@@ -72,7 +73,7 @@ foreach ($d in $defs) {
   $fn = (Get-ItemProperty -LiteralPath "HKCU:\Software\MCNeel\Rhinoceros\8.0\Plug-Ins\$($d.Guid)\PlugIn" -ErrorAction SilentlyContinue).FileName
   if ($fn -and $fn -like "*$($d.Key)*") { $regOk++ } else { $fail += "注册表缺：$($d.Key)" }
 }
-Write-Output ("REGISTRY {0}/7" -f $regOk)
+Write-Output ("REGISTRY {0}/{1}" -f $regOk, $defs.Count)
 
 $rui = Join-Path $pluginsRoot 'IVAN-CENTER.rui'
 $items = 0; $cmds = @()
@@ -82,7 +83,7 @@ if (Test-Path -LiteralPath $rui) {
   $cmds = [regex]::Matches($txt, '! _([A-Za-z]+)') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique
 }
 Write-Output ("RUI macro_item={0}；命令：{1}" -f $items, ($cmds -join ', '))
-if ($items -ne 7) { $fail += "RUI 项数 $items ≠ 7" }
+if ($items -ne $defs.Count) { $fail += "RUI 项数 $items ≠ $($defs.Count)" }
 foreach ($d in $defs) { if ($cmds -notcontains $d.Cmd) { $fail += "RUI 缺命令：$($d.Cmd)" } }
 
 if ($fail.Count -eq 0) { Write-Output 'INSTALL-VERIFY: PASS'; exit 0 }

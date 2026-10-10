@@ -167,6 +167,23 @@ namespace IvanCenter
                 Deps8Name = "DiamondFacet.deps.json", Runtime8Name = "DiamondFacet.runtimeconfig.json",
                 IconKind = "diamond"
             },
+            new PluginDef
+            {
+                Key = "WaterRipple",
+                Name = "水波纹",
+                EnName = "WaterRipple",
+                Desc = "在曲面 / 多重曲面（当成一整个面，波纹跨面连续）/ 闭合平面曲线边界上生成水波纹：有机水波（多方向随机叠加）/ 定向条带 / 同心涟漪 三种波形可切换，波长、波高、波数、方向、方向散布、波峰形状、边缘收平、随机种子可调；输出网格面，勾「一键平滑」转成细分曲面（SubD）",
+                Guid7 = "901D517B-DBFD-4AD8-9A7B-82F465031C1F",
+                Guid8 = "6C615EE9-EADB-4346-A6F5-633CA3FD7D16",
+                Cmd = "WaterRipple",
+                ExtraCommands = "WaterRippleSelfTest;WaterRipplePickTarget",
+                Res7 = "p_rip7", Res8 = "p_rip8",
+                File7 = "WaterRipple-rh7.rhp", File8 = "WaterRipple.rhp",
+                Res8Dll = "p_rip8_dll",
+                Res8Deps = "j_rip8_deps", Res8Runtime = "j_rip8_rt",
+                Deps8Name = "WaterRipple.deps.json", Runtime8Name = "WaterRipple.runtimeconfig.json",
+                IconKind = "ripple"
+            },
         };
 
         public static string RootDir

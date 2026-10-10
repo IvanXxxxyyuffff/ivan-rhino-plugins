@@ -34,12 +34,14 @@ THEME_PATHS = [
     "stripe/center/PanelTheme.cs",
     "stripe/src/PanelTheme.cs",
     "voronoi/src/PanelTheme.cs",
+    "waterripple/src/PanelTheme.cs",
 ]
 PANEL_TYPES = {
     "halftone/src/HalftoneUi.cs": "HalftonePanel",
     "radialdots/src/RadialDotsUi.cs": "RadialDotsPanel",
     "voronoi/src/VoronoiUi.cs": "VoronoiPanel",
     "stripe/src/StripePanel.cs": "StripePanel",
+    "waterripple/src/WaterRippleUi.cs": "WaterRipplePanel",
 }
 VOLUME_PATH = "src/VapeVolume/UI/VolumeDialog.cs"
 CENTER_PATH = "stripe/center/CenterForm.cs"

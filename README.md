@@ -12,7 +12,7 @@
 
 | 版本 | 下载 | 说明 |
 |---|---|---|
-| **v1.0.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.0.0/IVAN-CENTER.exe) | Windows x64 安装器（2.7 MB，md5 `23b3034dc7da712527ab8eefc183c528`） |
+| **v1.1.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | Windows x64 安装器（2.9 MB，md5 `4a7932421e68dfc91d64618c63f9f648`） |
 
 1. **先关闭 Rhino**，双击运行安装器 → 自动装到 `%LOCALAPPDATA%\IVAN\plugins`（注册 7 个插件 + 写入工具条）
 2. 打开 Rhino：工具条上出现 7 个按钮，点按钮开面板即可用
@@ -31,6 +31,7 @@
 | 5 | 径向渐变圆点 **RadialDots** | `RadialDots` | 按半径渐变的圆点图案：4 种阵列 × 5 种图形，尺寸按峰值位置与衰减渐变；重叠图形自动布尔合并 |
 | 6 | 网格修复 **MeshFix** | `MeshFix` | 一键修复「着色/渲染模式下复杂修剪曲面只剩边缘线、面体不显示」：把物件渲染网格的「最大长宽比」由 0 改成 6 并重建；**无面板**，选中物件修选中的、没选中自动扫描整份文件 |
 | 7 | 钻石切面 **DiamondFacet** | `DiamondFacet` | 平面/闭合曲线边界内生成凹凸钻石切面：随机三角剖分 + 顶点随机高低，可固定边界；输出「仅线框 / 面」二选一，面模式可**每个三角切面细分出一张网格片**并细分 |
+| 8 | 水波纹 **WaterRipple** | `WaterRipple` | 曲面 / 多重曲面（当成一整个面）/ 闭合平面曲线边界上生成水波纹：**有机水波 / 定向条带 / 同心涟漪**三种波形可切换，波长、波高、波数、主方向、方向散布、波峰形状可调；**固定边界 + 边界过渡**（宽度 / 平滑度）；输出网格面，勾「一键平滑」转成**细分曲面（SubD）**（边界自动打 crease，角不收） |
 
 每个插件都带自检命令（如 `VoronoiSelfTest`、`DiamondFacetSelfTest`），可在无界面下跑完整几何断言。
 

@@ -701,3 +701,43 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - 改说明 / 改简介：`PATCH /repos/{o}/{r}/releases/{id}`、`PATCH /repos/{o}/{r}`
 - 请求体一律 `[IO.File]::WriteAllText(path, json, UTF8 无 BOM)` + `curl --data-binary "@file"`；响应 `[IO.File]::ReadAllText(path, UTF8) | ConvertFrom-Json`
   （直接管道 `curl | ConvertFrom-Json` 遇到中文会炸：PowerShell 按 ANSI 解码 UTF-8 字节）
+
+## 17. 第 8 个插件「水波纹 WaterRipple」（2026-10-10，用户口径：按参考图做水波纹；三种波形可切换；输出网格面 + 一键平滑出 SubD；加固定边界与边界过渡；集成进插件中心）
+
+### 交付内容
+- 工程：`MODIFIED_FILE/waterripple/`（`Rhino7/WaterRipple.csproj` = net48，`Rhino8/WaterRipple.csproj` = net7.0-windows；`src/` = Core / Ui / Plugin / SelfTest + `PanelTheme.cs` 副本）
+- 命令：`WaterRipple`（参数面板）、`WaterRippleSelfTest`（无头自检）、`WaterRipplePickTarget`（面板拾取）
+- 图标：新种类 `ripple`（三道青色水波，accent #168498）→ 主题 `GlassDrawRipple` + `iconmake/Program.cs` 同步（方法逐字一致，`--kind` 模式可导出 PNG 人工核对）；**8 份 `PanelTheme.cs` 逐字节一致**，主题一改就要全量重编 8 个插件 + 中心
+- 图层：`水波纹-网格`（不勾平滑）/ `水波纹-平滑`（勾了一键平滑 → **只出 SubD**，不再出网格）
+- 中心集成：`Repo.Plugins` 第 8 项（GUID7 `901D517B-…C1F` / GUID8 `6C615EE9-…D16`）、`Center.csproj` 5 个 payload 资源（`p_rip7/p_rip8/p_rip8_dll/j_rip8_deps/j_rip8_rt`）、工具条第 8 个按钮、`refresh-payload-and-center.ps1` / `native-gate.py` / `final-ui-audit.py` / `install-and-verify.ps1`（数量断言改成 `$defs.Count`）/ `run-native-selftests.ps1` 都加了它
+
+### 几何口径
+1. **输入**：单一曲面 / 多重曲面（**当成一整个面**）/ 闭合平面曲线（封成平面片）。网格、细分物件、点明确拒绝并给理由（面板拾取按钮红绿按老口径）。
+2. **参考平面**：平面输入用自身平面；弯曲输入对网格顶点 `Plane.FitPlaneToPoints` 拟合（采样点都贴在拟合平面上 → 视为平面输入，多重曲面的共面拼片走这条）。
+3. **网格化**：`Mesh.CreateFromBrep` + `MaximumEdgeLength = 波长/每波长分段`（**剖分密度跟着波长走** —— 高光面要光滑全靠这条）；多重曲面 `Weld` 缝上顶点 → 跨面不裂。
+4. **位移**：沿**顶点法向**，相位取参考平面 2D 坐标 → **多重曲面跨面连续**（自检断言：每个顶点 Z 精确等于波形场值）。
+5. **三种波形**（**每种波形下每个参数都有作用，面板不留灰行** —— 用户实测口径：「灰了就是点了没反应」）：
+
+| 参数 | 有机水波 | 定向条带 | 同心涟漪 |
+|---|---|---|---|
+| 波数 | 叠加几个方向 | 叠几层谐波（振幅递减、最后归一） | 叠几列涟漪（干涉） |
+| 主方向 | 主方向 | 条带方向 | **椭圆环长轴方向**（1.45 拉伸，图案保持居中） |
+| 方向散布 | 方向随机范围 | **条带摆动幅度**（低频横波） | **环的起伏**（3θ 角向谐波） |
+| 波长 / 波高 / 波峰形状 / 随机种子 | 三种通用；**种子给相位**（所以条带/同心下「换一种」也有反应） | | |
+
+6. **固定边界**（勾选框）：边界顶点**硬锁**（位移 = 0）+ 从边界向内过渡（`过渡宽度` mm，给 0 用 `波长×0.5` 兜底；`过渡平滑度` 0 线性 → 0.5 smoothstep → 1 smootherstep，见 `BlendCurve`）。不勾 = 全幅到边（参考图 1/2 的口径）。拖过渡参数会**自动勾上固定边界**（否则它们没作用）。闭合体（没有开放边界）时按全幅并在报告里写明。
+7. **一键平滑 → SubD + 边界保形**：`SubD.CreateFromMesh` 后，固定边界时把**边界边打 `SubDEdgeTag.Crease`**、**边界顶点打 `SubDVertexTag.Corner`**，再 `UpdateAllTagsAndSectorCoefficients()`。不做这步 Catmull-Clark 极限面会把边界往里收、四个角磨圆（用户实测：「一键平滑成 SubD 之后 边界就没有固定到 4 个节点上了」）。实测 120×60：打 crease 后极限面包围盒 **= 120×60**、角点到极限面距离 **0**；不打 crease 角明显被磨掉。
+
+### 关键结论（别踩）
+1. **Rhino 7 / 8 的 SubD API 不一样**：Rhino 7 没有 `SubDVertex.Tag` / `SubDVertexList.SetVertexTags`（角点标记是 8 才有的）；`SubD.ToBrep()` 在 7 里必须传 `SubDToBrepOptions`、没有无参重载 → 相关代码一律 `#if !RH7` 隔开（两套 TFM 都要能编过）。
+2. **`SubDVertexList` 既不能 foreach 也不能索引**（Rhino 8 实测）：顶点要经 `SubDEdge.VertexFrom / VertexTo` 取，再用 `SetVertexTags(IEnumerable<SubDVertex>, tag)` 批量打标；`SubDEdgeList` 可以 foreach ✓。`SubDEdge.Tag` 两代都有 ✓。
+3. **「接线测试」是本轮最有价值的方法**：面板加 `SetParam(行名, 值)` / `ParamEnabled(行名)` 自检钩子，用例里**逐参数在面板上改值 → 生成 → 网格特征值必须变**（3 波形 × 10 参数 = 30 项）。第一次跑出 25 条失败，查出是钩子的行匹配写错（标签 Top=y+6、数字框 Top=y+2，**差 4px**）；修好后立刻暴露两个真问题：随机种子在条带/同心下完全没用、波数在条带下只有 1↔2 有区别。
+4. **过渡类参数要量「过渡带内」的幅度**：整体最大 |Z| 由内部全幅顶点主导，量它看不出过渡宽度/平滑度的差别（实测 1.849 vs 1.849 假通过）→ 用 `BandAbsZ(mesh, lo, hi)` 只统计离边界 lo~hi 的顶点；且平滑度只在 **t<0.5 半段**单调（smootherstep 在后半段反而比线性大）。
+5. `Plane.ClosestPoint(Point3d)` 返回的是**平面上的 3D 点**（不是 2D 坐标）→ 要 2D 自己用平面轴点乘（`To2d`）。
+6. `Mesh.Normals.ComputeFaceNormals()` 不存在（面法向在 `mesh.FaceNormals`）；`Brep` 没有 `IsPlanar`（用 `BrepFace.TryGetPlane`，或拟合平面 + 平面度判定）。
+7. 3 点闭合折线**必然共面**（「非平面曲线」用例要用 ≥4 点且不共面），否则用例自己写错。
+
+### 本轮验证
+- 水波纹自检 **100/0**（含三波形接线 30 项、固定边界硬锁、过渡宽度/平滑度、SubD crease 前后对照、图标渲染）
+- 8 插件全量回归 **ALL-PASS**（112.8s：Voronoi 150 / Stripe 55 / Halftone 23 / RadialDots 37+1 / MeshFix 14 / DiamondFacet 86 / WaterRipple 100 / VapeVolume 3）
+- 安装 8/8 逐字节一致（INSTALL-VERIFY PASS）；安装器 `IVAN-CENTER.exe` 3025408 bytes / md5 `4a7932421e68dfc91d64618c63f9f648`

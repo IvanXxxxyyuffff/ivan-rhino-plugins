@@ -13,7 +13,7 @@ Every plugin is "one command + one parameter panel + live preview + headless sel
 
 | Version | Download | Notes |
 |---|---|---|
-| **v1.0.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.0.0/IVAN-CENTER.exe) | Windows x64 installer (2.7 MB, md5 `23b3034dc7da712527ab8eefc183c528`) |
+| **v1.1.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | Windows x64 installer (2.9 MB, md5 `4a7932421e68dfc91d64618c63f9f648`) |
 
 1. **Close Rhino first**, then run the installer → installs to `%LOCALAPPDATA%\IVAN\plugins` (registers 7 plugins + writes the toolbar)
 2. Open Rhino: 7 buttons appear on the toolbar — click one to open its panel
@@ -32,6 +32,7 @@ Every plugin is "one command + one parameter panel + live preview + headless sel
 | 5 | **RadialDots** | `RadialDots` | Radially graded dot pattern: 4 arrays × 5 shapes, sized by peak position and falloff; overlapping shapes are boolean-unioned automatically |
 | 6 | **MeshFix** | `MeshFix` | One-click fix for "in shaded/rendered mode a complex trimmed surface shows only edges": sets the object's render-mesh maximum aspect ratio from 0 to 6 and rebuilds it. **No panel** — fixes the selection, or scans the whole file when nothing is selected |
 | 7 | **DiamondFacet** | `DiamondFacet` | Faceted diamond relief inside a planar/closed-curve boundary: random triangulation + random vertex heights, optional locked boundary; output is either **wireframe only** or **faces**, where each triangle facet becomes its own mesh patch and can be subdivided |
+| 8 | **WaterRipple** | `WaterRipple` | Water ripples on a surface / polysurface (treated as one face) / closed planar boundary: three switchable wave modes (**organic, directional bands, concentric rings**) with wavelength, height, wave count, direction, spread and crest shape; **locked boundary** with blend width & smoothness; outputs a mesh, or a **SubD** via one-click smooth (boundary creased so corners stay sharp) |
 
 Each plugin ships a self-test command (e.g. `VoronoiSelfTest`, `DiamondFacetSelfTest`) that runs full geometric assertions headlessly.
 

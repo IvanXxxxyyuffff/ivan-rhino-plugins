@@ -111,8 +111,8 @@
 
 ## 8. 图标（一套家族，程序化绘制，不用图片）
 
-- 安装器：`IconFactory.Create(kind, size)` —— 中性圆角底板（白→浅灰渐变 + 边）+ 单一深色系强调色图形；已有 kind：`stripe`(青 #0E7490) / `vape`(蓝) / `halftone`(靛 #3E4C9A) / `voronoi`(琥珀) / `radialdots`(紫 #603EBA) / **`meshfix`(绿 #208A60，2026-10-08 加)**。新插件**必须新增一个 kind 和一种色相**，别复用别人的。
-- **图标改动必须同时改 7 个文件**：6 份 `PanelTheme.cs`（shared + 4 个插件 src + stripe\center）+ `iconmake\Program.cs`（`GlassDraw*` 方法体要逐 token 一致，`final-ui-audit.py` 的 `theme_to_iconmake_renderer_parity` 会校验；6 份 PanelTheme 的 md5 也必须一致）。改完必须**全量重建所有插件** —— `shared\PanelTheme.cs` 是被 5 个插件一起编译的（实测加一个图标 = 每个插件二进制 +1536 字节）。
+- 安装器：`IconFactory.Create(kind, size)` —— 中性圆角底板（白→浅灰渐变 + 边）+ 单一深色系强调色图形；已有 kind：`stripe`(青 #0E7490) / `vape`(蓝) / `halftone`(靛 #3E4C9A) / `voronoi`(琥珀) / `radialdots`(紫 #603EBA) / **`meshfix`(绿 #208A60，2026-10-08 加)** / `diamond`(紫 #5C4CD0) / **`ripple`(青 #168498，2026-10-10 加，水波纹)**。新插件**必须新增一个 kind 和一种色相**，别复用别人的。
+- **图标改动必须同时改 9 个文件**：8 份 `PanelTheme.cs`（shared + 6 个插件 src + stripe\center + waterripple）+ `iconmake\Program.cs`（`GlassDraw*` 方法体要逐 token 一致，`final-ui-audit.py` 的 `theme_to_iconmake_renderer_parity` 会校验；8 份 PanelTheme 的 md5 也必须一致）。改完必须**全量重建所有插件 + 中心**（`shared\PanelTheme.cs` 是被所有面板一起编译的；实测加一个图标 = 每个插件二进制 +1536 字节）。`iconmake.exe --kind <kind> <out.png>` 可单独导出图标 PNG 人工核对（2026-10-10 加）。
 - 面板：`Theme.DrawGlyph(g, rect, kind, col)`（头部小图标）+ `Theme.MakeFormIcon(kind, 16)`（窗体标题栏图标）。**kind 未命中会落到「条纹」默认分支**，所以两个文件都要加分支。
 - EXE 应用图标：`<ApplicationIcon>app.ico</ApplicationIcon>`（多尺寸 .ico；<256 用 DIB 条目，256 用 PNG），并由 `iconmake` 程序生成。
 

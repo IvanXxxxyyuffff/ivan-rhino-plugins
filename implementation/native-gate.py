@@ -17,12 +17,12 @@ def run(label,argv,cwd=None):
 if __name__=='__main__':
  action=sys.argv[1]
  if action=='build-panels':
-  jobs=[('voronoi8','voronoi/Rhino8/VoronoiTexture.csproj'),('voronoi7','voronoi/Rhino7/VoronoiTexture.csproj'),('stripe8','stripe/Rhino8/StripeOnSurface.csproj'),('stripe7','stripe/Rhino7/StripeOnSurface.csproj'),('halftone8','halftone/Rhino8/HalftoneDots.csproj'),('halftone7','halftone/Rhino7/HalftoneDots.csproj'),('radialdots8','radialdots/Rhino8/RadialDots.csproj'),('radialdots7','radialdots/Rhino7/RadialDots.csproj'),('meshfix8','meshfix/Rhino8/MeshFix.csproj'),('meshfix7','meshfix/Rhino7/MeshFix.csproj'),('diamondfacet8','diamondfacet/Rhino8/DiamondFacet.csproj'),('diamondfacet7','diamondfacet/Rhino7/DiamondFacet.csproj')]
+  jobs=[('voronoi8','voronoi/Rhino8/VoronoiTexture.csproj'),('voronoi7','voronoi/Rhino7/VoronoiTexture.csproj'),('stripe8','stripe/Rhino8/StripeOnSurface.csproj'),('stripe7','stripe/Rhino7/StripeOnSurface.csproj'),('halftone8','halftone/Rhino8/HalftoneDots.csproj'),('halftone7','halftone/Rhino7/HalftoneDots.csproj'),('radialdots8','radialdots/Rhino8/RadialDots.csproj'),('radialdots7','radialdots/Rhino7/RadialDots.csproj'),('meshfix8','meshfix/Rhino8/MeshFix.csproj'),('meshfix7','meshfix/Rhino7/MeshFix.csproj'),('diamondfacet8','diamondfacet/Rhino8/DiamondFacet.csproj'),('diamondfacet7','diamondfacet/Rhino7/DiamondFacet.csproj'),('waterripple8','waterripple/Rhino8/WaterRipple.csproj'),('waterripple7','waterripple/Rhino7/WaterRipple.csproj')]
   for tag,p in jobs: run('build-'+tag,[D,'build',str(C/p),'-c','Release','--nologo','-v','minimal'])
  elif action=='build-vape-center':
   run('build-vape',[D,'build',str(C/'src/VapeVolume/VapeVolume.csproj'),'-c','Release','--nologo','-v','minimal'])
   P=C/'stripe/center/payload'
-  for folder,name in [('voronoi','VoronoiTexture'),('stripe','StripeOnSurface'),('halftone','HalftoneDots'),('radialdots','RadialDots'),('meshfix','MeshFix'),('diamondfacet','DiamondFacet')]:
+  for folder,name in [('voronoi','VoronoiTexture'),('stripe','StripeOnSurface'),('halftone','HalftoneDots'),('radialdots','RadialDots'),('meshfix','MeshFix'),('diamondfacet','DiamondFacet'),('waterripple','WaterRipple')]:
    for ver in [7,8]: shutil.copy2(C/folder/'out'/('rhino'+str(ver))/(name+'.rhp'),P/(name+'-rh'+str(ver)+'.rhp'))
    for suffix in ['.dll','.deps.json','.runtimeconfig.json']:
     src=C/folder/'out/rhino8'/(name+suffix)
