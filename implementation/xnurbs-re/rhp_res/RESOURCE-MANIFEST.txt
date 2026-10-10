@@ -1,0 +1,13 @@
+# resources of C:/Program Files/Rhino 7/Plug-ins/XNurbsRhino 5/XNurbsRhino.rhp
+784                  id=2000     lang=0x0804 rva=0x26334 size=       2 -> 784_2000_2052.bin
+RT_BITMAP            id=2005     lang=0x0804 rva=0x26338 size=     808 -> RT_BITMAP_2005_2052.bin
+RT_ICON              id=1        lang=0x0804 rva=0x26660 size=   14866 -> RT_ICON_1_2052.bin
+RT_ICON              id=2        lang=0x0804 rva=0x2a074 size=    9640 -> RT_ICON_2_2052.bin
+RT_ICON              id=3        lang=0x0804 rva=0x2c61c size=    4264 -> RT_ICON_3_2052.bin
+RT_ICON              id=4        lang=0x0804 rva=0x2d6c4 size=    1128 -> RT_ICON_4_2052.bin
+RT_DIALOG            id=2000     lang=0x0804 rva=0x2db2c size=    1432 -> RT_DIALOG_2000_2052.bin
+RT_STRING            id=126      lang=0x0804 rva=0x2e0c4 size=     176 -> RT_STRING_126_2052.bin
+RT_STRING            id=127      lang=0x0804 rva=0x2e174 size=     256 -> RT_STRING_127_2052.bin
+RT_GROUP_ICON        id=100      lang=0x0804 rva=0x2e274 size=      62 -> RT_GROUP_ICON_100_2052.bin
+RT_VERSION           id=1        lang=0x0804 rva=0x2e2b4 size=     768 -> RT_VERSION_1_2052.bin
+RT_MANIFEST          id=2        lang=0x0804 rva=0x2e5b4 size=     548 -> RT_MANIFEST_2_2052.bin

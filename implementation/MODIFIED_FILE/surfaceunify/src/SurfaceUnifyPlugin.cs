@@ -166,7 +166,7 @@ namespace SurfaceUnifyPattern
     /// 和拟合偏差打成报告，结果写进当前文档（图层「单一曲面」）。
     /// 支持无人值守：%LOCALAPPDATA%\IVAN\logs\run-surfaceunify-probe.flag，内容为 key=value 多行：
     ///   open=D:\...\x.3dm   save=D:\...\out.3dm   capture=%TEMP%\x.png   report=...
-    ///   grid=12  fit=1  smooth=0.15  lock=1  holes=1  snap=0
+    ///   grid=12  fit=1  smooth=0.15  lock=1  holes=1  trim=1  snap=0
     /// </summary>
     public class SurfaceUnifyProbeCommand : Command
     {
@@ -216,6 +216,7 @@ namespace SurfaceUnifyPattern
             if (kv.TryGetValue("snap", out v) && double.TryParse(v, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out d)) s.MaxSnapDistance = d;
             if (kv.TryGetValue("lock", out v)) s.LockBoundary = !(v == "0" || v.Equals("false", StringComparison.OrdinalIgnoreCase));
             if (kv.TryGetValue("holes", out v)) s.KeepHoles = !(v == "0" || v.Equals("false", StringComparison.OrdinalIgnoreCase));
+            if (kv.TryGetValue("trim", out v)) s.AllowTrim = !(v == "0" || v.Equals("false", StringComparison.OrdinalIgnoreCase));
 
             RhinoDoc doc = RhinoDoc.ActiveDoc;
             string open = Get(kv, "open");

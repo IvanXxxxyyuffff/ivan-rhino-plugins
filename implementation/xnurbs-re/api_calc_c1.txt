@@ -1,0 +1,13 @@
+### VK_Calc_C1_dd entry RVA = 0x2ed1c50
+Traceback (most recent call last):
+  File "E:\IVAN-LiquidGlass-preview\implementation\xnurbs-re\disas.py", line 100, in <module>
+    main()
+  File "E:\IVAN-LiquidGlass-preview\implementation\xnurbs-re\disas.py", line 74, in main
+    lines = disas_range(pe, md, base, rva, 0x60,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\IVAN-LiquidGlass-preview\implementation\xnurbs-re\disas.py", line 33, in disas_range
+    if ins.mnemonic in ('call', 'jmp') and ins.operands:
+                                           ^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\site-packages\capstone\__init__.py", line 782, in __getattr__
+    raise CsError(CS_ERR_DETAIL)
+capstone.CsError: Details are unavailable (CS_ERR_DETAIL)

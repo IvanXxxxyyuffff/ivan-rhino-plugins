@@ -201,6 +201,23 @@ namespace IvanCenter
                 Deps8Name = "SurfaceUnify.deps.json", Runtime8Name = "SurfaceUnify.runtimeconfig.json",
                 IconKind = "unify"
             },
+            new PluginDef
+            {
+                Key = "PatchFill",
+                Name = "多边补面",
+                EnName = "PatchFill",
+                Desc = "选一圈边界（曲线 / 曲面边，N ≥ 2，N≠4 也行）补出一张光滑的 NURBS 面：边界位置精确（夹持节点 + 硬约束，边界缝隙 1e-6 量级）、内部加权最小二乘 + 薄板能量、可选 G1 与相邻面相切（切线带 + 跨向导数约束）、可选内部曲线/点约束、残差驱动迭代局部补约束；报告给逐边缝隙 / 最大平均偏差 / G1 法向夹角 / 位掩码告警",
+                Guid7 = "FEAB732C-606E-41CD-BB13-894894D73F08",
+                Guid8 = "016FBAD8-C5C9-49E7-B56C-9CCEB364DE06",
+                Cmd = "PatchFill",
+                ExtraCommands = "PatchFillSelfTest;PatchFillPickTarget;PatchFillProbe",
+                Res7 = "p_pf7", Res8 = "p_pf8",
+                File7 = "PatchFill-rh7.rhp", File8 = "PatchFill.rhp",
+                Res8Dll = "p_pf8_dll",
+                Res8Deps = "j_pf8_deps", Res8Runtime = "j_pf8_rt",
+                Deps8Name = "PatchFill.deps.json", Runtime8Name = "PatchFill.runtimeconfig.json",
+                IconKind = "patchfill"
+            },
         };
 
         public static string RootDir

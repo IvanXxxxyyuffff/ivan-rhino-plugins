@@ -1,0 +1,1373 @@
+0000004d A !This program cannot be run in DOS mode.
+000000ff A (Rich
+00000218 A .text
+0000023f A `.rdata
+00000267 A @.data
+00000290 A .pdata
+000002b7 A @.rsrc
+000002df A @.reloc
+00000639 A \$0H
+00000653 A UWATAVAWH
+000006f7 A EPE3
+0000082b A )EPL
+0000084a A )E`E3
+000009d0 A D$ E3
+000009d8 A T$ H
+00000a2f A T$@H
+00000e12 A A_A^A\_]
+00000e44 A D$`H
+00000e53 A D$PH
+00000e97 A t$0H
+00000e9c A t$8H
+00000ea1 A t$@H
+00000eb0 A D$@H
+00000f49 A L$`H3
+00000f56 A \$pI
+00000fce A T$0H
+00001029 A D$0E3
+00001031 A \$ H
+000010e3 A VWAVH
+00001135 A T$0I
+000011bb A A^_^
+00001253 A UWAVH
+00001302 A T$@I
+00001352 A T$HH
+00001361 A D$Hf
+00001377 A D$XH
+000013a3 A D$HH
+000013a8 A T$`H
+00001401 A D$PE3
+0000142d A T$Pf
+00001437 A L$Hf
+0000144e A D$ I
+00001514 A D$(H
+000015cb A D$ L
+00001638 A A^_]
+00001871 A |$ ATAVAWH
+000018ef A t&H;
+000018fa A \$@H
+000018ff A l$HH
+00001904 A t$PH
+00001909 A |$XH
+0000190f A  A_A^A\
+00001949 A h VWATAVAWH
+0000196e A D$xA
+000019aa A L$xH3
+000019d2 A A_A^A\_^
+00001a08 A t$XH
+00001a61 A @8l$ht
+00001a6a A Y5x0
+00001a73 A D$pf
+00001a7f A t$pL
+00001a91 A D$lH
+00001aa9 A T$l3
+00001ad5 A L$`F
+00001b00 A D9B s
+00001b1d A D;@ s
+00001b32 A D$pA
+00001b3c A t$@3
+00001b43 A \$8;
+00001b5f A D$ H
+00001b7a A d$0E3
+00001b83 A t$(;
+00001b8a A |$ I
+00001d13 A L$(H3
+00001d26 A L$ H
+00001dc1 A D$PD
+00001f50 A 9{,~LL
+00001f83 A C8A;
+00001f95 A ;s,|
+00002043 A USVWATAUAVH
+0000209a A D$@L
+000020a4 A D$0H
+000020b9 A D$pH
+000020c5 A D$xH
+00002157 A D$8H
+000021cf A )D$`
+00002265 A T$HA
+000022d5 A t$(D
+000022e0 A d$ L
+000022f0 A T$4H
+00002308 A L$@E3
+0000232a A T$HI
+00002390 A A^A]A\_^[]
+000023a5 A UVWH
+000023e6 A L$HH
+000023ee A L$h3
+000023fc A \$(H
+0000241c A T$pL
+00002427 A L$hH
+0000244b A L$PH
+000024d7 A UVWATAUAVAWH
+00002534 A T$HM
+00002540 A D$XL
+00002609 A t$ H
+0000262b A T$pH
+00002641 A L$pA
+0000264c A t$0E3
+00002653 A t$(H
+00002696 A \$`H
+000026ad A L$pL
+0000272e A D$ M
+00002785 A L$xA
+000027c5 A t$(M
+000027fa A \$pL
+0000284b A T$pI
+0000285a A )D$p
+000028fe A L$xL
+00002922 A t$D9t$Hu
+00002988 A )D$pH
+00002a0e A T$PH
+00002a13 A |$PI
+00002a6e A |$(D
+00002a79 A t$ L
+00002a9c A T$PI
+00002ab3 A |$XE3
+00002ac0 A D$pI
+00002ae3 A 9t$Dtz3
+00002b43 A |$0H
+00002b6e A MhH3
+00002b9b A A_A^A]A\_^]
+00002d79 A D$p3
+00002e29 A 1H;Q
+00002ea7 A UVWAVAWH
+00002f8c A D$8D
+00003044 A T$`I
+00003054 A t$h3
+0000307a A _t$`
+0000318c A XL$8f
+0000328a A Xt$XfD
+000032f5 A A_A^_^]
+00003303 A SVWH
+0000336d A \$@L
+000033a5 A \|$X
+000033ab A \L$P
+000033b6 A \D$`D
+000033e8 A T$ A
+0000342e A t$8A
+00003437 A l$0H
+0000346b A L$hH3
+00003554 A \T$8
+0000355a A \L$0
+00003565 A \D$@
+00003585 A L$HH3
+000035c0 A @USVWAWH
+00003606 A T$ D
+00003635 A t$HL
+0000363a A L$`H
+0000383f A t$0L
+00003844 A L$xH
+000038d4 A t$(L
+00003912 A M@H3
+00003923 A A__^[]
+000039f5 A |$@H
+00003a41 A L$@H3
+00003a54 A |$hM
+00003a7e A |$8L
+00003ab0 A |$hH
+00003b55 A T$@D
+00003b6f A \$\9L$HD
+00003b7c A 9D$LH
+00003b8c A D+D$PH
+00003b96 A \$\+\$T3
+00003bb7 A T$DH
+00003bce A L$ D
+00003c30 A @SUVWATAVAWH
+00003cfb A D$4D
+00003d2f A PA_A^A\_^][
+00003d67 A )t$@H
+00003d73 A )|$0
+00003d8c A )D$ 
+00003dd9 A (t$@
+00003dde A (|$0D
+00003de4 A (D$ H
+00003e61 A D$H3
+00003f45 A T$@A
+00003f82 A D$8I
+00003f8b A D$0A
+00003f94 A |$(H
+00003fad A D$HL
+0000400a A L$P3
+00004013 A L$@H
+00004018 A \$0L
+00004076 A L$XH
+00004112 A |$0D
+00004119 A |$(A
+0000415d A D$ @
+00004417 A T$X3
+00004425 A l$(H
+0000443e A T$`L
+00004465 A D$@@8o
+000044a7 A L$pH3
+000044d0 A @USWATAWH
+00004578 A |$HH
+000045bc A L$hL
+00004627 A D$0L
+0000469c A MXH3
+000046ad A A_A\_[]
+00004833 A T$ E
+00004991 A L$8H3
+00004c72 A D$ E
+00004e2a A D$|fA
+00004eef A L$PD
+00004fc0 A @SUWH
+000050c8 A t$@M
+00005130 A T$@L
+0000513b A L$HI
+00005152 A t;A8^Tt
+000051f0 A @SUVWH
+00005285 A )D$`t
+000052e0 A L$Ht
+00005339 A _^][
+00005340 A @UVWAUH
+0000545d A \$hH
+00005462 A \$xH
+0000549d A D$HI
+000054ef A 8XTt
+00005663 A MHH3
+00005674 A A]_^]
+00005687 A t$ UWAVH
+00005811 A \$HH
+00005816 A l$PH
+00005897 A t$ WH
+000058dc A t$HH
+00005944 A D$hH
+0000599f A H95R
+000059b2 A 9p u
+000059cf A t$`H
+00005a1b A t$ D
+00005cf2 A T$ 3
+00005e01 A \$X3
+00005e78 A \$XH
+00005f4f A 0_^]
+00006100 A @SWATAWH
+000063a9 A l$8D
+000063ae A t$@D
+000063b3 A l$DD
+000063b8 A l$HD
+000063bd A t$,D
+0000645a A t$<E9
+00006468 A L$pD
+000064f9 A A_A\_[
+00006850 A @UWH
+00006887 A t$ E3
+0000689a A D9sLtzD
+00006907 A O@E3
+00006a74 A LcD$PE3
+00006a99 A LcL$X
+00006acf A LcL$`
+00006b05 A LcL$h
+00006b2d A LcL$p
+00006b55 A LcD$xE3
+00006bbd A l$8H
+00006c73 A UATAUAVAWH
+00006cbe A d$PI
+00006d57 A D$83
+00006de3 A u#L9p s
+00006e02 A L;s s
+00006f7e A |$ L
+0000701b A D$@3
+00007125 A d$PH
+00007139 A D$4;D$8I
+0000717d A A_A^A]A\]
+000071c6 A D$8eH
+00007396 A l$hH
+0000739b A t$pH
+000073eb A T$(H
+00007786 A \$$L
+0000779c A L$ 9L$$
+000077ad A \$(L
+000077b2 A D$(3
+000077c2 A D$(A
+0000780d A VUUU
+0000784e A L$0H3
+00007c4e A T$8H
+00007cb0 A @UVWAVAWH
+00007d76 A u#H9X s
+00007d95 A I;Y s
+00007da9 A |$ A
+00007e3f A K@E3
+00007e64 A u#H9A s
+00007e83 A I;A s
+00007eaa A \$PH
+00007ecf A WATAUAVAWH
+00007f81 A t$hM
+00007f8b A D$hI
+000080cb A l$XH
+000080d6 A  A_A^A]A\_
+00008100 A @SVH
+00008170 A H9y s
+0000818d A H;{ s
+000081f5 A ;k(u0;K,u+D
+000082e8 A L$8t
+000082f2 A T$(E
+0000832a A VWATAVAWH
+000083f7 A t$`M
+00008401 A D$`I
+00008607 A  A_A^A\_^H
+00008701 A T$$H
+00008b32 A )D$0H
+00008fc7 A T$@3
+00009010 A D9@Pu
+0000912d A H;x s
+0000927c A l$8I
+00009283 A D$0D
+00009329 A L$HE
+00009369 A d$@E
+0000938c A l$ E
+00009393 A T$DI
+00009431 A A_A^A]A\_
+00009456 A l$`H
+0000945b A t$hH
+0000959f A \$ L
+000096a4 A \$0E3
+000096ac A t$pE
+000096d0 A t$hL
+00009700 A |$pI
+0000970f A t$8L
+0000975c A |$8H
+000097a9 A D$@E
+000097af A D9t$0
+00009823 A u#H9x s
+0000984b A H;\$@tr
+000098d1 A D;|$0
+000098e5 A d$xH
+000098f1 A |$8H+
+000098f9 A yxxxxxxxH
+00009adc A t$xL
+00009c71 A D$ f
+00009fb1 A u28D$ t,H
+0000a000 A @UVWATAUAVAWH
+0000a1ae A D$tH
+0000a1fc A |$pH
+0000a233 A D$|H
+0000a2a6 A t$dH
+0000a3b7 A \$`f
+0000a505 A H;y s
+0000a6d1 A D$XD
+0000a6d6 A |$hD
+0000a6eb A D$@D
+0000a70c A D$ D
+0000a727 A D$tA
+0000a74b A D$|A
+0000a7ae A t4E3
+0000a7f7 A MPH3
+0000a9e0 A @SVWH
+0000a9fd A D$@I
+0000aa33 A L;B A
+0000aa5e A L$(H
+0000aaf0 A H9P s)
+0000aafc A |$ E
+0000ab39 A P_^[
+0000af0c A |$ AVH
+0000af3a A D$0L;
+0000afc5 A fA;DH
+0000b02f A L$4A
+0000b066 A D$@A
+0000b3b8 A \$HL
+0000b430 A \$8H
+0000b462 A u;H;P
+0000b8d0 A @WAVAWH
+0000b8ea A t$hI
+0000b8ff A unL;
+0000b914 A u2ff
+0000b9ef A u+H;A
+0000ba4d A 0A_A^_
+0000baf0 A @VWAVH
+0000bb16 A D$HM
+0000bb32 A T$(L
+0000bb37 A L$ L
+0000bb5a A @ A9
+0000bb6b A \$ M
+0000bb93 A A9A 
+0000bba3 A \$ E3
+0000bbc1 A P E;
+0000bc2d A E9q s<I
+0000bc92 A u;I;A
+0000bcd4 A E;q s1
+0000bd0c A T$ M
+0000bd40 A PA^_^
+0000bda3 A D;B A
+0000be5f A 9P s)
+0000bec7 A TUUUUUU
+0000c311 A 93tW
+0000c588 A l$0D
+0000c5c4 A t$ E
+0000c8e3 A E9P s
+0000c901 A D;P s
+0000cb80 A 9H s
+0000cb9c A ;K s
+0000cc48 A 9J s
+0000cc64 A ;H s
+0000cc6e A \$ I;
+0000cca7 A \$ 3
+0000ccc0 A @UWAVAWH
+0000ccd7 A D$PL
+0000cd65 A L$8L
+0000cdd8 A L$0H
+0000cde3 A L$0D
+0000ce26 A D$ A
+0000ce48 A D$ ;
+0000ce74 A D$HA
+0000cea4 A L$PH3
+0000ceb2 A hA_A^_]
+0000d1a6 A )D$0
+0000d1b2 A )D$P
+0000d1be A )L$@
+0000d1cf A )L$`f
+0000d399 A l$pH
+0000d3c5 A L95,@
+0000d498 A L95Y?
+0000d4f1 A @A^_^
+0000dc9f A t!eH
+0000df37 A uyHc
+0000df5c A uTL+
+0000e511 A L$0L
+0000e519 A L$pH
+0000e51e A L$(3
+0000e538 A @_^[
+0000e54f A SVWAVH
+0000e57b A \$pH
+0000e588 A |$`H
+0000e5a4 A 8A^_^[
+0000e5bb A WAVAWH
+0000e5d4 A \$(H;
+0000e5f9 A \$PI
+0000e607 A A_A^_
+0000e662 A |$PH
+0000e71e A D$@@
+0000ea2c A ntelA
+0000ea33 A GenuD
+0000ea49 A ineI
+0000ea76 A t(=`
+0000ea7d A t!=p
+0000ea8d A  w$H
+0000eb26 A D$ $
+0000eb63 A \$(3
+0000ec2e A L$ 3
+0000ecde A \$ UH
+0000ed2c A M H1E
+0000ed42 A  H3E H3E
+0000f5af A u|Lc
+0000f5d0 A fA9@
+0000f5d5 A uVL+
+0000f649 A x AVH
+0000fbed A 8csm
+0000fc80 A T$ L
+00011720 W api-ms-win-core-synch-l1-2-0.dll
+00011768 W kernel32.dll
+00011788 A InitializeConditionVariable
+000117a8 A SleepConditionVariableCS
+000117c8 A WakeAllConditionVariable
+00011820 W ERROR : Unable to initialize critical section in CAtlBaseModule
+000118b0 W XNurbs
+000118c0 W Edit
+00011958 W XNurbsHelp
+00011970 W XNurbsRhino.rhp
+00011990 W XNurbsHelp.chm
+000119b0 W open
+00011ab0 W Days left for your XNurbs trial period: 
+00011b16 W After your XNurbs trial period, you need purchase a software key from xnurbs.com and activate it.
+00011be0 W Cannot find a valid license. If you have purchased a software key, please make sure you're connected to the internet and activate the key.
+00011d04 W Would you like to run xNURBS License Manager and activate xNURBS plugin?
+00011d98 W XNurbs License
+00011dc0 W Cannot find and run xNURBS License Manager.
+00011e1a W Make sure that xNURBS License Manager is in the same folder as XNurbs. You can also manually run xNURBS License Manager by exploring your XNurbs installation directory.
+00011f70 W xNURBS License Manager.exe
+00011fac W Error Code 
+00011fd0 W Invalid product key.
+00012000 W The product needs to be activated.
+00012050 W Connection to the server failed.
+000120a0 W The product key has already been activated with the maximum number of computers.
+00012150 W The product key has been revoked.
+000121a0 W Cannot find a valid license. Make sure that TurboActivate.dat is in the same folder as XNurbs.
+00012260 W The trial data has been corrupted.
+000122b0 W The trial extension has already been used.
+00012310 W The activation/trial has expired or the system time has been tampered with. Ensure your time, timezone, and date settings are correct first.
+00012430 W The hardware id couldn't be generated due to an error in the COM setup. Re-enable Windows Management Instrumentation (WMI) in your group policy editor or reset the local group policy to the default values. Contact your system admin for more information.
+00012630 W The the buffer size was too small. Create a larger buffer and try again.
+000126d0 W Insufficient system permission. Sstart your process as an
+00012744 W admin / elevated user.
+00012780 W The function failed because this instance of your program
+000127f4 W is running inside a virtual machine / hypervisor.
+00012860 W The product key used is for a floating licese.
+000128c0 W Please waiting 5 hours before rechecking on the network or directly use the RefreshLicense button.
+00012990 W This product key had a limited number of allowed deactivations. No more deactivations are allowed for the product key.
+00012a80 W The license activation is no longer valid. Please update the latest version.
+00012b20 W You can't use a product key because your app is already activated with a product key.To use a new product key, then first deactivate the existing key.
+00012c50 W There are network adapters on the system that are disabled and xNURBS couldn't read their hardware properties (even after trying and failing to enable the adapters automatically). Enable the network adapters, re-run the function.
+00012e20 W The verified trial has expired. You need request a trial extension or purchase a license key.
+00012ee0 W The connection to the server timed out because a long period of time elapsed since the last data was sent or received.
+00012fd0 W The secure connection to the activation servers failed due to a TLS or certificate error.This is most often caused by MITM(man - in - the - middle) attempts on corporate
+00013124 W networks.This means either keeping your system itself up - to - date, or manually updating the CA certs.
+000131f8 W No valid license.
+00013668 A CXNurbsDialog
+00013678 W    G0   
+00013690 W    G1   
+000136a8 W    G2   
+000136c0 W xNURBS surfaces are generated by a newer xNURBS version. To edit or rebuild the model, you must update xNURBS plugin.
+000137b0 A map/set<T> too long
+00014028 W Rhino.exe
+00014040 W xnkernel.dll
+000142e0 W 80BE33B0-13B2-4AC4-9C77-03829214F9E9
+00014330 W XNurbs plug-in for Rhinoceros
+00014370 A 5.0.0.0
+00014380 W Woodman Way, Milton,
+000143ac W Cambridge CB24 6DS
+000143e0 W 123.456.7890
+00014400 W 123.456.7891
+00014420 W support@xnurbs.com
+00014448 W https://www.xnurbs.com
+000146b4 A MbP?{
+000146cf A ?333333
+000146ff A @ffffff
+00014740 A 333333
+00014777 A ?ffffff
+00015eb4 A GCTL
+00015ec0 A .text$di
+00015ed4 A .text$mn
+00015ee8 A .text$mn$00
+00015efc A .text$x
+00015f0c A .text$yd
+00015f20 A .idata$5
+00015f34 A .00cfg
+00015f44 A .CRT$XCA
+00015f58 A .CRT$XCL
+00015f6c A .CRT$XCU
+00015f80 A .CRT$XCZ
+00015f94 A .CRT$XIA
+00015fa8 A .CRT$XIC
+00015fbc A .CRT$XIZ
+00015fd0 A .CRT$XLA
+00015fe4 A .CRT$XLZ
+00015ff8 A .CRT$XPA
+0001600c A .CRT$XPZ
+00016020 A .CRT$XTA
+00016034 A .CRT$XTZ
+00016048 A .rdata
+00016058 A .rdata$T
+0001606c A .rdata$r
+00016080 A .rdata$zzzdbg
+00016098 A .rtc$IAA
+000160ac A .rtc$IZZ
+000160c0 A .rtc$TAA
+000160d4 A .rtc$TZZ
+000160e8 A .tls
+000160f8 A .tls$
+00016108 A .tls$ZZZ
+0001611c A .xdata
+0001612c A .edata
+0001613c A .idata$2
+00016150 A .idata$3
+00016164 A .idata$4
+00016178 A .idata$6
+0001618c A .data
+0001619c A .data$r
+000161ac A .bss
+000161cc A .rsrc$01
+000161e0 A .rsrc$02
+00017b24 A XNurbsRhino.rhp
+00017b34 A AddOneConstraint
+00017b45 A CreateOrSetVSurf
+00017b56 A FreeXNSurf
+00017b61 A GenerateNewVSurf
+00017b72 A RhinoPlugInDescription
+00017b89 A RhinoPlugInDeveloperAddress
+00017ba5 A RhinoPlugInDeveloperCountry
+00017bc1 A RhinoPlugInDeveloperEmail
+00017bdb A RhinoPlugInDeveloperFax
+00017bf3 A RhinoPlugInDeveloperOrganization
+00017c14 A RhinoPlugInDeveloperPhone
+00017c2e A RhinoPlugInDeveloperWebsite
+00017c4a A RhinoPlugInIconResourceId
+00017c64 A RhinoPlugInId
+00017c72 A RhinoPlugInMfcVersion
+00017c88 A RhinoPlugInMscVersion
+00017c9e A RhinoPlugInName
+00017cae A RhinoPlugInSdkServiceRelease
+00017ccb A RhinoPlugInSdkVersion
+00017ce1 A RhinoPlugInUpdateURL
+00017cf6 A RhinoPlugInUsesMfc
+00017d09 A RhinoPlugInVersion
+0001941a A VK_get_outcome_status
+00019432 A VK_get_outer_boundary_loop
+00019450 A VK_get_uv_bcurve_from_curve_cst
+00019472 A VK_Calc_perpendicular_curvature
+00019494 A VK_initialize_kernel
+000194ac A VK_terminate_kernel
+000194c2 A VK_remove_constraint
+000194da A VK_free_v_object
+000194ee A VK_remove_all_from_multi_pt_cst
+00019510 A VK_reset_vsurf_advanced
+0001952a A VK_get_auto_enforce_tol_flavor
+0001954c A VK_get_version
+0001955e A VK_create_vsurf_without_init_para
+00019582 A VK_get_bsurf
+00019592 A VK_generate_solution
+000195aa A VK_remove_pt_from_multi_pt_cst
+000195cc A VK_create_multi_pt_cst
+000195e6 A VK_add_pt_position_normal_set_cst
+0001960a A VK_add_pt_position_set_cst
+00019628 A VK_modify_curve_cst
+0001963e A VK_add_curve_cst
+00019652 A VK_remove_physical_force
+0001966e A VK_reset_vsurf
+00019680 A VK_get_warning_message
+0001969a A VK_check_open_boundary_difference
+000196be A VK_create_bspline
+000196d0 A xnkernel.dll
+000196de A mfc140u.dll
+000196ec A GetModuleHandleW
+00019700 A GetModuleFileNameW
+00019716 A InitializeCriticalSectionEx
+00019734 A GetLastError
+00019744 A DeleteCriticalSection
+0001975c A GetCurrentProcessId
+00019772 A OpenProcess
+00019780 A K32GetProcessImageFileNameW
+0001979e A K32EnumProcessModulesEx
+000197b8 A K32GetModuleBaseNameW
+000197d0 A InitializeCriticalSectionAndSpinCount
+000197f8 A LocalAlloc
+00019806 A LocalFree
+00019812 A CloseHandle
+00019820 A EnterCriticalSection
+00019838 A LeaveCriticalSection
+00019850 A SetEvent
+0001985c A ResetEvent
+0001986a A WaitForSingleObjectEx
+00019882 A CreateEventW
+00019892 A GetProcAddress
+000198a4 A RtlCaptureContext
+000198b8 A RtlLookupFunctionEntry
+000198d2 A RtlVirtualUnwind
+000198e6 A UnhandledExceptionFilter
+00019902 A SetUnhandledExceptionFilter
+00019920 A GetCurrentProcess
+00019934 A TerminateProcess
+00019948 A IsProcessorFeaturePresent
+00019964 A IsDebuggerPresent
+00019978 A QueryPerformanceCounter
+00019992 A GetCurrentThreadId
+000199a8 A GetSystemTimeAsFileTime
+000199c2 A InitializeSListHead
+000199d6 A KERNEL32.dll
+000199e6 A GetClientRect
+000199f6 A GetWindowRect
+00019a06 A GetSystemMetrics
+00019a1a A IsWindow
+00019a26 A SystemParametersInfoW
+00019a3e A GetScrollInfo
+00019a4e A SendMessageW
+00019a5e A PostMessageW
+00019a6e A EnableWindow
+00019a7e A EnumWindows
+00019a8c A GetWindowThreadProcessId
+00019aa6 A USER32.dll
+00019ab4 A ShellExecuteW
+00019ac2 A SHELL32.dll
+00019ad0 A ?_Xlength_error@std@@YAXPEBD@Z
+00019af0 A MSVCP140.dll
+00019b00 A ??4CRhinoObjRef@@QEAAAEAV0@AEBV0@@Z
+00019b26 A ??0CRhinoCommand@@QEAA@_N0PEBVCRhinoPlugIn@@0@Z
+00019b58 A ??1CRhinoCommand@@UEAA@XZ
+00019b73 A #?IsInteractive@CRhinoCommandContext@@QEBA_NXZ
+00019ba3 A *?OpenDockbarTab@CRhinoTabbedDockBarDialog@@SAXAEBVCRhinoDoc@@AEBU_GUID@@_NPEBU3@@Z
+00019bfa A ??0CRhinoHistory@@QEAA@AEBVCRhinoCommand@@@Z
+00019c2a A ??1CRhinoHistory@@QEAA@XZ
+00019c45 A +?PlugInInstance@CRhinoPlugIn@@QEBAPEAUHINSTANCE__@@XZ
+00019c7d A 5?SetCommandPrompt@CRhinoGet@@QEAAXPEB_W@Z
+00019caa A ?AddCommandOption@CRhinoGet@@QEAAHVCRhinoCommandOptionName@@VCRhinoCommandOptionValue@@H@Z
+00019d08 A ??0CRhinoCommandOptionValue@@QEAA@PEB_W0@Z
+00019d36 A ??0CRhinoCommandOptionName@@QEAA@PEB_W0@Z
+00019d62 A ?EnableSubObjectSelect@CRhinoGetObject@@QEAAXH@Z
+00019d95 A 6?SetGeometryFilter@CRhinoGetObject@@QEAAXI@Z
+00019dc6 A ?EnablePressEnterWhenDonePrompt@CRhinoGetObject@@QEAA_N_N@Z
+00019e04 A ?EnablePreSelect@CRhinoGetObject@@QEAAXHH@Z
+00019e32 A ?GetObjects@CRhinoGetObject@@QEAA?AW4result@CRhinoGet@@HH@Z
+00019e70 A ??0CRhinoObjRef@@QEAA@XZ
+00019e8c A ??1CRhinoObjRef@@QEAA@XZ
+00019ea8 A ?ClearCommandOptions@CRhinoGet@@QEAAXXZ
+00019ed2 A ??0?$ON_ClassArray@VCRhinoObjRef@@@@QEAA@XZ
+00019f00 A ??1?$ON_ClassArray@VCRhinoObjRef@@@@UEAA@XZ
+00019f2d A '?Object@CRhinoGetObject@@QEBA?AVCRhinoObjRef@@H@Z
+00019f61 A >?Zero@?$ON_ClassArray@VCRhinoObjRef@@@@QEAAXXZ
+00019f94 A ?Empty@?$ON_ClassArray@VCRhinoObjRef@@@@QEAAXXZ
+00019fc5 A ,?Print@CRhinoApp@@QEBAXPEB_WZZ
+00019fe7 A /?RhinoApp@@YAAEAVCRhinoApp@@XZ
+0001a008 A f:?ShowObject@CRhinoDoc@@QEAA_NAEBVCRhinoObjRef@@_N@Z
+0001a040 A ?EnableClearObjectsOnEntry@CRhinoGetObject@@QEAAX_N@Z
+0001a078 A ?EnableDeselectAllBeforePostSelect@CRhinoGetObject@@QEAAX_N@Z
+0001a0b8 A ?CommandResult@CRhinoGet@@QEBA?AW4result@CRhinoCommand@@XZ
+0001a0f5 A .?Result@CRhinoGet@@QEBA?AW4result@1@XZ
+0001a120 A ?Document@CRhinoHistoryRecord@@QEBAAEAVCRhinoDoc@@XZ
+0001a158 A ?EnglishCommandName@CRhinoCommand@@UEBAPEB_WXZ
+0001a189 A %?LocalCommandName@CRhinoCommand@@UEBAPEB_WXZ
+0001a1b8 A s.?ReplayHistory@CRhinoCommand@@UEAA_NAEBVCRhinoHistoryRecord@@AEAV?$ON_SimpleArray@VCRhinoObjectPair@@@@@Z
+0001a226 A ?EditObjects@CRhinoCommand@@UEAAPEAVCRhinoObject@@AEBVCRhinoHistoryRecord@@AEAV?$ON_SimpleArray@VCRhinoObjectPair@@@@@Z
+0001a29e A &%?LoadProfile@CRhinoCommand@@UEAAXPEB_WAEAVCRhinoProfileContext@@@Z
+0001a2e5 A 3?SaveProfile@CRhinoCommand@@UEAAXPEB_WAEAVCRhinoProfileContext@@@Z
+0001a32c A ?DoHelp@CRhinoCommand@@UEAAXXZ
+0001a34e A ?DynamicDraw@CRhinoCommand@@UEAAXAEAVCRhinoView@@@Z
+0001a384 A ?ContextHelpURL@CRhinoCommand@@UEBA_NAEAVON_wString@@@Z
+0001a3bc A r.?ReplayHistory@CRhinoCommand@@UEAAPEAVCRhinoObject@@AEBVCRhinoHistoryRecord@@@Z
+0001a410 A ??0CRhinoGetObject@@QEAA@XZ
+0001a42e A ??1CRhinoGetObject@@UEAA@XZ
+0001a44b A '?ObjectCount@CRhinoGetObject@@QEBAHXZ
+0001a473 A 5?SetCommandWndPrompt@CRhinoGet@@MEBAXXZ
+0001a49e A ?GetCS@CRhinoGet@@MEAA?AVON_Plane@@_N0@Z
+0001a4ca A ??0CRhinoDisplayConduit@@QEAA@UCSupportChannels@@@Z
+0001a500 A ??1CRhinoDisplayConduit@@UEAA@XZ
+0001a524 A ?Disable@CRhinoDisplayConduit@@QEAAXXZ
+0001a54d A -?Redraw@CRhinoDoc@@QEAAXXZ
+0001a56b A 7?SetObjectColor@CRhinoDisplayPipeline@@QEAA?AVON_Color@@AEBV2@@Z
+0001a5af A =?VP@CRhinoDisplayPipeline@@QEBAAEAVON_Viewport@@XZ
+0001a5e6 A ?DrawLine@CRhinoDisplayPipeline@@QEAAXAEBVON_3dPoint@@0AEBVON_Color@@HI@Z
+0001a632 A ?DrawDot@CRhinoDisplayPipeline@@QEAAXMMPEB_WVON_Color@@1@Z
+0001a670 A ?DrawSurface@CRhinoDisplayPipeline@@QEAAXAEBVON_Surface@@H@Z
+0001a6b0 A ?DisplayAttrs@CRhinoDisplayPipeline@@QEBAPEBVCDisplayPipelineAttributes@@XZ
+0001a6fd A :?SetupDisplayMaterial@CRhinoDisplayPipeline@@QEBA_NAEAVCDisplayPipelineMaterial@@PEBVCRhinoDoc@@PEBVCRhinoObject@@PEBVCRhinoObjectAttributes@@PEBVON_Xform@@@Z
+0001a7a0 A ?DrawShadedBrep@CRhinoDisplayPipeline@@QEAAXPEBVON_Brep@@PEBVCDisplayPipelineMaterial@@PEAVCRhinoCacheHandle@@@Z
+0001a813 A >?ZebraAnalysisSettings@CRhinoAppSettings@@QEBAAEBVCRhinoZebraAnalysisSettings@@XZ
+0001a868 A ?AppSettings@CRhinoApp@@QEAAAEAVCRhinoAppSettings@@XZ
+0001a8a0 A ?AnalysisMeshSettings@CRhinoDocProperties@@QEBAAEBVON_MeshParameters@@XZ
+0001a8eb A ,?Properties@CRhinoDoc@@QEAAAEAVCRhinoDocProperties@@XZ
+0001a925 A 3?SelectedObjectColor@CRhinoAppSettings@@QEBA?AVON_Color@@_N@Z
+0001a966 A ?DrawZebraPreview@CRhinoDisplayPipeline@@QEAAXPEBVON_Brep@@AEBVCRhinoZebraAnalysisSettings@@AEBVON_MeshParameters@@AEBVON_Color@@PEAVCRhinoCacheHandle@@@Z
+0001aa04 A ?DrawBrep@CRhinoDisplayPipeline@@QEAAXAEBVON_Brep@@AEBVON_Color@@H@Z
+0001aa4b A "?IsEnabled@CRhinoDisplayConduit@@QEBA_NXZ
+0001aa78 A ?Enable@CRhinoDisplayConduit@@QEAAXI@Z
+0001aaa1 A 2?RuntimeSerialNumber@CRhinoDoc@@QEBAIXZ
+0001aacb A -?Regen@CRhinoDoc@@QEAAXXZ
+0001aae6 A x'?NotifyConduit@CRhinoDisplayConduit@@UEAAXW4EConduitNotifiers@@AEAVCRhinoDisplayPipeline@@@Z
+0001ab48 A ??1CDisplayPipelineMaterial@@QEAA@XZ
+0001ab70 A ??0CDisplayPipelineMaterial@@QEAA@AEBV0@@Z
+0001ab9c A )1?RhinoMessageBox@@YAHPEB_W0I@Z
+0001abbf A <?UnitsAndTolerances@CRhinoDocProperties@@QEBAAEBVON_3dmUnitsAndTolerances@@XZ
+0001ac10 A ??0CRhinoBrepObject@@QEAA@XZ
+0001ac2f A 4?SetBrep@CRhinoBrepObject@@QEAAXPEAVON_Brep@@@Z
+0001ac62 A ??1CRhinoBrepObject@@UEAA@XZ
+0001ac82 A ?ClassId@CRhinoBrepObject@@UEBAPEBVON_ClassId@@XZ
+0001acb6 A ?CopyFrom@CRhinoBrepObject@@UEAA_NPEBVON_Object@@@Z
+0001aceb A "?Internal_DeepCopy@CRhinoBrepObject@@EEBAPEAVON_Object@@XZ
+0001ad28 A #&?MemoryRelocate@CRhinoObject@@UEAAXXZ
+0001ad51 A #?IsValid@CRhinoObject@@UEBA_NPEAVON_TextLog@@@Z
+0001ad83 A :?SizeOf@CRhinoObject@@UEBAIXZ
+0001ada3 A '?ObjectType@CRhinoBrepObject@@UEBA?AW4object_type@ON@@XZ
+0001adde A g&?ModelObjectId@CRhinoObject@@UEBA?AU_GUID@@XZ
+0001ae10 A ?DestroyRuntimeCache@CRhinoBrepObject@@UEAAX_N@Z
+0001ae44 A ?DuplicateRhinoObject@CRhinoObject@@UEBAPEAV1@XZ
+0001ae77 A "?IsDeletable@CRhinoObject@@UEBA_NXZ
+0001ae9e A ?DeleteFromDocNotification@CRhinoBrepObject@@UEAAXXZ
+0001aed6 A ?AddToDocNotification@CRhinoObject@@UEAAXXZ
+0001af03 A "?IsGroupObject@CRhinoObject@@UEBA_NXZ
+0001af2b A ;?SubObjectStatus@CRhinoObject@@UEBA?AVON_ComponentStatus@@XZ
+0001af6a A {"?IsActiveInViewport@CRhinoObject@@UEBA_NAEBVCRhinoViewport@@@Z
+0001afad A #?IsSubObjectSelected@CRhinoBrepObject@@UEBA_NVON_COMPONENT_INDEX@@@Z
+0001aff6 A ?GetSelectedSubObjects@CRhinoBrepObject@@UEBAHAEAV?$ON_SimpleArray@VON_COMPONENT_INDEX@@@@@Z
+0001b055 A !?InternalVirtual_IsSelectable@CRhinoObject@@MEBA_N_N000@Z
+0001b091 A 3?SelectSubObject@CRhinoBrepObject@@UEBAHVON_COMPONENT_INDEX@@_N11@Z
+0001b0d7 A <?UnselectAllSubObjects@CRhinoBrepObject@@UEAAHXZ
+0001b10b A #?IsSubObjectHighlighted@CRhinoBrepObject@@UEBA_NVON_COMPONENT_INDEX@@@Z
+0001b156 A ?GetHighlightedSubObjects@CRhinoBrepObject@@UEBAHAEAV?$ON_SimpleArray@VON_COMPONENT_INDEX@@@@@Z
+0001b1b7 A  ?HighlightSubObject@CRhinoBrepObject@@UEBA_NVON_COMPONENT_INDEX@@_N@Z
+0001b1ff A <?UnhighlightAllSubObjects@CRhinoBrepObject@@UEAAHXZ
+0001b235 A  ?HighlightRequiresRedraw@CRhinoBrepObject@@UEBA_NXZ
+0001b26c A ?EnableGrips@CRhinoBrepObject@@UEAAX_N@Z
+0001b298 A ?EnableCustomGrips@CRhinoObject@@UEAA_NPEAVCRhinoObjectGrips@@@Z
+0001b2dc A ?GetGrips@CRhinoObject@@UEBAHAEAV?$ON_SimpleArray@PEAVCRhinoGripObject@@@@@Z
+0001b32c A ?DrawV6@CRhinoBrepObject@@UEBAXPEAVCRhinoObjectDrawContext@@@Z
+0001b36e A ?DrawGrips@CRhinoObject@@UEBAXAEAVCRhinoDisplayPipeline@@@Z
+0001b3ac A ?Draw@CRhinoBrepObject@@UEBAXAEAVCRhinoDisplayPipeline@@@Z
+0001b3e8 A %,?PreDrawUpdate@CRhinoObject@@UEBAXAEAVCRhinoDisplayPipeline@@@Z
+0001b42c A ?DrawSubObject@CRhinoBrepObject@@UEBAXAEAVCRhinoDisplayPipeline@@VON_COMPONENT_INDEX@@@Z
+0001b488 A ?DrawHighlightedSubObjects@CRhinoBrepObject@@UEBAXAEAVCRhinoDisplayPipeline@@@Z
+0001b4d8 A Q+?PickFilter@CRhinoBrepObject@@UEBA_NAEBVCRhinoGetObject@@_N@Z
+0001b518 A 6+?Pick@CRhinoBrepObject@@UEBAHAEBVCRhinoPickContext@@AEAVCRhinoObjRefArray@@@Z
+0001b569 A :?SnapTo@CRhinoBrepObject@@UEBA_NAEBVCRhinoSnapContext@@AEAVCRhinoSnapEvent@@@Z
+0001b5bb A (?OnDoubleClick@CRhinoObject@@UEBA?AVON_wString@@AEBVCRhinoDoubleClickContext@@@Z
+0001b610 A ?BoundingBox@CRhinoBrepObject@@UEBA?AVON_BoundingBox@@PEBVCRhinoViewport@@@Z
+0001b660 A ?BoundingBox@CRhinoBrepObject@@UEBA?AVON_BoundingBox@@XZ
+0001b69c A ?GetTightBoundingBox@CRhinoBrepObject@@UEBA_NAEAVON_BoundingBox@@_NPEBVON_Xform@@@Z
+0001b6f2 A ?GetFrame@CRhinoBrepObject@@UEBA_NAEAVON_Plane@@@Z
+0001b726 A }&?ModifyAttributes@CRhinoObject@@UEAA_NAEBVON_3dmObjectAttributes@@_N1@Z
+0001b772 A ?Attributes@CRhinoObject@@UEBAAEBVCRhinoObjectAttributes@@XZ
+0001b7b1 A '?ObjectMaterial@CRhinoBrepObject@@MEBAAEBVCRhinoMaterial@@AEBVON_COMPONENT_INDEX@@AEBU_GUID@@PEBVON_3dmObjectAttributes@@@Z
+0001b82f A '?ObjectMaterial@CRhinoObject@@UEBAAEBVCRhinoMaterial@@AEBVON_3dmObjectAttributes@@@Z
+0001b887 A '?ObjectMaterial@CRhinoObject@@UEBAAEBVCRhinoMaterial@@AEBU_GUID@@@Z
+0001b8cd A '?ObjectMaterial@CRhinoObject@@UEBAAEBVCRhinoMaterial@@XZ
+0001b909 A '?ObjectRdkMaterial@CRhinoBrepObject@@MEBAPEBVCRhRdkMaterial@@AEBVON_COMPONENT_INDEX@@AEBU_GUID@@PEBVON_3dmObjectAttributes@@@Z
+0001b98a A l ?HasSubobjectMaterials@CRhinoBrepObject@@MEBA_NXZ
+0001b9c0 A ?GetSubobjectMaterialComponents@CRhinoBrepObject@@MEBAHAEAV?$ON_SimpleArray@VON_COMPONENT_INDEX@@@@@Z
+0001ba26 A A9?SetTextureCoordinates@CRhinoBrepObject@@UEBA_NAEBVON_TextureMapping@@PEBVON_Xform@@_N@Z
+0001ba82 A G9?SetTextureCoordinatesFromPlugIn@CRhinoObject@@UEBA_NAEBU_GUID@@H@Z
+0001bac9 A :?ShortDescription@CRhinoBrepObject@@UEBAPEB_W_N@Z
+0001bafd A #?IsMeshable@CRhinoBrepObject@@UEBA_NW4mesh_type@ON@@@Z
+0001bb36 A i8?SetRenderMeshParameters@CRhinoBrepObject@@UEAA_NAEBVON_MeshParameters@@@Z
+0001bb84 A 9&?MeshCount@CRhinoBrepObject@@UEBAHW4mesh_type@ON@@PEBVON_MeshParameters@@@Z
+0001bbd4 A ?CreateMeshes@CRhinoBrepObject@@UEAAHW4mesh_type@ON@@AEBVON_MeshParameters@@_N@Z
+0001bc28 A ?DestroyMeshes@CRhinoBrepObject@@UEAAXW4mesh_type@ON@@_N@Z
+0001bc65 A ,?PromotePreviewMeshes@CRhinoBrepObject@@UEAA_NW4mesh_type@ON@@@Z
+0001bcaa A ?GetMeshes@CRhinoBrepObject@@UEBAHW4mesh_type@ON@@AEAV?$ON_SimpleArray@PEBVON_Mesh@@@@@Z
+0001bd04 A @&?MeshDisplayAttributes@CRhinoBrepObject@@UEBAPEBVCDisplayPipelineAttributes@@HAEBVON_Mesh@@AEBV2@@Z
+0001bd6b A  ?GetWireframeCurves@CRhinoBrepObject@@UEBAHAEAV?$ON_SimpleArray@PEAVON_Curve@@@@@Z
+0001bdc0 A {#?IsSolid@CRhinoBrepObject@@UEBA_NXZ
+0001bde7 A =?VetoTransformObject@CRhinoObject@@UEBA_NAEAVCRhinoDoc@@_N11@Z
+0001be2a A ?BeginTransform@CRhinoObject@@UEAAXAEAVCRhinoDoc@@_N11@Z
+0001be66 A ?EndTransform@CRhinoObject@@UEAAXAEAVCRhinoDoc@@_N11@Z
+0001bea0 A ?GetSubObjects@CRhinoBrepObject@@UEBAHAEAV?$ON_SimpleArray@PEAVCRhinoObject@@@@PEBVCRhinoViewport@@@Z
+0001bf06 A g,?PrepareToWrite@CRhinoObject@@UEAA_NH@Z
+0001bf31 A ;?SubObjectsAreSelected@CRhinoBrepObject@@MEBAHXZ
+0001bf65 A ;?SubObjectsAreHighlighted@CRhinoBrepObject@@MEBAHXZ
+0001bf9a A l#?IsSelectableWithGripsOn@CRhinoObject@@MEBA_NXZ
+0001bfcd A ;?SynchAttributes@CRhinoObject@@MEAAXXZ
+0001bff7 A ;?SupportsBrepProxyReferenceCounting@CRhinoObject@@UEBA_NXZ
+0001c036 A ??0CRhinoEventWatcher@@QEAA@XZ
+0001c058 A ??1CRhinoEventWatcher@@UEAA@XZ
+0001c07a A ?Enable@CRhinoEventWatcher@@QEAAXH@Z
+0001c0a1 A <?UnRegister@CRhinoEventWatcher@@QEAAXXZ
+0001c0cb A -?Register@CRhinoEventWatcher@@QEAAXXZ
+0001c0f3 A (?OnEnableEventWatcher@CRhinoEventWatcher@@UEAAXH@Z
+0001c129 A (?OnInitRhino@CRhinoEventWatcher@@UEAAXAEAVCRhinoApp@@@Z
+0001c162 A %(?OnCloseRhino@CRhinoEventWatcher@@UEAAXAEAVCRhinoApp@@@Z
+0001c19e A #(?OnCloseDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@@Z
+0001c1dd A '?OnActiveDocumentChanged@CRhinoEventWatcher@@UEAAXPEAVCRhinoDoc@@@Z
+0001c223 A '?OnBeginOpenDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@PEB_WHH@Z
+0001c26d A (?OnEndOpenDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@PEB_WHH@Z
+0001c2b5 A (?OnEndSaveDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@PEB_WH@Z
+0001c2fb A (?OnDocumentPropertiesChanged@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@@Z
+0001c345 A *?OnUnitsChangedWithScaling@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@N@Z
+0001c38f A '?OnAppSettingsChanged@CRhinoEventWatcher@@UEAAXAEBVCRhinoAppSettings@@@Z
+0001c3da A Q(?OnCreateView@CRhinoEventWatcher@@UEAAXPEAVCRhinoView@@@Z
+0001c416 A w(?OnDestroyView@CRhinoEventWatcher@@UEAAXPEAVCRhinoView@@@Z
+0001c454 A #*?OnRenameView@CRhinoEventWatcher@@UEAAXPEAVCRhinoView@@@Z
+0001c491 A '?OnBeginCommand@CRhinoEventWatcher@@UEAAXAEBVCRhinoCommand@@AEBVCRhinoCommandContext@@@Z
+0001c4ed A (?OnEndCommand@CRhinoEventWatcher@@UEAAXAEBVCRhinoCommand@@AEBVCRhinoCommandContext@@W4result@2@@Z
+0001c552 A ?DeleteLayerCheck@CRhinoEventWatcher@@UEAAHAEAVCRhinoDoc@@AEAV?$ON_SimpleArray@H@@_N@Z
+0001c5aa A a(?OnDeleteObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@@Z
+0001c5fa A '*?OnReplaceObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@1@Z
+0001c64d A )?OnObjectReplaced@CRhinoEventWatcher@@UEAAXIII@Z
+0001c681 A *?OnUnDeleteObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@@Z
+0001c6d3 A *?OnPurgeObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@@Z
+0001c720 A 1*?OnSelectObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEBVCRhinoObject@@@Z
+0001c770 A 2*?OnSelectObjects@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEBV?$ON_SimpleArray@PEBVCRhinoObject@@@@@Z
+0001c7d8 A c(?OnDeselectObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEBVCRhinoObject@@@Z
+0001c82a A d(?OnDeselectObjects@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEBV?$ON_SimpleArray@PEBVCRhinoObject@@@@@Z
+0001c894 A b(?OnDeselectAllObjects@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@H@Z
+0001c8d9 A )?OnModifyObjectAttributes@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@AEBVCRhinoObjectAttributes@@@Z
+0001c94f A *?OnUpdateObjectMesh@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@W4mesh_type@ON@@@Z
+0001c9b3 A $?LayerTableEvent@CRhinoEventWatcher@@UEAAXW4layer_event@1@AEBVCRhinoLayerTable@@HPEBVON_Layer@@@Z
+0001ca17 A $?LinetypeTableEvent@CRhinoEventWatcher@@UEAAXW4linetype_event@1@AEBVCRhinoLinetypeTable@@HPEBVON_Linetype@@@Z
+0001ca87 A !?InstanceDefinitionTableEvent@CRhinoEventWatcher@@UEAAXW4idef_event@1@AEBVCRhinoInstanceDefinitionTable@@HPEBVON_InstanceDefinition@@@Z
+0001cb11 A $?LightTableEvent@CRhinoEventWatcher@@UEAAXW4light_event@1@AEBVCRhinoLightTable@@HPEBVON_Light@@@Z
+0001cb75 A %?MaterialTableEvent@CRhinoEventWatcher@@UEAAXW4material_event@1@AEBVCRhinoMaterialTable@@HPEBVON_Material@@@Z
+0001cbe4 A <<?TextureMappingTableEvent@CRhinoEventWatcher@@UEAAXW4texture_mapping_event@1@AEBVCRhinoTextureMappingTable@@HPEBVON_TextureMapping@@@Z
+0001cc6e A P ?GroupTableEvent@CRhinoEventWatcher@@UEAAXW4group_event@1@AEBVCRhinoGroupTable@@HPEBVON_Group@@@Z
+0001ccd4 A ?AliasTableEvent@CRhinoEventWatcher@@UEAAXW4alias_event@1@AEBVCRhinoAppAliasList@@HPEBVCRhinoCommandAlias@@@Z
+0001cd44 A ?DimStyleTableEvent@CRhinoEventWatcher@@UEAAXW4dimstyle_event@1@AEBVCRhinoDimStyleTable@@HPEBVON_DimStyle@@@Z
+0001cdb2 A | ?HatchPatternTableEvent@CRhinoEventWatcher@@UEAAXW4hatchpattern_event@1@AEBVCRhinoHatchPatternTable@@HPEBVON_HatchPattern@@@Z
+0001ce33 A <?UndoEvent@CRhinoEventWatcher@@UEAAXW4undo_event@1@IPEBVCRhinoCommand@@@Z
+0001ce80 A ?Event@CRhinoEventWatcher@@UEAAXW4event_id@1@IHPEBX1@Z
+0001ceba A ?GetThisClass@CRhinoTabbedDockBarDialog@@SAPEAUCRuntimeClass@@XZ
+0001cefd A #?IsTabVisible@CRhinoTabbedDockBarDialog@@SA_NAEBVCRhinoDoc@@AEBU_GUID@@_N@Z
+0001cf4c A ?ActiveDoc@CRhinoApp@@QEBAPEAVCRhinoDoc@@XZ
+0001cf7a A ??0CRhinoTabbedDockBarDialog@@QEAA@XZ
+0001cfa0 A N#?IsRegistered@CRhinoEventWatcherEx@@QEBA_NXZ
+0001cfd2 A ?EnableAllDlgControls@CRhinoUiDialog@@QEAAX_N@Z
+0001d004 A ?Geometry@CRhinoObjRef@@QEBAPEBVON_Geometry@@XZ
+0001d036 A ?GetSafeHwnd@CRhinoView@@QEBAPEAUHWND__@@XZ
+0001d064 A ?ActiveView@CRhinoApp@@QEBAPEAVCRhinoView@@XZ
+0001d094 A ?Edge@CRhinoObjRef@@QEBAPEBVON_BrepEdge@@XZ
+0001d0c2 A ?Curve@CRhinoObjRef@@QEBAPEBVON_Curve@@XZ
+0001d0ed A +?Point@CRhinoObjRef@@QEBAPEBVON_Point@@XZ
+0001d11a A ?Brep@CRhinoObjRef@@QEBAPEBVON_Brep@@XZ
+0001d144 A ?DoDataExchange@CRhinoDialog@@MEAAXPEAVCDataExchange@@@Z
+0001d180 A ?GetThisMessageMap@CRhinoDialog@@KAPEBUAFX_MSGMAP@@XZ
+0001d1b6 A ]*?OnSize@CRhinoUiDialog@@QEAAXIHH@Z
+0001d1de A ?Add@CRhinoUiDialogItemResizer@@QEAAXHI@Z
+0001d209 A (?OnInitDialog@CRhinoTabbedDockBarDialog@@MEAAHXZ
+0001d23e A ??2CRhinoEventWatcherEx@@SAPEAX_K@Z
+0001d264 A ??3CRhinoEventWatcherEx@@SAXPEAX@Z
+0001d289 A -?Register@CRhinoEventWatcherEx@@QEAA_NXZ
+0001d2b6 A ?Enable@CRhinoEventWatcherEx@@QEAAX_N@Z
+0001d2de A ;(?OnCreate@CRhinoUiDialog@@QEAAHPEAUtagCREATESTRUCTW@@@Z
+0001d319 A <?Unregister@CRhinoEventWatcherEx@@QEAA_NXZ
+0001d346 A f(?OnDestroy@CRhinoDialog@@IEAAXXZ
+0001d36b A 0?RhinoHistoryManager@@YAPEAVCRhinoHistoryManager@@PEAVCRhinoDoc@@@Z
+0001d3b1 A -?RecordNextCommand@CRhinoHistoryManager@@QEBA_NXZ
+0001d3e4 A P8?SetRecordNextCommand@CRhinoHistoryManager@@QEAAX_N@Z
+0001d41d A 6?SetHistory@CRhinoObject@@QEAA_NAEAVCRhinoHistory@@@Z
+0001d454 A n.?ReplaceObject@CRhinoDoc@@QEAA_NAEBVCRhinoObjRef@@PEAVCRhinoObject@@_N@Z
+0001d4a2 A ?AddBrepObject@CRhinoDoc@@QEAAPEAVCRhinoBrepObject@@AEBVON_Brep@@PEBVON_3dmObjectAttributes@@PEAVCRhinoHistory@@H@Z
+0001d518 A ?AddObject@CRhinoDoc@@QEAA_NPEAVCRhinoObject@@_N1@Z
+0001d54d A 7?SetObjRefValues@CRhinoHistory@@QEAA_NHHPEBVCRhinoObjRef@@@Z
+0001d58d A 9?SetStringValue@CRhinoHistory@@QEAA_NHPEB_W@Z
+0001d5bd A 6?SetHistoryVersion@CRhinoHistory@@QEAA_NH@Z
+0001d5ea A L,?PreTranslateMessage@CRhinoTabbedDockBarDialog@@MEAAHPEAUtagMSG@@@Z
+0001d632 A ?Cast@CRhinoBrepObject@@SAPEBV1@PEBVON_Object@@@Z
+0001d665 A '?Object@CRhinoObjRef@@QEBAPEBVCRhinoObject@@XZ
+0001d697 A  ?HistoryRecord@CRhinoObject@@QEBAPEBVCRhinoHistoryRecord@@XZ
+0001d6d7 A  ?HistoryVersion@CRhinoHistoryRecord@@QEBAHXZ
+0001d708 A ?GetRhinoObjRefList@CRhinoHistoryRecord@@QEBAHHAEAV?$ON_ClassArray@VCRhinoObjRef@@@@@Z
+0001d762 A ?Count@?$ON_ClassArray@VCRhinoObjRef@@@@QEBAHXZ
+0001d793 A  ?HideObject@CRhinoDoc@@QEAA_NAEBVCRhinoObjRef@@_N@Z
+0001d7ca A ?ClearObjects@CRhinoGetObject@@QEAAXXZ
+0001d7f4 A ??A?$ON_ClassArray@VCRhinoObjRef@@@@QEAAAEAVCRhinoObjRef@@H@Z
+0001d834 A ?GeometryComponentIndex@CRhinoObjRef@@QEBA?AVON_COMPONENT_INDEX@@XZ
+0001d87a A ?ContinueModal@CRhinoDialog@@MEAAHXZ
+0001d8a0 A .(?OnCommand@CRhinoDialog@@MEAAH_K_J@Z
+0001d8c8 A $>?WindowProc@CRhinoTabbedDockBarDialog@@MEAA_JI_K_J@Z
+0001d902 A ?Create@CRhinoDialog@@UEAAHIPEAVCWnd@@@Z
+0001d92e A ?Create@CRhinoDialog@@UEAAHPEB_WPEAVCWnd@@@Z
+0001d95e A ?CreateIndirect@CRhinoUiDialog@@UEAAHPEAXPEAVCWnd@@@Z
+0001d996 A ?CreateIndirect@CRhinoUiDialog@@UEAAHPEBUDLGTEMPLATE@@PEAVCWnd@@PEAX@Z
+0001d9e0 A ?DoModal@CRhinoDialog@@UEAA_JXZ
+0001da01 A )?OnOK@CRhinoDialog@@MEAAXXZ
+0001da1f A '?OnCancel@CRhinoDialog@@MEAAXXZ
+0001da41 A *?OverrideAllowEscapeAndEnter@CRhinoUiDialog@@UEAA_NPEAUtagMSG@@@Z
+0001da85 A *?OnUnhandledEscapeAndEnter@CRhinoUiDialog@@UEAAXI@Z
+0001dabc A ?ForwardLMouseDownMessagesToParent@CRhinoUiDialog@@UEAA_NVCPoint@@@Z
+0001db04 A ?ForwardLMouseDblClickMessagesToParent@CRhinoUiDialog@@UEAA_NVCPoint@@@Z
+0001db4e A '(?OnColorButtonClicked@CRhinoDialog@@UEAAXI@Z
+0001db7e A L*?OnShowDockBar@CRhinoTabbedDockBarDialog@@UEAAX_N@Z
+0001dbb6 A ?EVF@CRhinoTabbedDockBarDialog@@MEAAPEAXPEB_WPEBX@Z
+0001dbea A |(?OnDockContextStartDrag@CRhinoTabbedDockBarDialog@@UEAA_N_N@Z
+0001dc2b A *?OnToggleDocking@CRhinoTabbedDockBarDialog@@UEAAX_N@Z
+0001dc62 A n*?OnStartTracking@CRhinoTabbedDockBarDialog@@UEAAX_N@Z
+0001dc9a A z(?OnDockBarPositionChanged@CRhinoTabbedDockBarDialog@@UEAAXK@Z
+0001dcda A Q*?OnShowTab@CRhinoTabbedDockBarDialog@@UEAAXAEBVCRhinoUiPanel@@_NAEBU_GUID@@@Z
+0001dd2b A )?OnNewDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@@Z
+0001dd67 A '?OnBeginSaveDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@PEB_WH@Z
+0001ddae A 6*?OnSetActiveView@CRhinoEventWatcher@@UEAAXPEAVCRhinoView@@@Z
+0001ddef A '?OnAddObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@@Z
+0001de3c A ??1CRhinoTabbedDockBarDialog@@UEAA@XZ
+0001de64 A ??0CRhinoIsIdle@@QEAA@U_GUID@@@Z
+0001de88 A ??1CRhinoIsIdle@@UEAA@XZ
+0001dea3 A "?IsEnabled@CRhinoEventWatcher@@QEBA_NXZ
+0001decd A -?Register@CRhinoTabbedDockBarDialog@@SA_NPEAUCRuntimeClass@@IIPEAVAFX_MODULE_STATE@@@Z
+0001df26 A -*?OnSaveAllSettings@CRhinoPlugIn@@UEAAXXZ
+0001df54 A ?ClassId@CRhinoUtilityPlugIn@@UEBAPEBVON_ClassId@@XZ
+0001df8c A ?CopyFrom@CRhinoUtilityPlugIn@@UEAA_NPEBVON_Object@@@Z
+0001dfc4 A 7"?Internal_DeepCopy@CRhinoUtilityPlugIn@@EEBAPEAVON_Object@@XZ
+0001e005 A #?IsValid@CRhinoPlugIn@@MEBA_NPEAVON_TextLog@@@Z
+0001e037 A %?LocalPlugInName@CRhinoPlugIn@@UEBAPEB_WXZ
+0001e065 A +?PlugInType@CRhinoUtilityPlugIn@@UEBA?AW4plugin_type@CRhinoPlugIn@@XZ
+0001e0ad A +?PlugInDescription@CRhinoPlugIn@@UEBAPEB_WXZ
+0001e0dd A %?LocalPlugInDescription@CRhinoPlugIn@@UEBAPEB_WXZ
+0001e111 A +?PlugInIcon@CRhinoPlugIn@@UEAAPEAUHICON__@@AEBVON_2iSize@@@Z
+0001e150 A v)?OnLoadPlugInErrorString@CRhinoPlugIn@@UEAA_NAEAVON_wString@@@Z
+0001e192 A 5%?LoadProfile@CRhinoPlugIn@@UEAAXPEB_WAEAVCRhinoProfileContext@@@Z
+0001e1d6 A &3?SaveProfile@CRhinoPlugIn@@UEAAXPEB_WAEAVCRhinoProfileContext@@@Z
+0001e21a A !*?OnRegisterPlugIn@CRhinoPlugIn@@UEAAX_N@Z
+0001e247 A +?PlugInLoadTime@CRhinoPlugIn@@UEAA?AW4plugin_load_time@1@XZ
+0001e284 A y(?OnDisplayPlugInHelp@CRhinoPlugIn@@UEBAHPEAUHWND__@@@Z
+0001e2bf A (?OnInitPlugInMenuPopups@CRhinoPlugIn@@UEAAX_K_J@Z
+0001e2f4 A ?GetMenuMessageString@CRhinoPlugIn@@UEBAXPEAUHMENU__@@IAEAVON_wString@@@Z
+0001e33f A *?OnPlugInMenuCommand@CRhinoPlugIn@@UEAAH_K@Z
+0001e370 A ?CallWriteDocument@CRhinoPlugIn@@UEAAHAEBVCRhinoFileWriteOptions@@@Z
+0001e3b7 A 2?SaveAsV3@CRhinoPlugIn@@UEAA_NAEBVCRhinoFileWriteOptions@@@Z
+0001e3f6 A l>?WriteDocument@CRhinoPlugIn@@UEAAHAEAVCRhinoDoc@@AEAVON_BinaryArchive@@AEBVCRhinoFileWriteOptions@@@Z
+0001e45e A U-?ReadDocument@CRhinoPlugIn@@UEAAHAEAVCRhinoDoc@@AEAVON_BinaryArchive@@AEBVCRhinoFileReadOptions@@@Z
+0001e4c6 A ?AddPagesToObjectPropertiesDialog@CRhinoPlugIn@@UEAAXAEAVCRhinoPropertiesPanelPageCollection@@@Z
+0001e52a A ?AddPagesToDocumentPropertiesDialog@CRhinoPlugIn@@UEAAXAEAVCRhinoOptionsPageCollection@@@Z
+0001e587 A .?RemoveDocumentPropertiesDialogTabs@CRhinoPlugIn@@UEAAXAEAVCRhinoDocumentPropertiesTabs@@@Z
+0001e5e6 A ?AddPagesToOptionsDialog@CRhinoPlugIn@@UEAAXAEAVCRhinoOptionsPageCollection@@@Z
+0001e638 A ?GetPlugInObjectInterface@CRhinoPlugIn@@UEAAPEAUIUnknown@@AEBU_GUID@@@Z
+0001e681 A .?ResetMessageBoxes@CRhinoPlugIn@@UEAAXXZ
+0001e6ad A +?PlugInProc@CRhinoPlugIn@@UEAA_JI_K_J@Z
+0001e6d7 A =?UtilityPlugInProc@CRhinoUtilityPlugIn@@UEAA_JI_K_J@Z
+0001e710 A ??0CRhinoUtilityPlugIn@@QEAA@XZ
+0001e732 A ??1CRhinoUtilityPlugIn@@UEAA@XZ
+0001e752 A RhinoCore.dll
+0001e762 A ??0ON_wString@@QEAA@XZ
+0001e77c A ??1ON_wString@@QEAA@XZ
+0001e794 A N??IsEmpty@ON_wString@@QEBA_NXZ
+0001e7b5 A E?LoadResourceString@ON_wString@@QEAA_NPEAUHINSTANCE__@@I@Z
+0001e7f4 A ??BON_wString@@QEBAPEB_WXZ
+0001e811 A 2?Empty@ON_wString@@QEAAXXZ
+0001e82f A U?SaturatedMagenta@ON_Color@@2V1@B
+0001e853 A ??IsNotEmpty@ON_wString@@QEBA_NXZ
+0001e878 A ??0ON_Xform@@QEAA@XZ
+0001e88e A +:?GetXform@ON_Viewport@@QEBA_NW4coordinate_system@ON@@0AEAVON_Xform@@@Z
+0001e8da A ??DON_Xform@@QEBA?AVON_3dPoint@@AEBV1@@Z
+0001e906 A ??0ON_Color@@QEAA@HHH@Z
+0001e91f A f?UnsetColor@ON_Color@@2V1@B
+0001e93d A U?SaturatedYellow@ON_Color@@2V1@B
+0001e962 A ??A?$ON_SimpleArray@PEAVON_Surface@@@@QEAAAEAPEAVON_Surface@@H@Z
+0001e9a5 A @?IsSurface@ON_Brep@@QEBA_NXZ
+0001e9c6 A ??4ON_wString@@QEAAAEBV0@PEB_W@Z
+0001e9ea A ??YON_wString@@QEAAAEBV0@AEBV0@@Z
+0001ea0d A 0?EdgeCount@ON_BrepVertex@@QEBAHXZ
+0001ea32 A ??A?$ON_ClassArray@VON_BrepEdge@@@@QEBAAEBVON_BrepEdge@@H@Z
+0001ea70 A ??A?$ON_SimpleArray@H@@QEBAAEBHH@Z
+0001ea95 A e?TrimCount@ON_BrepEdge@@QEBAHXZ
+0001eab7 A e?Trim@ON_BrepEdge@@QEBAPEAVON_BrepTrim@@H@Z
+0001eae5 A 3?Face@ON_BrepTrim@@QEBAPEAVON_BrepFace@@XZ
+0001eb12 A &&?Cast@ON_BrepEdge@@SAPEBV1@PEBVON_Object@@@Z
+0001eb43 A F?Mid@ON_Interval@@QEBANXZ
+0001eb5e A MM?PointAt@ON_Curve@@QEBA?AVON_3dPoint@@N@Z
+0001eb8a A 8&?Cast@ON_Curve@@SAPEBV1@PEBVON_Object@@@Z
+0001ebb7 A &?Cast@ON_Point@@SAPEBV1@PEBVON_Object@@@Z
+0001ebe2 A )H?New@ON_Brep@@SAPEAV1@XZ
+0001ec00 A ?Append@?$ON_SimpleArray@PEAVON_Surface@@@@QEAAXAEBQEAVON_Surface@@@Z
+0001ec47 A H?NewFace@ON_Brep@@QEAAAEAVON_BrepFace@@H@Z
+0001ec75 A H?NewLoop@ON_Brep@@QEAAAEAVON_BrepLoop@@W4TYPE@2@AEAVON_BrepFace@@@Z
+0001ecba A s^?SetTolerancesBoxesAndFlags@ON_Brep@@QEAAX_N0000000@Z
+0001ecf3 A A?IsValidTopology@ON_Brep@@QEBA_NPEAVON_TextLog@@@Z
+0001ed29 A A?IsValidGeometry@ON_Brep@@QEBA_NPEAVON_TextLog@@@Z
+0001ed5f A A?IsValidTolerancesAndFlags@ON_Brep@@QEBA_NPEAVON_TextLog@@@Z
+0001ed9e A .H?New@ON_NurbsSurface@@SAPEAV1@AEBV1@@Z
+0001edc9 A .?Destroy@ON_Brep@@QEAAXXZ
+0001ede5 A *?Create@ON_Brep@@QEAA_NAEAPEAVON_NurbsSurface@@@Z
+0001ee1a A ??0ON_NurbsSurface@@QEAA@XZ
+0001ee38 A ??1ON_NurbsSurface@@UEAA@XZ
+0001ee54 A |A?IsValid@ON_NurbsSurface@@UEBA_NPEAVON_TextLog@@@Z
+0001ee8a A G*?Count@?$ON_SimpleArray@PEAVON_Curve@@@@QEBAHXZ
+0001eebe A ?Append@?$ON_SimpleArray@PEAVON_Curve@@@@QEAAXAEBQEAVON_Curve@@@Z
+0001ef01 A *?Count@?$ON_ClassArray@VON_BrepEdge@@@@QEBAHXZ
+0001ef33 A *?Count@?$ON_ClassArray@VON_BrepVertex@@@@QEBAHXZ
+0001ef67 A 3?EvPoint@ON_Surface@@QEBA_NNNAEAVON_3dPoint@@HPEAH@Z
+0001ef9f A I?NewVertex@ON_Brep@@QEAAAEAVON_BrepVertex@@VON_3dPoint@@N@Z
+0001efdd A H?NewEdge@ON_Brep@@QEAAAEAVON_BrepEdge@@AEAVON_BrepVertex@@0HPEBVON_Interval@@N@Z
+0001f032 A ??A?$ON_ClassArray@VON_BrepVertex@@@@QEAAAEAVON_BrepVertex@@H@Z
+0001f073 A I?NewTrim@ON_Brep@@QEAAAEAVON_BrepTrim@@AEAVON_BrepEdge@@_NAEAVON_BrepLoop@@H@Z
+0001f0c6 A ??A?$ON_ClassArray@VON_BrepEdge@@@@QEAAAEAVON_BrepEdge@@H@Z
+0001f104 A ??D@YA?AVON_3dPoint@@NAEBV0@@Z
+0001f126 A ??HON_3dPoint@@QEBA?AV0@AEBV0@@Z
+0001f149 A ]?SetPoint@ON_BrepVertex@@QEAA_NAEBVON_3dPoint@@@Z
+0001f17e A ??A?$ON_SimpleArray@PEAVON_Curve@@@@QEAAAEAPEAVON_Curve@@H@Z
+0001f1be A ??BON_3dPoint@@QEAAPEANXZ
+0001f1d9 A 3?EvPoint@ON_Curve@@QEBA_NNAEAVON_3dPoint@@HPEAH@Z
+0001f20c A <&?Cast@ON_CurveProxy@@SAPEBV1@PEBVON_Object@@@Z
+0001f23e A w&?Cast@ON_NurbsCurve@@SAPEAV1@PEAVON_Object@@@Z
+0001f272 A ??0ON_NurbsCurve@@QEAA@XZ
+0001f28e A ??1ON_NurbsCurve@@UEAA@XZ
+0001f2a8 A {A?IsValid@ON_NurbsCurve@@UEBA_NPEAVON_TextLog@@@Z
+0001f2dc A *H?New@ON_NurbsCurve@@SAPEAV1@AEBV1@@Z
+0001f306 A ??0ON_3dPoint@@QEAA@NNN@Z
+0001f320 A u3?Ev2Der@ON_Surface@@QEBA_NNNAEAVON_3dPoint@@AEAVON_3dVector@@1111HPEAH@Z
+0001f36e A ??BON_3dVector@@QEAAPEANXZ
+0001f38a A r3?Ev1Der@ON_Surface@@QEBA_NNNAEAVON_3dPoint@@AEAVON_3dVector@@1HPEAH@Z
+0001f3d2 A .E?Loop@ON_BrepTrim@@QEBAPEAVON_BrepLoop@@XZ
+0001f401 A e?TrimCount@ON_BrepLoop@@QEBAHXZ
+0001f423 A <?IndexOfTrim@ON_BrepLoop@@QEBAHAEBVON_BrepTrim@@@Z
+0001f459 A e?Trim@ON_BrepLoop@@QEBAPEAVON_BrepTrim@@H@Z
+0001f487 A e?TrimCurveOf@ON_BrepTrim@@QEBAPEBVON_Curve@@XZ
+0001f4b9 A c?SurfaceOf@ON_BrepTrim@@QEBAPEBVON_Surface@@XZ
+0001f4ea A z3?EvNormal@ON_Surface@@QEBA_NNNAEAVON_3dVector@@HPEAH@Z
+0001f525 A V?Scale@ON_3dmUnitsAndTolerances@@QEBANW4LengthUnitSystem@ON@@@Z
+0001f568 A ??BON_3dPoint@@QEBAPEBNXZ
+0001f582 A JE?MakeIncreasing@ON_Interval@@QEAA_NXZ
+0001f5aa A 2&?Cast@ON_BrepVertex@@SAPEBV1@PEBVON_Object@@@Z
+0001f5dc A 9M?Point@ON_BrepVertex@@QEBA?AVON_3dPoint@@XZ
+0001f60b A c?SurfaceOf@ON_BrepFace@@QEBAPEBVON_Surface@@XZ
+0001f63c A SU?Reverse@ON_3dVector@@QEAAXXZ
+0001f65c A f&?Cast@ON_LineCurve@@SAPEBV1@PEBVON_Object@@@Z
+0001f68c A  &?Cast@ON_ArcCurve@@SAPEBV1@PEBVON_Object@@@Z
+0001f6be A ??2ON_Object@@SAPEAX_K@Z
+0001f6da A ??3ON_Object@@SAXPEAX@Z
+0001f6f2 A 00?Dump@ON_Object@@UEBAXAEAVON_TextLog@@@Z
+0001f71f A -?DataCRC@ON_Object@@UEBAII@Z
+0001f73f A i?Write@ON_Object@@UEBA_NAEAVON_BinaryArchive@@@Z
+0001f773 A O?Read@ON_Object@@UEAA_NAEAVON_BinaryArchive@@@Z
+0001f7a5 A g?UpdateReferencedComponents@ON_Object@@UEAA_NAEBVON_ComponentManifest@@0AEBVON_ManifestMap@@@Z
+0001f807 A '?ClearComponentStates@ON_Object@@UEBAIVON_COMPONENT_INDEX@@VON_ComponentStatus@@@Z
+0001f85d A '?ClearComponentStates@ON_Object@@UEBAIVON_ComponentStatus@@@Z
+0001f89d A 7?GetComponentsWithSetStates@ON_Object@@UEBAIVON_ComponentStatus@@_NAEAV?$ON_SimpleArray@VON_COMPONENT_INDEX@@@@@Z
+0001f911 A Z?SetComponentStates@ON_Object@@UEBAIVON_COMPONENT_INDEX@@VON_ComponentStatus@@@Z
+0001f965 A Z?SetComponentStatus@ON_Object@@UEBAIVON_COMPONENT_INDEX@@VON_ComponentStatus@@@Z
+0001f9ba A ?AggregateComponentStatus@ON_Object@@UEBA?AVON_AggregateComponentStatus@@XZ
+0001fa07 A E?MarkAggregateComponentStatusAsNotCurrent@ON_Object@@UEBAXXZ
+0001fa47 A -?DeleteComponents@ON_Object@@UEAA_NPEBVON_COMPONENT_INDEX@@_K@Z
+0001fa88 A R&?Cast@ON_Geometry@@SAPEBV1@PEBVON_Object@@@Z
+0001faba A ??4ON_wString@@QEAAAEBV0@AEBV0@@Z
+0001fade A ??YON_wString@@QEAAAEBV0@PEB_W@Z
+0001fb01 A 4?Find@ON_wString@@QEBAH_W@Z
+0001fb20 A ??0ON_wString@@QEAA@$$QEAV0@@Z
+0001fb42 A ??0ON_wString@@QEAA@AEBV0@@Z
+0001fb61 A D?Left@ON_wString@@QEBA?AV1@H@Z
+0001fb83 A 9?GetStringValue@ON_HistoryRecord@@QEBA_NHAEAVON_wString@@@Z
+0001fbc1 A D?Length@ON_wString@@QEBAHXZ
+0001fbe0 A ?Array@ON_wString@@QEAAPEA_WXZ
+0001fc02 A ??4ON_wString@@QEAAAEBV0@PEBD@Z
+0001fc22 A 9K?ON_UuidFromString@@YA?AU_GUID@@PEB_W@Z
+0001fc4c A |F?MemoryRelocate@ON_Object@@UEAAXXZ
+0001fc73 A _?SizeOf@ON_Object@@UEBAIXZ
+0001fc91 A K?ObjectType@ON_Object@@UEBA?AW4object_type@ON@@XZ
+0001fcc5 A G?ModelObjectId@ON_Object@@UEBA?AU_GUID@@XZ
+0001fcf3 A /?DestroyRuntimeCache@ON_Object@@UEAAX_N@Z
+0001fd1e A opennurbs.dll
+0001fd2e A __CxxFrameHandler3
+0001fd44 A __std_terminate
+0001fd56 A wcsrchr
+0001fd60 A wcsstr
+0001fd6a A memset
+0001fd74 A __C_specific_handler
+0001fd8c A __std_type_info_destroy_list
+0001fdaa A VCRUNTIME140.dll
+0001fdbe A wcscat_s
+0001fdca A free
+0001fdd2 A _itow_s
+0001fddc A wcstol
+0001fde6 A _seh_filter_dll
+0001fdf8 A _configure_narrow_argv
+0001fe12 A _initialize_narrow_environment
+0001fe34 A _initialize_onexit_table
+0001fe50 A _register_onexit_function
+0001fe6c A _execute_onexit_table
+0001fe84 A _crt_atexit
+0001fe92 A _cexit
+0001fe9c A terminate
+0001fea8 A _initterm
+0001feb4 A _initterm_e
+0001fec0 A api-ms-win-crt-string-l1-1-0.dll
+0001fee2 A api-ms-win-crt-heap-l1-1-0.dll
+0001ff02 A api-ms-win-crt-convert-l1-1-0.dll
+0001ff24 A api-ms-win-crt-runtime-l1-1-0.dll
+0001ff48 A OutputDebugStringW
+0001ff5e A _CxxThrowException
+0001ff74 A sqrt
+0001ff7a A api-ms-win-crt-math-l1-1-0.dll
+00020050 A .PEAVCMemoryException@@
+00020078 A .?AVCNoTrackObject@@
+000200a0 A .?AV_AFX_DLL_MODULE_STATE@@
+000200d0 A .?AVAFX_MODULE_STATE@@
+000200f8 A .?AVtype_info@@
+00020118 A .?AVCRhinoCommand@@
+00020140 A .?AVCCommandXNurbsRhino@@
+00020170 A .?AVCCommandXNurbsRhinoHelp@@
+000201a0 A .?AVCRhinoGetObject@@
+000201c8 A .?AVCRhinoGet@@
+000201e8 A .?AVCRhinoGetXNurbsObject@@
+00020218 A .?AVCRhinoDisplayConduit@@
+00020248 A .?AVCXNurbsPreviewConduit@@
+00020278 A .?AVON_Object@@
+00020298 A .?AVCRhinoObject@@
+000202c0 A .?AVCRhinoBrepObject@@
+000202e8 A .?AVCRhinoEventWatcher@@
+00020318 A .?AVCXNurbsAPIEvent@@
+00020340 A .?AVCDialog@@
+00020360 A .?AVCWnd@@
+00020380 A .?AVCCmdTarget@@
+000203a8 A .?AVCObject@@
+000203c8 A .?AVCRhinoTabbedDockBarDialog@@
+000203f8 A .?AVIDockBarEventWatcher@@
+00020428 A .?AVITabbedDockBarEventWatcher@@
+00020460 A .?AVCRhinoDialog@@
+00020488 A .?AVCRhinoUiDialog@@
+000204b0 A .?AVCXNurbsDialog@@
+000204d8 A .?AVCRhinoIsIdle@@
+00020500 A .?AVCRhinoEventWatcherEx@@
+00020530 A .?AVCXNurbsIdleWatcher@@
+00020560 A .?AVCWinApp@@
+00020580 A .?AVCWinThread@@
+000205a8 A .?AVCXNurbsRhinoApp@@
+000205d0 A .?AVCRhinoUtilityPlugIn@@
+00020600 A .?AVCRhinoPlugIn@@
+00020628 A .?AVCXNurbsRhinoPlugIn@@
+00021912 W AFX_DIALOG_LAYOUT
+00021c6c A IHDR
+00021c85 A IDATx
+00021caa A BGA}6
+00021d06 A 0Ybw
+00021d6e A U(--
+00021d74 A 32)%5
+00021e80 A Bi%eU
+00021ebb A >0Z]~,Cn
+00021ef5 A :c ,EVh
+00021f59 A A?vl
+00021f7d A jRra
+00021f8c A I :a
+00021fe0 A @t"\
+00021fee A 3s())
+00022093 A 1f:efV
+00022235 A gH4n
+0002235a A B=Z@@
+00022392 A P:=3q
+000223cd A  *.V
+00022455 A E{voS
+000224e4 A HbRD
+0002250f A |&|;Z
+00022559 A .br'
+000225ba A @"%%
+000226d3 A <YB#
+000226fe A ?~_Csg=
+000227ea A d`s]D
+00022817 A 3l~o
+0002284d A Is~|
+00022854 A TVvZ
+000228d7 A rh=I
+000228e7 A >;$M
+0002292a A !'1y
+00022984 A +SoP
+00022989 A l-7b
+00022999 A (--C
+000229d0 A MIRtwe
+00022a2f A &L'$
+00022a34 A GX|-
+00022a7d A ]95-
+00022bbf A d;1Yew]m
+00022bce A VZnLJJ
+00022bd8 A 0%oJu
+00022c00 A w q[
+00022c33 A x!;~J=
+00022ccf A Q#&{
+00022cfa A )//gR
+00022d12 A 'Q{+g
+00022d1f A e dW
+00022d6c A TXK9
+00022d7d A bF4!
+00022d91 A XFF>q
+00022db3 A >L4p
+00022dd2 A }{w+Y
+00022dff A 9(7Wrf
+00022e13 A ,JHeJ
+00022e1c A 5!5UJgg
+00022e8b A r&d1
+00022e95 A )zBF
+00022ea9 A yiPN
+00022f54 A j&oUy
+00022faa A &6h@)
+0002307d A *g8,
+00023187 A k~oni
+000231ea A )e.zS>
+000231f1 A +, x9V
+00023226 A dum2
+000234f8 A (,<J
+00023558 A k0%_v9eL
+00023606 A fh|_^` 8
+00023634 A Hd-^
+000236a9 A 'Q{;
+000237cc A ~TVvZ9
+00023880 A /'6C
+000238e3 A Y8z$
+00023946 A 22C9
+00023afc A JF`'
+00023b37 A 3#jh
+00023b62 A )(1'
+00023b83 A qON>
+00023c05 A o)X@
+00023c59 A 9, D9
+00023c84 A H$_|
+00023cf4 A 1O"> 
+00023d2b A q,r,
+00023d75 A X9~TX
+00023d92 A O>ZJ_
+00023d9e A GyyZ
+00023df9 A R9:X
+00023f23 A G`r>
+00023f42 A |Hc#
+00023fbb A F@'*
+000240b8 A A7(<
+00024128 A mZj|
+00024157 A x+{Qa
+0002415e A =*)6
+000241aa A ZQVV
+00024213 A E/<v
+000242df A &CSp
+00024337 A Zylr
+000243b6 A V=Wj
+00024411 A 0YGR
+00024421 A xbLD"
+0002446a A D@9Me
+000244d2 A |~=Z`
+00024519 A @d`4
+000245b7 A 3e>3!
+00024626 A +;h|
+00024690 A uZz&
+00024699 A 4mAg
+000246b4 A H@ 8
+000246bc A NAO<
+000246fa A `{j*H@ 
+00024782 A PjZz
+000247d0 A ZpeoM
+00024806 A ;wpe/
+00024856 A Q wa
+000248fc A (?|Dj
+000249b4 A X(5w
+000249e7 A n95jS
+00024a15 A "@hB
+00024a69 A tKKK
+00024a96 A uQbb
+00024acf A nCjzFK
+00024b8a A ?t@94
+00024b9e A HdeU
+00024c27 A u?)Y
+00024c6a A AX $
+00024ce2 A Y:rX]
+00024d42 A &kIZ#@=z
+00024d97 A W_{3]tI
+00024dbc A 1H))
+00024dc4 A hJMM
+00024dec A ;\F]
+00024e40 A 4mAw
+00024e4a A 7(//
+00024e82 A nY f`
+00024ef9 A R@,O
+00024fb4 A @l,:
+00025024 A ];si
+0002508d A ql7N]
+000250c1 A ,Bqq!
+000250e5 A `cQl0*c
+0002513e A @;&pZ
+00025173 A -w#-^
+000251e6 A :uCa
+000251fa A |s;D
+0002531f A _&|C
+00025377 A hJII
+0002539c A _tI'
+000253be A K{0y
+000253e5 A ~7E?@'KNh}
+0002541e A M@;b
+00025442 A <xp_
+000254b5 A j)<|Xzz
+0002551f A >JQt
+00025581 A DVVu> 
+0002566a A IEND
+00025787 A orda
+00025b3b A >YNL
+00025cb7 A nrda
+0002606b A <YMK
+0002662c A I@>w[RR8
+00026708 A .))d
+00027247 A n&" 
+000277a7 A .ra]
+00027cdf A foa^
+00027f53 A &KA@
+0002804f A B]RO
+00028a4b A 2vfa
+00028d37 A RfZV
+0002902f A J}lh
+00029152 W MS Shell Dlg
+000291f3 A ~'`:
+00029285 A bQb:
+00029394 W msctls_trackbar32
+000293dd A c6R:
+00029444 A s^fW
+00029564 A >f:y
+000296ac W 1078148786
+00029756 A ck8^
+000297c5 A l%N<h
+00029819 A vMOn
+00029829 A N*N 
+0002982c W  xNURBS 
+000298ba W VS_VERSION_INFO
+00029916 W StringFileInfo
+0002993a W 080403A8
+00029952 W CompanyName
+00029982 W FileDescription
+000299a4 W XNurbsRhino Plugin
+000299d2 W FileVersion
+000299ec W 5.0.0.0
+00029a02 W InternalName
+00029a42 W LegalCopyright
+00029a60 W Copyright 
+00029a76 W  2020 XNurbs. All rights reserved.
+00029ac2 W OriginalFilename
+00029b0a W ProductName
+00029b24 W XNurbsRhino
+00029b42 W ProductVersion
+00029b76 W VarFileInfo
+00029b96 W Translation
+00029bb7 A <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+00029bf0 A <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0"><trustInfo xmlns="urn:schemas-microsoft-com:asm.v3"><security><requestedPrivileges><requestedExecutionLevel level="asInvoker" uiAccess="false"></requestedExecutionLevel></requestedPrivileges></security></trustInfo><application xmlns="urn:schemas-microsoft-com:asm.v3"><windowsSettings><dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true</dpiAware></windowsSettings></application></assembly>

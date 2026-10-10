@@ -71,6 +71,11 @@
     <EmbeddedResource Include="payload\SurfaceUnify.dll" LogicalName="p_unf8_dll" />
     <EmbeddedResource Include="payload\SurfaceUnify.deps.json" LogicalName="j_unf8_deps" />
     <EmbeddedResource Include="payload\SurfaceUnify.runtimeconfig.json" LogicalName="j_unf8_rt" />
+    <EmbeddedResource Include="payload\PatchFill-rh7.rhp" LogicalName="p_pf7" />
+    <EmbeddedResource Include="payload\PatchFill-rh8.rhp" LogicalName="p_pf8" />
+    <EmbeddedResource Include="payload\PatchFill.dll" LogicalName="p_pf8_dll" />
+    <EmbeddedResource Include="payload\PatchFill.deps.json" LogicalName="j_pf8_deps" />
+    <EmbeddedResource Include="payload\PatchFill.runtimeconfig.json" LogicalName="j_pf8_rt" />
   </ItemGroup>
 
 </Project>

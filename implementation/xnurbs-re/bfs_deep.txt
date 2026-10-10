@@ -1,0 +1,26 @@
+## deep BFS: scanned=1552 distinct=1552 (budget 60000, complete)
+## reached code per 1MB bucket
+     0 MB (0x00000000) : 68
+     4 MB (0x00400000) : 5
+    27 MB (0x01b00000) : 1
+    44 MB (0x02c00000) : 2
+    45 MB (0x02d00000) : 3
+    46 MB (0x02e00000) : 372
+    47 MB (0x02f00000) : 1101
+
+## cross-bucket edges (from -> to : count), sorted
+    47 MB ->  47 MB : 4238
+    46 MB ->  46 MB : 744
+    46 MB ->  47 MB : 240
+    47 MB ->  46 MB : 208
+     0 MB ->   0 MB : 179
+     0 MB ->  47 MB : 40
+    46 MB ->   0 MB : 9
+     0 MB ->   4 MB : 5
+    45 MB ->  45 MB : 3
+    44 MB ->  44 MB : 2
+     0 MB ->  44 MB : 1
+    44 MB ->   0 MB : 1
+    44 MB ->  45 MB : 1
+     0 MB ->  27 MB : 1
+     4 MB ->  27 MB : 1

@@ -1,0 +1,38 @@
+### VK_get_auto_enforce_tol_flavor entry RVA = 0x2ed5790
+
+===== chunk @0x2ed5790 @ rva 0x2ed5790 len 0x60 =====
+  02ed5790  push     rbx
+  02ed5792  sub      rsp, 0x20
+  02ed5796  mov      rbx, rdx
+  02ed5799  mov      edx, 1
+  02ed579e  call     0x182ee6300   ; -> 0x2ee6300
+  02ed57a3  mov      rcx, rax
+  02ed57a6  test     rax, rax
+  02ed57a9  jne      0x182ed57b6
+  02ed57ab  mov      eax, 0x10
+  02ed57b0  add      rsp, 0x20
+  02ed57b4  pop      rbx
+  02ed57b5  ret      
+  02ed57b6  mov      rax, qword ptr [rax]
+  02ed57b9  mov      rdx, rbx
+  02ed57bc  add      rsp, 0x20
+  02ed57c0  pop      rbx
+  02ed57c1  jmp      qword ptr [rax + 0x30]
+  02ed57c5  int3     
+  02ed57c6  int3     
+  02ed57c7  int3     
+  02ed57c8  int3     
+  02ed57c9  int3     
+  02ed57ca  int3     
+  02ed57cb  int3     
+  02ed57cc  int3     
+  02ed57cd  int3     
+  02ed57ce  int3     
+  02ed57cf  int3     
+  02ed57d0  mov      r10, qword ptr [rip + 0x393051]
+  02ed57d7  mov      dword ptr [rdx], 0
+  02ed57dd  test     r10, r10
+  02ed57e0  je       0x182ed5839
+  02ed57e2  mov      r8, qword ptr [r10 + 8]
+  02ed57e6  mov      rax, r8
+  02ed57e9  mov      r9, qword ptr [r8 + 8]

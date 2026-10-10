@@ -1,0 +1,531 @@
+# PE RECON: C:/Program Files/Rhino 7/Plug-ins/XNurbsRhino 5/xnkernel.dll
+size_bytes: 53431808
+machine: 0x8664  (0x8664=x64, 0x14c=x86)
+timestamp: 1607672636  (2020-12-11 07:43:56 UTC)
+characteristics: 0x2022
+is_dll: True  is_exe: False
+subsystem: 2
+image_base: 0x180000000
+entry_point(RVA): 0x2f86944
+dll_characteristics: 0x160
+  flags: HIGH_ENTROPY_VA, DYNAMIC_BASE, NX_COMPAT
+
+## CLR / MANAGED DETECTION
+  COM_DESCRIPTOR dir: RVA=0x0 size=0
+  => IS_MANAGED: False
+
+## SECTIONS
+name               VA      VSize     RawPtr    RawSize  Entropy      Flags
+.text          0x1000  0x2feb978      0x400  0x2feba00   6.6537 0x60000020
+.rdata      0x2fed000   0x223834  0x2febe00   0x223a00   5.9241 0x40000040
+.data       0x3211000    0x61ff8  0x320f800    0x1be00   2.2423 0xc0000040
+.pdata      0x3273000    0xc5b50  0x322b600    0xc5c00   7.1251 0x40000040
+.gfids      0x3339000       0x2c  0x32f1200      0x200    0.224 0x40000040
+.tls        0x333a000        0x9  0x32f1400      0x200   0.0204 0xc0000040
+.rsrc       0x333b000      0x5d8  0x32f1600      0x600   4.0702 0x40000040
+.reloc      0x333c000     0x314c  0x32f1c00     0x3200    5.457 0x42000040
+
+## EXPORTS
+  dll_name: xnkernel.dll
+  ordinal_base: 1
+  export_count: 47
+  named_count: 47
+    ord        RVA name
+      1  0x2ed1c50 VK_Calc_C1_dd
+      2  0x2ed1c70 VK_Calc_C2_dd
+      3  0x2ed1ca0 VK_Calc_C3_dd
+      4  0x2ed1e80 VK_Calc_perpendicular_curvature
+      5  0x2ed1ee0 VK_Calc_perpendicular_curvature2
+      6  0x2ed19f0 VK_add_area_pressure
+      7  0x2ed13e0 VK_add_curve_cst
+      8  0x2ed0e80 VK_add_pt_cst
+      9  0x2ed1170 VK_add_pt_position_normal_set_cst
+     10  0x2ed1090 VK_add_pt_position_set_cst
+     11  0x2ed5f00 VK_check_open_boundary_difference
+     12  0x2ed5de0 VK_check_quad_sided_possibility
+     13  0x2ed0790 VK_create_bspline
+     14  0x2ed0f90 VK_create_multi_pt_cst
+     15  0x2ed0960 VK_create_vcurve
+     16  0x2ed06f0 VK_create_vsurf
+     17  0x2ed5560 VK_create_vsurf_advanced
+     18  0x2ed55d0 VK_create_vsurf_advanced2
+     19  0x2ed5b40 VK_create_vsurf_without_init_para
+     20  0x2ed5d00 VK_create_vsurf_without_init_para2
+     21  0x2ed0b40 VK_free_v_object
+     22  0x2ed0ad0 VK_free_vsurf
+     23  0x2ed1a90 VK_generate_solution
+     24  0x2ed5790 VK_get_auto_enforce_tol_flavor
+     25  0x2ed1bc0 VK_get_bcurve
+     26  0x2ed1b30 VK_get_bsurf
+     27  0x2ed5910 VK_get_interval_from_curve_cst
+     28  0x2ed5a10 VK_get_num_of_pts_from_multi_pt_cst
+     29  0x2ed5700 VK_get_outcome_status
+     30  0x2ed5d60 VK_get_outer_boundary_loop
+     31  0x2ed5840 VK_get_uv_bcurve_from_curve_cst
+     32  0x2ed5980 VK_get_uv_from_point_cst
+     33  0x2ed5a90 VK_get_uvs_from_multi_pt_cst
+     34  0x2ed06e0 VK_get_version
+     35  0x2ed57d0 VK_get_warning_message
+     36  0x2ecd5a0 VK_initialize_kernel
+     37  0x2ed1610 VK_modify_curve_cst
+     38  0x2ed1310 VK_remove_all_from_multi_pt_cst
+     39  0x2ed1730 VK_remove_constraint
+     40  0x2ed18a0 VK_remove_physical_force
+     41  0x2ed1250 VK_remove_pt_from_multi_pt_cst
+     42  0x2ed0a00 VK_reset_bsurf
+     43  0x2ed13d0 VK_reset_pt_xyz
+     44  0x2ed0d30 VK_reset_vsurf
+     45  0x2ed5640 VK_reset_vsurf_advanced
+     46  0x2ed56a0 VK_reset_vsurf_advanced2
+     47  0x2ed0260 VK_terminate_kernel
+
+## IMPORTS
+  KERNEL32.dll  (95 imports)
+      CloseHandle
+      CreateDirectoryW
+      CreateEventA
+      CreateEventW
+      CreateFileMappingA
+      CreateFileW
+      CreateIoCompletionPort
+      CreateMutexA
+      CreateWaitableTimerA
+      CreateWaitableTimerW
+      DeleteCriticalSection
+      DeleteFileW
+      DeviceIoControl
+      EnterCriticalSection
+      FileTimeToSystemTime
+      FormatMessageA
+      FormatMessageW
+      FreeLibrary
+      GetCurrentProcess
+      GetCurrentProcessId
+      GetCurrentThread
+      GetCurrentThreadId
+      GetEnvironmentVariableA
+      GetFileSizeEx
+      GetLastError
+      GetModuleFileNameW
+      GetModuleHandleA
+      GetModuleHandleW
+      GetProcAddress
+      GetProcessAffinityMask
+      GetProcessHeap
+      GetQueuedCompletionStatus
+      GetSystemDirectoryW
+      GetSystemTimeAsFileTime
+      GetThreadLocale
+      GetTickCount
+      GetVolumeNameForVolumeMountPointW
+      GetVolumePathNameW
+      GlobalFree
+      HeapAlloc
+      HeapFree
+      InitializeCriticalSection
+      InitializeCriticalSectionAndSpinCount
+      InitializeCriticalSectionEx
+      InitializeSListHead
+      IsDebuggerPresent
+      IsProcessorFeaturePresent
+      LeaveCriticalSection
+      LoadLibraryA
+      LoadLibraryExA
+      LoadLibraryW
+      LocalAlloc
+      LocalFree
+      MapViewOfFile
+      MultiByteToWideChar
+      OpenEventA
+      OpenProcess
+      OutputDebugStringW
+      PostQueuedCompletionStatus
+      QueryPerformanceCounter
+      QueryPerformanceFrequency
+      QueueUserAPC
+      ReadFile
+      ReleaseMutex
+      ReleaseSemaphore
+      ResetEvent
+      ResumeThread
+      RtlCaptureContext
+      RtlLookupFunctionEntry
+      RtlVirtualUnwind
+      SetEnvironmentVariableW
+      SetEvent
+      SetFileAttributesW
+      SetLastError
+      SetThreadAffinityMask
+      SetUnhandledExceptionFilter
+      SetWaitableTimer
+      Sleep
+      SleepEx
+      TerminateProcess
+      TerminateThread
+      TlsAlloc
+      TlsFree
+      TlsGetValue
+      TlsSetValue
+      TryEnterCriticalSection
+      UnhandledExceptionFilter
+      VerSetConditionMask
+      VerifyVersionInfoA
+      VerifyVersionInfoW
+      WaitForMultipleObjects
+      WaitForMultipleObjectsEx
+      WaitForSingleObject
+      WaitForSingleObjectEx
+      WideCharToMultiByte
+  ADVAPI32.dll  (26 imports)
+      AllocateAndInitializeSid
+      ChangeServiceConfigW
+      CloseServiceHandle
+      CryptAcquireContextW
+      CryptCreateHash
+      CryptDestroyHash
+      CryptGenRandom
+      CryptGetHashParam
+      CryptHashData
+      CryptReleaseContext
+      EqualSid
+      FreeSid
+      GetAce
+      GetAclInformation
+      GetSecurityInfo
+      InitializeSecurityDescriptor
+      OpenSCManagerW
+      OpenServiceW
+      QueryServiceConfigW
+      RegCloseKey
+      RegOpenKeyExA
+      RegOpenKeyExW
+      RegQueryValueExW
+      SetEntriesInAclW
+      SetSecurityDescriptorDacl
+      SetSecurityInfo
+  SHELL32.dll  (1 imports)
+      SHGetFolderPathW
+  ole32.dll  (4 imports)
+      CoCreateInstance
+      CoInitializeEx
+      CoSetProxyBlanket
+      CoUninitialize
+  OLEAUT32.dll  (6 imports)
+      SafeArrayGetElement
+      SysAllocString
+      SysAllocStringLen
+      SysFreeString
+      SysStringLen
+      VariantClear
+  MSVCP140.dll  (85 imports)
+      ??0?$basic_ios@DU?$char_traits@D@std@@@std@@IEAA@XZ
+      ??0?$basic_ios@_WU?$char_traits@_W@std@@@std@@IEAA@XZ
+      ??0?$basic_iostream@DU?$char_traits@D@std@@@std@@QEAA@PEAV?$basic_streambuf@DU?$char_traits@D@std@@@1@@Z
+      ??0?$basic_istream@DU?$char_traits@D@std@@@std@@QEAA@PEAV?$basic_streambuf@DU?$char_traits@D@std@@@1@_N@Z
+      ??0?$basic_istream@_WU?$char_traits@_W@std@@@std@@QEAA@PEAV?$basic_streambuf@_WU?$char_traits@_W@std@@@1@_N@Z
+      ??0?$basic_ostream@DU?$char_traits@D@std@@@std@@QEAA@PEAV?$basic_streambuf@DU?$char_traits@D@std@@@1@_N@Z
+      ??0?$basic_streambuf@DU?$char_traits@D@std@@@std@@IEAA@XZ
+      ??0?$basic_streambuf@_WU?$char_traits@_W@std@@@std@@IEAA@XZ
+      ??0_Lockit@std@@QEAA@H@Z
+      ??1?$basic_ios@DU?$char_traits@D@std@@@std@@UEAA@XZ
+      ??1?$basic_ios@_WU?$char_traits@_W@std@@@std@@UEAA@XZ
+      ??1?$basic_iostream@DU?$char_traits@D@std@@@std@@UEAA@XZ
+      ??1?$basic_istream@DU?$char_traits@D@std@@@std@@UEAA@XZ
+      ??1?$basic_istream@_WU?$char_traits@_W@std@@@std@@UEAA@XZ
+      ??1?$basic_ostream@DU?$char_traits@D@std@@@std@@UEAA@XZ
+      ??1?$basic_streambuf@DU?$char_traits@D@std@@@std@@UEAA@XZ
+      ??1?$basic_streambuf@_WU?$char_traits@_W@std@@@std@@UEAA@XZ
+      ??1_Lockit@std@@QEAA@XZ
+      ??5?$basic_istream@_WU?$char_traits@_W@std@@@std@@QEAAAEAV01@AEAH@Z
+      ??Bid@locale@std@@QEAA_KXZ
+      ??_D?$basic_ostream@DU?$char_traits@D@std@@@std@@QEAAXXZ
+      ?_BADOFF@std@@3_JB
+      ?_Fiopen@std@@YAPEAU_iobuf@@PEB_WHH@Z
+      ?_Getcat@?$codecvt@DDU_Mbstatet@@@std@@SA_KPEAPEBVfacet@locale@2@PEBV42@@Z
+      ?_Getcat@?$codecvt@_WDU_Mbstatet@@@std@@SA_KPEAPEBVfacet@locale@2@PEBV42@@Z
+      ?_Getgloballocale@locale@std@@CAPEAV_Locimp@12@XZ
+      ?_Init@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IEAAXXZ
+      ?_Init@?$basic_streambuf@_WU?$char_traits@_W@std@@@std@@IEAAXXZ
+      ?_Lock@?$basic_streambuf@DU?$char_traits@D@std@@@std@@UEAAXXZ
+      ?_Syserror_map@std@@YAPEBDH@Z
+      ?_Throw_C_error@std@@YAXH@Z
+      ?_Unlock@?$basic_streambuf@DU?$char_traits@D@std@@@std@@UEAAXXZ
+      ?_Xbad_alloc@std@@YAXXZ
+      ?_Xlength_error@std@@YAXPEBD@Z
+      ?_Xout_of_range@std@@YAXPEBD@Z
+      ?__ExceptionPtrAssign@@YAXPEAXPEBX@Z
+      ?__ExceptionPtrCopy@@YAXPEAXPEBX@Z
+      ?__ExceptionPtrCopyException@@YAXPEAXPEBX1@Z
+      ?__ExceptionPtrCreate@@YAXPEAX@Z
+      ?__ExceptionPtrCurrentException@@YAXPEAX@Z
+      ?__ExceptionPtrDestroy@@YAXPEAX@Z
+      ?__ExceptionPtrRethrow@@YAXPEBX@Z
+      ?always_noconv@codecvt_base@std@@QEBA_NXZ
+      ?clear@?$basic_ios@DU?$char_traits@D@std@@@std@@QEAAXH_N@Z
+      ?exceptions@ios_base@std@@QEAAXH@Z
+      ?gbump@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IEAAXH@Z
+      ?get@?$basic_istream@DU?$char_traits@D@std@@@std@@QEAAHXZ
+      ?getloc@?$basic_streambuf@DU?$char_traits@D@std@@@std@@QEBA?AVlocale@2@XZ
+      ?getloc@?$basic_streambuf@_WU?$char_traits@_W@std@@@std@@QEBA?AVlocale@2@XZ
+      ?id@?$codecvt@DDU_Mbstatet@@@std@@2V0locale@2@A
+      ?id@?$codecvt@_WDU_Mbstatet@@@std@@2V0locale@2@A
+      ?imbue@?$basic_streambuf@DU?$char_traits@D@std@@@std@@MEAAXAEBVlocale@2@@Z
+      ?in@?$codecvt@DDU_Mbstatet@@@std@@QEBAHAEAU_Mbstatet@@PEBD1AEAPEBDPEAD3AEAPEAD@Z
+      ?in@?$codecvt@_WDU_Mbstatet@@@std@@QEBAHAEAU_Mbstatet@@PEBD1AEAPEBDPEA_W3AEAPEA_W@Z
+      ?out@?$codecvt@DDU_Mbstatet@@@std@@QEBAHAEAU_Mbstatet@@PEBD1AEAPEBDPEAD3AEAPEAD@Z
+      ?out@?$codecvt@_WDU_Mbstatet@@@std@@QEBAHAEAU_Mbstatet@@PEB_W1AEAPEB_WPEAD3AEAPEAD@Z
+      ?pbackfail@?$basic_streambuf@DU?$char_traits@D@std@@@std@@MEAAHH@Z
+      ?pbump@?$basic_streambuf@DU?$char_traits@D@std@@@std@@IEAAXH@Z
+      ?put@?$basic_ostream@DU?$char_traits@D@std@@@std@@QEAAAEAV12@D@Z
+      ?read@?$basic_istream@DU?$char_traits@D@std@@@std@@QEAAAEAV12@PEAD_J@Z
+      ?seekg@?$basic_istream@DU?$char_traits@D@std@@@std@@QEAAAEAV12@V?$fpos@U_Mbstatet@@@2@@Z
+      ?seekoff@?$basic_streambuf@DU?$char_traits@D@std@@@std@@MEAA?AV?$fpos@U_Mbstatet@@@2@_JHH@Z
+      ?seekpos@?$basic_streambuf@DU?$char_traits@D@std@@@std@@MEAA?AV?$fpos@U_Mbstatet@@@2@V32@H@Z
+      ?set_new_handler@std@@YAP6AXXZP6AXXZ@Z
+      ?setbuf@?$basic_streambuf@DU?$char_traits@D@std@@@std@@MEAAPEAV12@PEAD_J@Z
+      ?setstate@?$basic_ios@DU?$char_traits@D@std@@@std@@QEAAXH_N@Z
+      ?setstate@?$basic_ios@_WU?$char_traits@_W@std@@@std@@QEAAXH_N@Z
+      ?sgetn@?$basic_streambuf@DU?$char_traits@D@std@@@std@@QEAA_JPEAD_J@Z
+      ?showmanyc@?$basic_streambuf@DU?$char_traits@D@std@@@std@@MEAA_JXZ
+      ?showmanyc@?$basic_streambuf@_WU?$char_traits@_W@std@@@std@@MEAA_JXZ
+      ?sync@?$basic_streambuf@DU?$char_traits@D@std@@@std@@MEAAHXZ
+      ?tellg@?$basic_istream@DU?$char_traits@D@std@@@std@@QEAA?AV?$fpos@U_Mbstatet@@@2@XZ
+      ?uflow@?$basic_streambuf@DU?$char_traits@D@std@@@std@@MEAAHXZ
+      ?uncaught_exceptions@std@@YAHXZ
+      ?unshift@?$codecvt@DDU_Mbstatet@@@std@@QEBAHAEAU_Mbstatet@@PEAD1AEAPEAD@Z
+      ?unshift@?$codecvt@_WDU_Mbstatet@@@std@@QEBAHAEAU_Mbstatet@@PEAD1AEAPEAD@Z
+      ?write@?$basic_ostream@DU?$char_traits@D@std@@@std@@QEAAAEAV12@PEBD_J@Z
+      ?xsgetn@?$basic_streambuf@DU?$char_traits@D@std@@@std@@MEAA_JPEAD_J@Z
+      ?xsgetn@?$basic_streambuf@_WU?$char_traits@_W@std@@@std@@MEAA_JPEA_W_J@Z
+      ?xsputn@?$basic_streambuf@DU?$char_traits@D@std@@@std@@MEAA_JPEBD_J@Z
+      ?xsputn@?$basic_streambuf@_WU?$char_traits@_W@std@@@std@@MEAA_JPEB_W_J@Z
+      _Mtx_destroy_in_situ
+      _Mtx_init_in_situ
+      _Mtx_lock
+      _Mtx_unlock
+  WS2_32.dll  (31 imports)
+      WSACleanup
+      WSACloseEvent
+      WSACreateEvent
+      WSAEnumNetworkEvents
+      WSAEventSelect
+      WSAGetLastError
+      WSAIoctl
+      WSAResetEvent
+      WSASetLastError
+      WSAStartup
+      WSAWaitForMultipleEvents
+      __WSAFDIsSet
+      accept
+      bind
+      closesocket
+      connect
+      freeaddrinfo
+      getaddrinfo
+      getpeername
+      getsockname
+      getsockopt
+      htonl
+      htons
+      ioctlsocket
+      listen
+      ntohs
+      recv
+      select
+      send
+      setsockopt
+      socket
+  WINHTTP.dll  (5 imports)
+      WinHttpCloseHandle
+      WinHttpGetIEProxyConfigForCurrentUser
+      WinHttpGetProxyForUrl
+      WinHttpOpen
+      WinHttpSetTimeouts
+  bcrypt.dll  (3 imports)
+      BCryptCloseAlgorithmProvider
+      BCryptGenRandom
+      BCryptOpenAlgorithmProvider
+  CRYPT32.dll  (16 imports)
+      CertAddCertificateContextToStore
+      CertCloseStore
+      CertCreateCertificateChainEngine
+      CertEnumCertificatesInStore
+      CertFindCertificateInStore
+      CertFindExtension
+      CertFreeCertificateChain
+      CertFreeCertificateChainEngine
+      CertFreeCertificateContext
+      CertGetCertificateChain
+      CertGetNameStringW
+      CertOpenStore
+      CryptDecodeObjectEx
+      CryptQueryObject
+      CryptStringToBinaryW
+      PFXImportCertStore
+  SHLWAPI.dll  (1 imports)
+      PathAppendW
+  IPHLPAPI.DLL  (1 imports)
+      GetAdaptersInfo
+  VCRUNTIME140.dll  (24 imports)
+      _CxxThrowException
+      __C_specific_handler
+      __C_specific_handler_noexcept
+      __CxxFrameHandler3
+      __RTDynamicCast
+      __std_exception_copy
+      __std_exception_destroy
+      __std_terminate
+      __std_type_info_compare
+      __std_type_info_destroy_list
+      __std_type_info_name
+      __vcrt_InitializeCriticalSectionEx
+      _purecall
+      memchr
+      memcmp
+      memcpy
+      memmove
+      memset
+      strchr
+      strrchr
+      strstr
+      wcschr
+      wcsrchr
+      wcsstr
+  api-ms-win-crt-runtime-l1-1-0.dll  (18 imports)
+      __sys_nerr
+      _beginthreadex
+      _cexit
+      _configure_narrow_argv
+      _crt_atexit
+      _errno
+      _execute_onexit_table
+      _initialize_narrow_environment
+      _initialize_onexit_table
+      _initterm
+      _initterm_e
+      _invalid_parameter_noinfo
+      _invalid_parameter_noinfo_noreturn
+      _register_onexit_function
+      _seh_filter_dll
+      abort
+      strerror
+      terminate
+  api-ms-win-crt-heap-l1-1-0.dll  (8 imports)
+      _aligned_free
+      _aligned_malloc
+      _aligned_realloc
+      _callnewh
+      calloc
+      free
+      malloc
+      realloc
+  api-ms-win-crt-stdio-l1-1-0.dll  (27 imports)
+      __acrt_iob_func
+      __stdio_common_vfprintf
+      __stdio_common_vsprintf
+      __stdio_common_vsprintf_s
+      __stdio_common_vsscanf
+      _fseeki64
+      _get_stream_buffer_pointers
+      _wfopen
+      fclose
+      feof
+      ferror
+      fflush
+      fgetc
+      fgetpos
+      fgets
+      fgetwc
+      fopen
+      fputc
+      fputwc
+      fread
+      fseek
+      fsetpos
+      ftell
+      fwrite
+      setvbuf
+      ungetc
+      ungetwc
+  api-ms-win-crt-string-l1-1-0.dll  (24 imports)
+      _strdup
+      _wcsdup
+      isspace
+      isupper
+      strcat
+      strcmp
+      strcpy
+      strcspn
+      strlen
+      strncat
+      strncmp
+      strncpy
+      strpbrk
+      strspn
+      strtok
+      strtok_s
+      tolower
+      toupper
+      wcscat_s
+      wcscmp
+      wcscpy_s
+      wcsncmp
+      wcsncpy
+      wcspbrk
+  api-ms-win-crt-convert-l1-1-0.dll  (9 imports)
+      _wcstoui64
+      atoi
+      strtod
+      strtol
+      strtoll
+      strtoul
+      wcstol
+      wcstombs
+      wcstoull
+  api-ms-win-crt-filesystem-l1-1-0.dll  (5 imports)
+      _lock_file
+      _stat64i32
+      _unlock_file
+      _wstat64i32
+      remove
+  api-ms-win-crt-time-l1-1-0.dll  (5 imports)
+      _difftime64
+      _gmtime64_s
+      _mkgmtime64
+      _time64
+      clock
+  api-ms-win-crt-math-l1-1-0.dll  (10 imports)
+      acos
+      cos
+      exp
+      expf
+      fabs
+      log
+      logf
+      pow
+      sin
+      sqrt
+  api-ms-win-crt-utility-l1-1-0.dll  (4 imports)
+      abs
+      qsort
+      rand
+      srand
+
+## DELAY IMPORTS
+  (none)
+
+## MISC
+  DEBUG entry type=13 size=940 ptr=0x30a6d0c
+  DEBUG entry type=14 size=0 ptr=0x0
+  TLS present: callbacks=6492710256
+  versioninfo Comments = Copyright 2020 xNURBS. All rights reserved. This software and related documentation are proprietary to xNURBS.
+  versioninfo FileDescription = XNKernel DLL
+  versioninfo FileVersion = 2021.0.1.0
+  versioninfo InternalName = XNKernel
+  versioninfo LegalCopyright = Copyright (C) 2020 XN. All Rights Reserved.
+  versioninfo OriginalFilename = XNKernel.dll
+  versioninfo ProductName = XNKernel
+  versioninfo ProductVersion = 2021.0.1.0
+  resources: {'RT_VERSION': 1, 'RT_MANIFEST': 1}
+
+## OVERLAY: overlay_bytes=0 (file=53431808, last_section_end=53431808)

@@ -1,0 +1,62 @@
+### VK_check_quad_sided_possibility entry RVA = 0x2ed5de0
+
+===== chunk @0x2ed5de0 @ rva 0x2ed5de0 len 0x60 =====
+  02ed5de0  push     rbx
+  02ed5de2  sub      rsp, 0x20
+  02ed5de6  mov      r9, qword ptr [rip + 0x392a3b]
+  02ed5ded  test     r9, r9
+  02ed5df0  je       0x182ed5ef4
+  02ed5df6  mov      rdx, qword ptr [r9 + 8]
+  02ed5dfa  mov      rax, rdx
+  02ed5dfd  mov      r8, qword ptr [rdx + 8]
+  02ed5e01  cmp      byte ptr [r8 + 0x19], 0
+  02ed5e06  jne      0x182ed5e21
+  02ed5e08  cmp      dword ptr [r8 + 0x20], ecx
+  02ed5e0c  jae      0x182ed5e14
+  02ed5e0e  mov      r8, qword ptr [r8 + 0x10]
+  02ed5e12  jmp      0x182ed5e1a   ; -> 0x2ed5e1a
+  02ed5e14  mov      rax, r8
+  02ed5e17  mov      r8, qword ptr [r8]
+  02ed5e1a  cmp      byte ptr [r8 + 0x19], 0
+  02ed5e1f  je       0x182ed5e08
+  02ed5e21  cmp      rax, rdx
+  02ed5e24  je       0x182ed5e2b
+  02ed5e26  cmp      ecx, dword ptr [rax + 0x20]
+  02ed5e29  jae      0x182ed5e2e
+  02ed5e2b  mov      rax, rdx
+  02ed5e2e  cmp      rax, rdx
+  02ed5e31  je       0x182ed5ef4
+  02ed5e37  mov      rbx, qword ptr [rax + 0x28]
+  02ed5e3b  test     rbx, rbx
+   >> following jmp to 0x2ed5e1a
+
+===== chunk @0x2ed5e1a @ rva 0x2ed5e1a len 0x60 =====
+  02ed5e1a  cmp      byte ptr [r8 + 0x19], 0
+  02ed5e1f  je       0x182ed5e08
+  02ed5e21  cmp      rax, rdx
+  02ed5e24  je       0x182ed5e2b
+  02ed5e26  cmp      ecx, dword ptr [rax + 0x20]
+  02ed5e29  jae      0x182ed5e2e
+  02ed5e2b  mov      rax, rdx
+  02ed5e2e  cmp      rax, rdx
+  02ed5e31  je       0x182ed5ef4
+  02ed5e37  mov      rbx, qword ptr [rax + 0x28]
+  02ed5e3b  test     rbx, rbx
+  02ed5e3e  je       0x182ed5ef4
+  02ed5e44  cmp      dword ptr [rbx + 0xc], 3
+  02ed5e48  jne      0x182ed5ef4
+  02ed5e4e  mov      rcx, rbx
+  02ed5e51  call     0x182eeb960   ; -> 0x2eeb960
+  02ed5e56  test     al, al
+  02ed5e58  jne      0x182ed5e67
+  02ed5e5a  mov      edx, 3
+  02ed5e5f  mov      eax, edx
+  02ed5e61  add      rsp, 0x20
+  02ed5e65  pop      rbx
+  02ed5e66  ret      
+  02ed5e67  mov      rcx, rbx
+  02ed5e6a  call     0x182ef0bd0   ; -> 0x2ef0bd0
+  02ed5e6f  test     eax, eax
+  02ed5e71  jne      0x182ed5e80
+  02ed5e73  mov      edx, 0x16
+  02ed5e78  mov      eax, edx

@@ -1,0 +1,200 @@
+## 26 IAT slots for xnkernel.dll
+
+## call sites per imported kernel function
+   VK_remove_constraint                         x1  @ 0x1afc
+   VK_free_v_object                             x1  @ 0x1b0e
+   VK_get_outcome_status                        x1  @ 0x265b
+   VK_get_outer_boundary_loop                   x1  @ 0x26a1
+   VK_get_uv_bcurve_from_curve_cst              x1  @ 0x3166
+
+===== window around call to VK_remove_constraint @0x1afc =====
+  00001a4a  movups    xmm0, xmmword ptr [rip + 0x1305f]
+  00001a51  movups    xmmword ptr [rsp + 0x50], xmm0
+  00001a56  mov       rcx, rdx
+  00001a59  call      qword ptr [rip + 0xfda1]
+  00001a5f  mov       rcx, rax
+  00001a62  xor       r9d, r9d
+  00001a65  mov       r8b, 1
+  00001a68  lea       rdx, [rsp + 0x50]
+  00001a6d  call      qword ptr [rip + 0xfcad]
+  00001a73  mov       rdi, qword ptr [rip + 0x203fe]
+  00001a7a  test      rdi, rdi
+  00001a7d  je        0x180001b45
+  00001a83  mov       rcx, rbx
+  00001a86  call      qword ptr [rip + 0xfd74]
+  00001a8c  mov       qword ptr [rdi + 0x3f8], rax
+  00001a93  xor       esi, esi
+  00001a95  mov       qword ptr [rsp + 0x30], rsi
+  00001a9a  mov       qword ptr [rsp + 0x38], rsi
+  00001a9f  mov       qword ptr [rsp + 0x40], rsi
+  00001aa4  mov       qword ptr [rsp + 0x48], rsi
+  00001aa9  call      0x1800064f0
+  00001aae  mov       qword ptr [rsp + 0x40], rax
+  00001ab3  mov       rcx, rbx
+  00001ab6  call      qword ptr [rip + 0xf744]
+  00001abc  cmp       eax, 0x190
+  00001ac1  jle       0x180001add
+  00001ac3  call      qword ptr [rip + 0xfd07]
+  00001ac9  mov       rcx, rax
+  00001acc  lea       rdx, [rip + 0x12bed]
+  00001ad3  call      qword ptr [rip + 0xfcef]
+  00001ad9  mov       ebx, esi
+  00001adb  jmp       0x180001aed
+  00001add  mov       rdx, rbx
+  00001ae0  lea       rcx, [rsp + 0x30]
+  00001ae5  call      0x18000ce30
+  00001aea  mov       rbx, rax
+  00001aed  mov       qword ptr [rdi + 0x3f8], rsi
+  00001af4  mov       ecx, dword ptr [rsp + 0x34]
+  00001af8  test      ecx, ecx
+  00001afa  je        0x180001b06
+  00001afc  call      qword ptr [rip + 0x109fe] <<<
+  00001b02  mov       dword ptr [rsp + 0x34], esi
+  00001b06  mov       ecx, dword ptr [rsp + 0x30]
+  00001b0a  test      ecx, ecx
+  00001b0c  je        0x180001b18
+  00001b0e  call      qword ptr [rip + 0x10a5c]
+
+===== window around call to VK_free_v_object @0x1b0e =====
+  00001a62  xor       r9d, r9d
+  00001a65  mov       r8b, 1
+  00001a68  lea       rdx, [rsp + 0x50]
+  00001a6d  call      qword ptr [rip + 0xfcad]
+  00001a73  mov       rdi, qword ptr [rip + 0x203fe]
+  00001a7a  test      rdi, rdi
+  00001a7d  je        0x180001b45
+  00001a83  mov       rcx, rbx
+  00001a86  call      qword ptr [rip + 0xfd74]
+  00001a8c  mov       qword ptr [rdi + 0x3f8], rax
+  00001a93  xor       esi, esi
+  00001a95  mov       qword ptr [rsp + 0x30], rsi
+  00001a9a  mov       qword ptr [rsp + 0x38], rsi
+  00001a9f  mov       qword ptr [rsp + 0x40], rsi
+  00001aa4  mov       qword ptr [rsp + 0x48], rsi
+  00001aa9  call      0x1800064f0
+  00001aae  mov       qword ptr [rsp + 0x40], rax
+  00001ab3  mov       rcx, rbx
+  00001ab6  call      qword ptr [rip + 0xf744]
+  00001abc  cmp       eax, 0x190
+  00001ac1  jle       0x180001add
+  00001ac3  call      qword ptr [rip + 0xfd07]
+  00001ac9  mov       rcx, rax
+  00001acc  lea       rdx, [rip + 0x12bed]
+  00001ad3  call      qword ptr [rip + 0xfcef]
+  00001ad9  mov       ebx, esi
+  00001adb  jmp       0x180001aed
+  00001add  mov       rdx, rbx
+  00001ae0  lea       rcx, [rsp + 0x30]
+  00001ae5  call      0x18000ce30
+  00001aea  mov       rbx, rax
+  00001aed  mov       qword ptr [rdi + 0x3f8], rsi
+  00001af4  mov       ecx, dword ptr [rsp + 0x34]
+  00001af8  test      ecx, ecx
+  00001afa  je        0x180001b06
+  00001afc  call      qword ptr [rip + 0x109fe]
+  00001b02  mov       dword ptr [rsp + 0x34], esi
+  00001b06  mov       ecx, dword ptr [rsp + 0x30]
+  00001b0a  test      ecx, ecx
+  00001b0c  je        0x180001b18
+  00001b0e  call      qword ptr [rip + 0x10a5c] <<<
+  00001b14  mov       dword ptr [rsp + 0x30], esi
+  00001b18  mov       qword ptr [rsp + 0x38], rsi
+  00001b1d  lea       rcx, [rsp + 0x40]
+  00001b22  call      0x180006400
+  00001b27  lea       rcx, [rsp + 0x40]
+
+===== window around call to VK_get_outcome_status @0x265b =====
+  000025c5  movaps    xmm6, xmmword ptr [r11 - 0x10]
+  000025ca  movaps    xmm7, xmmword ptr [r11 - 0x20]
+  000025cf  mov       rsp, r11
+  000025d2  pop       r15
+  000025d4  pop       r14
+  000025d6  pop       r12
+  000025d8  pop       rdi
+  000025d9  pop       rsi
+  000025da  ret       
+  000025db  cmp       dword ptr [rsp + 0xf0], 0
+  000025e3  je        0x1800025fa
+  000025e5  mov       rdx, r14
+  000025e8  mov       rcx, rdi
+  000025eb  call      0x1800028e0
+  000025f0  test      eax, eax
+  000025f2  jne       0x180002812
+  000025f8  jmp       0x1800025a6
+  000025fa  test      ebx, ebx
+  000025fc  je        0x1800027ff
+  00002602  lea       rcx, [rax + 0x48]
+  00002606  mov       qword ptr [rsp + 0x58], r14
+  0000260b  lea       rdx, [rsp + 0x58]
+  00002610  call      qword ptr [rip + 0xfb42]
+  00002616  xor       edx, edx
+  00002618  mov       rcx, rdi
+  0000261b  call      qword ptr [rip + 0xfb3f]
+  00002621  mov       edx, 1
+  00002626  mov       rcx, rdi
+  00002629  mov       r8, rax
+  0000262c  mov       byte ptr [rax + 0x54], 0
+  00002630  call      qword ptr [rip + 0xfb32]
+  00002636  mov       ebx, dword ptr [rsp + 0xf8]
+  0000263d  mov       r12, rax
+  00002640  movsd     qword ptr [rsp + 0x70], xmm6
+  00002646  mov       byte ptr [rsp + 0x68], 0
+  0000264b  test      ebp, ebp
+  0000264d  jne       0x180002682
+  0000264f  lea       r8, [rsp + 0x70]
+  00002654  mov       ecx, ebx
+  00002656  lea       rdx, [rsp + 0x68]
+  0000265b  call      qword ptr [rip + 0xff5f] <<<
+  00002661  cmp       byte ptr [rsp + 0x68], bpl
+  00002666  je        0x180002682
+  00002668  mulsd     xmm6, qword ptr [rip + 0x13078]
+  00002670  movsd     xmm0, qword ptr [rsp + 0x70]
+  00002676  comisd    xmm0, xmm6
+
+===== window around call to VK_get_outer_boundary_loop @0x26a1 =====
+  000025f0  test      eax, eax
+  000025f2  jne       0x180002812
+  000025f8  jmp       0x1800025a6
+  000025fa  test      ebx, ebx
+  000025fc  je        0x1800027ff
+  00002602  lea       rcx, [rax + 0x48]
+  00002606  mov       qword ptr [rsp + 0x58], r14
+  0000260b  lea       rdx, [rsp + 0x58]
+  00002610  call      qword ptr [rip + 0xfb42]
+  00002616  xor       edx, edx
+  00002618  mov       rcx, rdi
+  0000261b  call      qword ptr [rip + 0xfb3f]
+  00002621  mov       edx, 1
+  00002626  mov       rcx, rdi
+  00002629  mov       r8, rax
+  0000262c  mov       byte ptr [rax + 0x54], 0
+  00002630  call      qword ptr [rip + 0xfb32]
+  00002636  mov       ebx, dword ptr [rsp + 0xf8]
+  0000263d  mov       r12, rax
+  00002640  movsd     qword ptr [rsp + 0x70], xmm6
+  00002646  mov       byte ptr [rsp + 0x68], 0
+  0000264b  test      ebp, ebp
+  0000264d  jne       0x180002682
+  0000264f  lea       r8, [rsp + 0x70]
+  00002654  mov       ecx, ebx
+  00002656  lea       rdx, [rsp + 0x68]
+  0000265b  call      qword ptr [rip + 0xff5f]
+  00002661  cmp       byte ptr [rsp + 0x68], bpl
+  00002666  je        0x180002682
+  00002668  mulsd     xmm6, qword ptr [rip + 0x13078]
+  00002670  movsd     xmm0, qword ptr [rsp + 0x70]
+  00002676  comisd    xmm0, xmm6
+  0000267a  jbe       0x180002682
+  0000267c  movsd     qword ptr [rsp + 0x70], xmm6
+  00002682  lea       r9, [rsp + 0x60]
+  00002687  mov       dword ptr [rsp + 0x6c], 0
+  0000268f  lea       r8, [rsp + 0x6c]
+  00002694  mov       qword ptr [rsp + 0x60], 0
+  0000269d  mov       dl, 1
+  0000269f  mov       ecx, ebx
+  000026a1  call      qword ptr [rip + 0xff01] <<<
+  000026a7  mov       r10d, dword ptr [rsp + 0x6c]
+  000026ac  xor       ebx, ebx
+  000026ae  test      r10d, r10d
+  000026b1  jle       0x1800027cc
+  000026b7  movsd     xmm6, qword ptr [rsp + 0x110]

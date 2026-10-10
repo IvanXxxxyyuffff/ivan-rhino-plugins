@@ -1,0 +1,213 @@
+00000653 A UWATAVAWH
+000006f7 A EPE3
+000010e3 A VWAVH
+00001253 A UWAVH
+00001949 A h VWATAVAWH
+00002043 A USVWATAUAVH
+000023a5 A UVWH
+000024d7 A UVWATAUAVAWH
+00002b6e A MhH3
+00002ea7 A UVWAVAWH
+00003303 A SVWH
+0000469c A MXH3
+0000689a A D9sLtzD
+00006c73 A UATAUAVAWH
+0000780d A VUUU
+00007ecf A WATAUAVAWH
+0000832a A VWATAVAWH
+000098f9 A yxxxxxxxH
+0000a7f7 A MPH3
+0000bec7 A TUUUUUU
+0000df37 A uyHc
+0000df5c A uTL+
+0000e54f A SVWAVH
+0000e5bb A WAVAWH
+0000ea2c A ntelA
+0000ea33 A GenuD
+0000ea49 A ineI
+0000f5d5 A uVL+
+0000f649 A x AVH
+00011788 A InitializeConditionVariable
+000117a8 A SleepConditionVariableCS
+000117c8 A WakeAllConditionVariable
+00011820 W ERROR : Unable to initialize critical section in CAtlBaseModule
+000118b0 W XNurbs
+000118c0 W Edit
+00011958 W XNurbsHelp
+00011990 W XNurbsHelp.chm
+000119b0 W open
+00011ab0 W Days left for your XNurbs trial period: 
+00011d98 W XNurbs License
+00011dc0 W Cannot find and run xNURBS License Manager.
+00011fac W Error Code 
+00011fd0 W Invalid product key.
+00012000 W The product needs to be activated.
+00012050 W Connection to the server failed.
+000120a0 W The product key has already been activated with the maximum number of computers.
+00012150 W The product key has been revoked.
+00012260 W The trial data has been corrupted.
+000122b0 W The trial extension has already been used.
+00012630 W The the buffer size was too small. Create a larger buffer and try again.
+000126d0 W Insufficient system permission. Sstart your process as an
+00012744 W admin / elevated user.
+00012780 W The function failed because this instance of your program
+000127f4 W is running inside a virtual machine / hypervisor.
+00012860 W The product key used is for a floating licese.
+00012a80 W The license activation is no longer valid. Please update the latest version.
+000131f8 W No valid license.
+00013668 A CXNurbsDialog
+00014330 W XNurbs plug-in for Rhinoceros
+00014380 W Woodman Way, Milton,
+000143ac W Cambridge CB24 6DS
+00014448 W https://www.xnurbs.com
+00015eb4 A GCTL
+00017b34 A AddOneConstraint
+00017b45 A CreateOrSetVSurf
+00017b56 A FreeXNSurf
+00017b61 A GenerateNewVSurf
+00017b72 A RhinoPlugInDescription
+00017b89 A RhinoPlugInDeveloperAddress
+00017ba5 A RhinoPlugInDeveloperCountry
+00017bc1 A RhinoPlugInDeveloperEmail
+00017bdb A RhinoPlugInDeveloperFax
+00017bf3 A RhinoPlugInDeveloperOrganization
+00017c14 A RhinoPlugInDeveloperPhone
+00017c2e A RhinoPlugInDeveloperWebsite
+00017c4a A RhinoPlugInIconResourceId
+00017c64 A RhinoPlugInId
+00017c72 A RhinoPlugInMfcVersion
+00017c88 A RhinoPlugInMscVersion
+00017c9e A RhinoPlugInName
+00017cae A RhinoPlugInSdkServiceRelease
+00017ccb A RhinoPlugInSdkVersion
+00017ce1 A RhinoPlugInUpdateURL
+00017cf6 A RhinoPlugInUsesMfc
+00017d09 A RhinoPlugInVersion
+0001941a A VK_get_outcome_status
+00019432 A VK_get_outer_boundary_loop
+00019450 A VK_get_uv_bcurve_from_curve_cst
+00019472 A VK_Calc_perpendicular_curvature
+00019494 A VK_initialize_kernel
+000194ac A VK_terminate_kernel
+000194c2 A VK_remove_constraint
+000194da A VK_free_v_object
+000194ee A VK_remove_all_from_multi_pt_cst
+00019510 A VK_reset_vsurf_advanced
+0001952a A VK_get_auto_enforce_tol_flavor
+0001954c A VK_get_version
+0001955e A VK_create_vsurf_without_init_para
+00019582 A VK_get_bsurf
+00019592 A VK_generate_solution
+000195aa A VK_remove_pt_from_multi_pt_cst
+000195cc A VK_create_multi_pt_cst
+000195e6 A VK_add_pt_position_normal_set_cst
+0001960a A VK_add_pt_position_set_cst
+00019628 A VK_modify_curve_cst
+0001963e A VK_add_curve_cst
+00019652 A VK_remove_physical_force
+0001966e A VK_reset_vsurf
+00019680 A VK_get_warning_message
+0001969a A VK_check_open_boundary_difference
+000196be A VK_create_bspline
+000196ec A GetModuleHandleW
+00019700 A GetModuleFileNameW
+00019716 A InitializeCriticalSectionEx
+00019734 A GetLastError
+00019744 A DeleteCriticalSection
+0001975c A GetCurrentProcessId
+00019772 A OpenProcess
+00019780 A K32GetProcessImageFileNameW
+0001979e A K32EnumProcessModulesEx
+000197b8 A K32GetModuleBaseNameW
+000197d0 A InitializeCriticalSectionAndSpinCount
+000197f8 A LocalAlloc
+00019806 A LocalFree
+00019812 A CloseHandle
+00019820 A EnterCriticalSection
+00019838 A LeaveCriticalSection
+00019850 A SetEvent
+0001985c A ResetEvent
+0001986a A WaitForSingleObjectEx
+00019882 A CreateEventW
+00019892 A GetProcAddress
+000198a4 A RtlCaptureContext
+000198b8 A RtlLookupFunctionEntry
+000198d2 A RtlVirtualUnwind
+000198e6 A UnhandledExceptionFilter
+00019902 A SetUnhandledExceptionFilter
+00019920 A GetCurrentProcess
+00019934 A TerminateProcess
+00019948 A IsProcessorFeaturePresent
+00019964 A IsDebuggerPresent
+00019978 A QueryPerformanceCounter
+00019992 A GetCurrentThreadId
+000199a8 A GetSystemTimeAsFileTime
+000199c2 A InitializeSListHead
+000199e6 A GetClientRect
+000199f6 A GetWindowRect
+00019a06 A GetSystemMetrics
+00019a1a A IsWindow
+00019a26 A SystemParametersInfoW
+00019a3e A GetScrollInfo
+00019a4e A SendMessageW
+00019a5e A PostMessageW
+00019a6e A EnableWindow
+00019a7e A EnumWindows
+00019a8c A GetWindowThreadProcessId
+00019ab4 A ShellExecuteW
+0001fd56 A wcsrchr
+0001fd60 A wcsstr
+0001fd6a A memset
+0001fdbe A wcscat_s
+0001fdca A free
+0001fddc A wcstol
+0001fe9c A terminate
+0001ff48 A OutputDebugStringW
+0001ff74 A sqrt
+00021912 W AFX_DIALOG_LAYOUT
+00021c6c A IHDR
+00021c85 A IDATx
+00021f7d A jRra
+000224e4 A HbRD
+00022854 A TVvZ
+000229d0 A MIRtwe
+00022bce A VZnLJJ
+00022d6c A TXK9
+00022ea9 A yiPN
+00022f54 A j&oUy
+00023226 A dum2
+00023d9e A GyyZ
+000241aa A ZQVV
+00024337 A Zylr
+00024690 A uZz&
+00024782 A PjZz
+000247d0 A ZpeoM
+00024a69 A tKKK
+00024a96 A uQbb
+00024acf A nCjzFK
+00024b9e A HdeU
+00024dc4 A hJMM
+00025377 A hJII
+0002566a A IEND
+00025787 A orda
+00025cb7 A nrda
+00028d37 A RfZV
+00029152 W MS Shell Dlg
+00029285 A bQb:
+00029394 W msctls_trackbar32
+00029819 A vMOn
+000298ba W VS_VERSION_INFO
+00029916 W StringFileInfo
+00029952 W CompanyName
+00029982 W FileDescription
+000299a4 W XNurbsRhino Plugin
+000299d2 W FileVersion
+00029a02 W InternalName
+00029a42 W LegalCopyright
+00029a60 W Copyright 
+00029ac2 W OriginalFilename
+00029b0a W ProductName
+00029b24 W XNurbsRhino
+00029b42 W ProductVersion
+00029b76 W VarFileInfo
+00029b96 W Translation

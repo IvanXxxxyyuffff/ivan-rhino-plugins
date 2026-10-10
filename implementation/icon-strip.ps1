@@ -7,7 +7,7 @@ $out | Select-String -Pattern 'error|已成功|错误' | ForEach-Object { $_.Lin
 $exe = Join-Path $iconmake 'bin\Release\net48\iconmake.exe'
 if (-not (Test-Path -LiteralPath $exe)) { throw "找不到 $exe" }
 
-$kinds = @('stripe','vape','halftone','voronoi','radialdots','meshfix','diamond','ripple','unify')
+$kinds = @('stripe','vape','halftone','voronoi','radialdots','meshfix','diamond','ripple','unify','patchfill')
 foreach ($k in $kinds) {
   & $exe --kind $k (Join-Path $root ("ICONS-$k.png")) | Out-Null
 }

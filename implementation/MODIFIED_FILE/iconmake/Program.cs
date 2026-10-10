@@ -40,6 +40,7 @@ namespace IconMake
                     else if (string.Equals(kind, "diamond", StringComparison.OrdinalIgnoreCase)) GlassDrawDiamond(g, side, accent);
                     else if (string.Equals(kind, "ripple", StringComparison.OrdinalIgnoreCase)) GlassDrawRipple(g, side, accent);
                     else if (string.Equals(kind, "unify", StringComparison.OrdinalIgnoreCase)) GlassDrawUnify(g, side, accent);
+                    else if (string.Equals(kind, "patchfill", StringComparison.OrdinalIgnoreCase)) GlassDrawPatchFill(g, side, accent);
                     else GlassDrawStripe(g, side, accent);
                 }
                 return bitmap;
@@ -61,6 +62,7 @@ namespace IconMake
             if (string.Equals(kind, "diamond", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 92, 76, 208);
             if (string.Equals(kind, "ripple", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 22, 132, 152);
             if (string.Equals(kind, "unify", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 168, 69, 111);
+            if (string.Equals(kind, "patchfill", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 194, 96, 58);
             if (string.Equals(kind, "app", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 38, 59, 89);
             return Color.FromArgb(255, 8, 127, 150);
         }
@@ -627,6 +629,75 @@ namespace IconMake
                     new PointF(x0 + w * 0.34f, midY + amp * 0.05f - half * 0.34f),
                     new PointF(x0 + w * 0.44f, midY + amp * 0.10f - half * 0.34f),
                     new PointF(x0 + w * 0.54f, midY + amp * 0.46f - half * 0.34f));
+            }
+        }
+        /// <summary>多边补面：五边形边界环 + 环内一张补出来的曲面（5 个角点 + 两条 iso 肋线）</summary>
+        private static void GlassDrawPatchFill(Graphics g, int size, Color accent)
+        {
+            float s = size;
+            float cx = s * 0.5f, cy = s * 0.5f;
+            float R = s * 0.335f;
+            float stroke = Math.Max(1.0f, s * 0.062f);
+            var ring = new PointF[5];
+            for (int i = 0; i < 5; i++)
+            {
+                double a = -Math.PI / 2 + i * 2.0 * Math.PI / 5.0;
+                ring[i] = new PointF(cx + R * (float)Math.Cos(a), cy + R * (float)Math.Sin(a));
+            }
+            var inner = new PointF[5];
+            for (int i = 0; i < 5; i++)
+            {
+                double a = -Math.PI / 2 + i * 2.0 * Math.PI / 5.0 + 0.10;
+                inner[i] = new PointF(cx + R * 0.68f * (float)Math.Cos(a), cy + R * 0.68f * (float)Math.Sin(a) - s * 0.015f);
+            }
+            using (var patch = new GraphicsPath())
+            {
+                patch.StartFigure();
+                patch.AddClosedCurve(inner, 0.55f);
+                var box = new RectangleF(cx - R, cy - R, R * 2f, R * 2f);
+                using (LinearGradientBrush fill = new LinearGradientBrush(box,
+                    GlassBlend(accent, Color.White, 0.46f), GlassBlend(accent, Color.Black, 0.18f), 90f))
+                    g.FillPath(fill, patch);
+                using (Pen rib = new Pen(Color.FromArgb(150, 14, 26, 38), Math.Max(0.42f, s * 0.020f)))
+                {
+                    rib.StartCap = LineCap.Round;
+                    rib.EndCap = LineCap.Round;
+                    g.DrawLine(rib, cx - R * 0.30f, cy - R * 0.30f, cx - R * 0.22f, cy + R * 0.34f);
+                    g.DrawLine(rib, cx + R * 0.30f, cy - R * 0.30f, cx + R * 0.24f, cy + R * 0.34f);
+                }
+                using (Pen dark = new Pen(Color.FromArgb(196, 14, 26, 38), stroke + Math.Max(0.7f, s * 0.028f)))
+                using (Pen main = new Pen(accent, stroke))
+                {
+                    dark.LineJoin = LineJoin.Round;
+                    main.LineJoin = LineJoin.Round;
+                    g.DrawPath(dark, patch);
+                    g.DrawPath(main, patch);
+                }
+            }
+            using (var loop = new GraphicsPath())
+            {
+                loop.StartFigure();
+                loop.AddPolygon(ring);
+                using (Pen dark = new Pen(Color.FromArgb(200, 14, 26, 38), stroke * 0.70f + Math.Max(0.5f, s * 0.020f)))
+                using (Pen main = new Pen(GlassBlend(accent, Color.Black, 0.28f), stroke * 0.70f))
+                {
+                    dark.LineJoin = LineJoin.Round;
+                    main.LineJoin = LineJoin.Round;
+                    g.DrawPath(dark, loop);
+                    g.DrawPath(main, loop);
+                }
+                using (var dot = new SolidBrush(GlassBlend(accent, Color.Black, 0.34f)))
+                {
+                    float d = Math.Max(1.4f, s * 0.10f);
+                    for (int i = 0; i < 5; i++)
+                        g.FillEllipse(dot, ring[i].X - d * 0.5f, ring[i].Y - d * 0.5f, d, d);
+                }
+            }
+            using (Pen hi = new Pen(Color.FromArgb(150, 255, 255, 255), Math.Max(0.6f, s * 0.020f)))
+            {
+                hi.StartCap = LineCap.Round;
+                hi.EndCap = LineCap.Round;
+                g.DrawLine(hi, cx - R * 0.26f, cy - R * 0.34f, cx + R * 0.10f, cy - R * 0.44f);
             }
         }
 

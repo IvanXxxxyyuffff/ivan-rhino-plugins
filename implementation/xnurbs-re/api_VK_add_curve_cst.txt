@@ -1,0 +1,66 @@
+### VK_add_curve_cst entry RVA = 0x2ed13e0
+
+===== chunk @0x2ed13e0 @ rva 0x2ed13e0 len 0x60 =====
+  02ed13e0  mov      qword ptr [rsp + 8], rbx
+  02ed13e5  push     rbp
+  02ed13e6  push     rsi
+  02ed13e7  push     rdi
+  02ed13e8  sub      rsp, 0xc0
+  02ed13ef  mov      rax, qword ptr [rip + 0x353262]
+  02ed13f6  xor      rax, rsp
+  02ed13f9  mov      qword ptr [rsp + 0xb0], rax
+  02ed1401  mov      r10, qword ptr [rip + 0x397420]
+  02ed1408  xor      ebp, ebp
+  02ed140a  mov      dword ptr [r8], ebp
+  02ed140d  mov      rsi, r8
+  02ed1410  mov      rdi, rdx
+  02ed1413  mov      r9d, ecx
+  02ed1416  mov      ebx, ebp
+  02ed1418  test     r10, r10
+  02ed141b  jne      0x182ed1425
+  02ed141d  lea      eax, [rbp + 6]
+  02ed1420  jmp      0x182ed15e2   ; -> 0x2ed15e2
+  02ed1425  mov      rcx, qword ptr [r10 + 8]
+  02ed1429  mov      rax, rcx
+  02ed142c  mov      rdx, qword ptr [rcx + 8]
+  02ed1430  cmp      byte ptr [rdx + 0x19], bl
+  02ed1433  jne      0x182ed144c
+  02ed1435  cmp      dword ptr [rdx + 0x20], r9d
+  02ed1439  jae      0x182ed1441
+  02ed143b  mov      rdx, qword ptr [rdx + 0x10]
+   >> following jmp to 0x2ed15e2
+
+===== chunk @0x2ed15e2 @ rva 0x2ed15e2 len 0x60 =====
+  02ed15e2  mov      rcx, qword ptr [rsp + 0xb0]
+  02ed15ea  xor      rcx, rsp
+  02ed15ed  call     0x182f86030   ; -> 0x2f86030
+  02ed15f2  mov      rbx, qword ptr [rsp + 0xe0]
+  02ed15fa  add      rsp, 0xc0
+  02ed1601  pop      rdi
+  02ed1602  pop      rsi
+  02ed1603  pop      rbp
+  02ed1604  ret      
+  02ed1605  int3     
+  02ed1606  int3     
+  02ed1607  int3     
+  02ed1608  int3     
+  02ed1609  int3     
+  02ed160a  int3     
+  02ed160b  int3     
+  02ed160c  int3     
+  02ed160d  int3     
+  02ed160e  int3     
+  02ed160f  int3     
+  02ed1610  mov      qword ptr [rsp + 0x18], rbx
+  02ed1615  push     rsi
+  02ed1616  sub      rsp, 0x20
+  02ed161a  mov      rsi, rdx
+  02ed161d  mov      rdx, qword ptr [rip + 0x397204]
+  02ed1624  test     rdx, rdx
+  02ed1627  je       0x182ed171c
+  02ed162d  mov      r8, qword ptr [rdx + 8]
+  02ed1631  mov      rax, r8
+  02ed1634  mov      r9, qword ptr [r8 + 8]
+  02ed1638  cmp      byte ptr [r9 + 0x19], 0
+  02ed163d  jne      0x182ed1659
+  02ed163f  nop      

@@ -1,0 +1,19 @@
+## external direct call/jmp targets from [0x2e00000,0x2feb978) = 160
+## per 1MB bucket (1MB index, count, addr range)
+     0 MB  0x00000000-0x000fffff : 101
+     1 MB  0x00100000-0x001fffff : 2
+     4 MB  0x00400000-0x004fffff : 36
+     7 MB  0x00700000-0x007fffff : 6
+     8 MB  0x00800000-0x008fffff : 6
+    23 MB  0x01700000-0x017fffff : 2
+    47 MB  0x02f00000-0x02ffffff : 7
+
+## per 256KB bucket (nonzero only)
+   0x00000000 : 44
+   0x00040000 : 57
+   0x00100000 : 2
+   0x004c0000 : 36
+   0x00780000 : 6
+   0x00880000 : 6
+   0x01700000 : 2
+   0x02fc0000 : 7

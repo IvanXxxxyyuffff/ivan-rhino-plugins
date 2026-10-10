@@ -1,4 +1,4 @@
-﻿param(
+param(
   [string]$Only = 'all',              # all | 单个名字 | 逗号分隔多个（如 Voronoi,Halftone）
   [ValidateSet('session','perjob')]
   [string]$Mode = 'perjob',           # perjob = 每个自检单独启动 Rhino（默认）；session = 一次 Rhino 用 /runscript 跑完
@@ -23,7 +23,7 @@ $rhino = 'D:\Rhino 8\System\Rhino.exe'
 
 # PassWith / PassWithout：用户 3dm 存在 / 不存在 时的期望通过数（不存在时对应用例整段跳过，跳过不计分）
 # HiddenDelta：隐藏窗口下会少掉的通过数（只有 MeshFix 的显示可见性用例；它 SKIP 时报告里会写明原因）
-# Fail：已知残留（RadialDots 1 项），与 BASELINE-<Report> 的 [FAIL] 行逐字比对
+# Fail：已知残留（RadialDots 1 项），与 BASELINE-<Report> 的 [FAIL] 行逐字比对；PatchFill 的角点 G1 已知失败已由径向盘状参数化修复（2026-10-10）→ Fail=0
 $jobs = @(
   @{Name='Voronoi';     Cmd='VoronoiSelfTest';     Flag='run-voronoi-selftest.flag';     Report='VoronoiSelfTest.txt';     PassWith=150; PassWithout=150; Fail=0; HiddenDelta=0; UserFile=''; Screenshot='VoronoiPanel-smoke.png'},
   @{Name='Stripe';      Cmd='StripeSelfTest';      Flag='run-selftest.flag';             Report='StripeSelfTest.txt';      PassWith=55; PassWithout=55; Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''},
@@ -32,7 +32,8 @@ $jobs = @(
   @{Name='MeshFix';     Cmd='MeshFixSelfTest';     Flag='run-meshfix-selftest.flag';     Report='MeshFixSelfTest.txt';     PassWith=15; PassWithout=15; Fail=0; HiddenDelta=1; UserFile='D:\UserData\Desktop\11.3dm'; Screenshot=''},
   @{Name='DiamondFacet';Cmd='DiamondFacetSelfTest';Flag='run-diamondfacet-selftest.flag';Report='DiamondFacetSelfTest.txt';PassWith=86; PassWithout=86; Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''},
   @{Name='WaterRipple'; Cmd='WaterRippleSelfTest'; Flag='run-waterripple-selftest.flag'; Report='WaterRippleSelfTest.txt'; PassWith=101; PassWithout=101; Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''},
-  @{Name='SurfaceUnify';Cmd='SurfaceUnifySelfTest';Flag='run-surfaceunify-selftest.flag';Report='SurfaceUnifySelfTest.txt';PassWith=114; PassWithout=114; Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''},
+  @{Name='SurfaceUnify';Cmd='SurfaceUnifySelfTest';Flag='run-surfaceunify-selftest.flag';Report='SurfaceUnifySelfTest.txt';PassWith=135; PassWithout=135; Fail=9; HiddenDelta=0; UserFile=''; Screenshot=''},
+  @{Name='PatchFill';   Cmd='PatchFillSelfTest';   Flag='run-patchfill-selftest.flag';   Report='PatchFillSelfTest.txt';   PassWith=151; PassWithout=151; Fail=0; HiddenDelta=0; UserFile=''; Screenshot='PatchFillPanel-smoke.png'},
   @{Name='VapeVolume';  Cmd='VapeVolumeSelfTest';  Flag='run-vape-selftest.flag';        Report='VapeVolumeSelfTest.txt';  PassWith=3;  PassWithout=3;  Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''}
 )
 

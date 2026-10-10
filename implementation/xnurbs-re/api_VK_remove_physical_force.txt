@@ -1,0 +1,22 @@
+### VK_remove_physical_force entry RVA = 0x2ed18a0
+
+===== chunk @0x2ed18a0 @ rva 0x2ed18a0 len 0x60 =====
+  02ed18a0  mov      qword ptr [rsp + 8], rbx
+  02ed18a5  mov      qword ptr [rsp + 0x10], rsi
+  02ed18aa  push     rdi
+  02ed18ab  sub      rsp, 0xc0
+  02ed18b2  mov      rax, qword ptr [rip + 0x352d9f]
+  02ed18b9  xor      rax, rsp
+  02ed18bc  mov      qword ptr [rsp + 0xb0], rax
+  02ed18c4  movdqa   xmm0, xmmword ptr [rip + 0x1c66b4]
+  02ed18cc  xor      ebx, ebx
+  02ed18ce  movdqa   xmm1, xmmword ptr [rip + 0x1c2fea]
+  02ed18d6  mov      esi, ecx
+  02ed18d8  movdqa   xmm2, xmmword ptr [rip + 0x1c6690]
+  02ed18e0  mov      eax, ebx
+  02ed18e2  movdqa   xmm3, xmmword ptr [rip + 0x1c66a6]
+  02ed18ea  movdqa   xmmword ptr [rsp + 0x50], xmm0
+  02ed18f0  xorps    xmm0, xmm0
+  02ed18f3  movdqa   xmmword ptr [rsp + 0x60], xmm1
+  02ed18f9  psubw    xmm0, xmm2
+  02ed18fd  xorps    xmm1, xmm1

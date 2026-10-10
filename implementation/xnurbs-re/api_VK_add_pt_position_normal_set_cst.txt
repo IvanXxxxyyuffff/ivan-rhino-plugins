@@ -1,0 +1,32 @@
+### VK_add_pt_position_normal_set_cst entry RVA = 0x2ed1170
+
+===== chunk @0x2ed1170 @ rva 0x2ed1170 len 0x60 =====
+  02ed1170  mov      qword ptr [rsp + 8], rbx
+  02ed1175  mov      qword ptr [rsp + 0x10], rsi
+  02ed117a  push     rdi
+  02ed117b  sub      rsp, 0x20
+  02ed117f  mov      r10, qword ptr [rip + 0x3976a2]
+  02ed1186  mov      rdi, r8
+  02ed1189  mov      esi, edx
+  02ed118b  mov      r9d, ecx
+  02ed118e  test     r10, r10
+  02ed1191  jne      0x182ed11a7
+  02ed1193  lea      eax, [r10 + 6]
+  02ed1197  mov      rbx, qword ptr [rsp + 0x30]
+  02ed119c  mov      rsi, qword ptr [rsp + 0x38]
+  02ed11a1  add      rsp, 0x20
+  02ed11a5  pop      rdi
+  02ed11a6  ret      
+  02ed11a7  mov      rcx, qword ptr [r10 + 8]
+  02ed11ab  mov      rax, rcx
+  02ed11ae  mov      rdx, qword ptr [rcx + 8]
+  02ed11b2  cmp      byte ptr [rdx + 0x19], 0
+  02ed11b6  jne      0x182ed11d0
+  02ed11b8  cmp      dword ptr [rdx + 0x20], r9d
+  02ed11bc  jae      0x182ed11c4
+  02ed11be  mov      rdx, qword ptr [rdx + 0x10]
+  02ed11c2  jmp      0x182ed11ca   ; -> 0x2ed11ca
+  02ed11c4  mov      rax, rdx
+  02ed11c7  mov      rdx, qword ptr [rdx]
+  02ed11ca  cmp      byte ptr [rdx + 0x19], 0
+  02ed11ce  je       0x182ed11b8

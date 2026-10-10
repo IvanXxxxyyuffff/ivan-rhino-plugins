@@ -1,0 +1,33 @@
+### VK_generate_solution entry RVA = 0x2ed1a90
+
+===== chunk @0x2ed1a90 @ rva 0x2ed1a90 len 0x60 =====
+  02ed1a90  mov      r11, qword ptr [rip + 0x396d91]
+  02ed1a97  xor      r9d, r9d
+  02ed1a9a  mov      r8d, ecx
+  02ed1a9d  mov      r10d, r9d
+  02ed1aa0  test     r11, r11
+  02ed1aa3  jne      0x182ed1aaa
+  02ed1aa5  lea      eax, [r9 + 6]
+  02ed1aa9  ret      
+  02ed1aaa  mov      rcx, qword ptr [r11 + 8]
+  02ed1aae  mov      rax, rcx
+  02ed1ab1  mov      rdx, qword ptr [rcx + 8]
+  02ed1ab5  cmp      byte ptr [rdx + 0x19], r9b
+  02ed1ab9  jne      0x182ed1ad8
+  02ed1abb  nop      dword ptr [rax + rax]
+  02ed1ac0  cmp      dword ptr [rdx + 0x20], r8d
+  02ed1ac4  jae      0x182ed1acc
+  02ed1ac6  mov      rdx, qword ptr [rdx + 0x10]
+  02ed1aca  jmp      0x182ed1ad2   ; -> 0x2ed1ad2
+  02ed1acc  mov      rax, rdx
+  02ed1acf  mov      rdx, qword ptr [rdx]
+  02ed1ad2  cmp      byte ptr [rdx + 0x19], r9b
+  02ed1ad6  je       0x182ed1ac0
+  02ed1ad8  cmp      rax, rcx
+  02ed1adb  je       0x182ed1ae3
+  02ed1add  cmp      r8d, dword ptr [rax + 0x20]
+  02ed1ae1  jae      0x182ed1ae6
+  02ed1ae3  mov      rax, rcx
+  02ed1ae6  cmp      rax, rcx
+  02ed1ae9  je       0x182ed1b26
+  02ed1aeb  mov      rcx, qword ptr [rax + 0x28]

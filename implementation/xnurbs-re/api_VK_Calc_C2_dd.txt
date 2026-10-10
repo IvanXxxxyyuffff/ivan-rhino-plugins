@@ -1,0 +1,37 @@
+### VK_Calc_C2_dd entry RVA = 0x2ed1c70
+
+===== chunk @0x2ed1c70 @ rva 0x2ed1c70 len 0x60 =====
+  02ed1c70  sub      rsp, 0x38
+  02ed1c74  mov      rax, qword ptr [rsp + 0x60]
+  02ed1c79  mov      qword ptr [rsp + 0x20], rax
+  02ed1c7e  call     0x182eea4d0   ; -> 0x2eea4d0
+  02ed1c83  xor      edx, edx
+  02ed1c85  mov      ecx, 0x13
+  02ed1c8a  test     eax, eax
+  02ed1c8c  cmovne   ecx, edx
+  02ed1c8f  mov      eax, ecx
+  02ed1c91  add      rsp, 0x38
+  02ed1c95  ret      
+  02ed1c96  int3     
+  02ed1c97  int3     
+  02ed1c98  int3     
+  02ed1c99  int3     
+  02ed1c9a  int3     
+  02ed1c9b  int3     
+  02ed1c9c  int3     
+  02ed1c9d  int3     
+  02ed1c9e  int3     
+  02ed1c9f  int3     
+  02ed1ca0  mov      rax, rsp
+  02ed1ca3  mov      qword ptr [rax + 8], rbx
+  02ed1ca7  mov      qword ptr [rax + 0x10], rbp
+  02ed1cab  mov      qword ptr [rax + 0x18], rsi
+  02ed1caf  push     rdi
+  02ed1cb0  sub      rsp, 0x60
+  02ed1cb4  movaps   xmmword ptr [rax - 0x18], xmm6
+  02ed1cb8  mov      rdi, r9
+  02ed1cbb  movaps   xmmword ptr [rax - 0x28], xmm7
+  02ed1cbf  mov      rsi, r8
+  02ed1cc2  movaps   xmmword ptr [rax - 0x38], xmm8
+  02ed1cc7  mov      rbp, rdx
+  02ed1cca  movsd    xmm8, qword ptr [rcx + 8]

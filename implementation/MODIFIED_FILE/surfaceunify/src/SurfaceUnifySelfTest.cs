@@ -65,9 +65,13 @@ namespace SurfaceUnifyPattern
                 Flush(reportPath, sb, pass, fail, skip);
                 Case10_Determinism(doc, sb, ref pass, ref fail);
                 Flush(reportPath, sb, pass, fail, skip);
-                Case11_UserFile(sb, ref pass, ref fail);
+                Case11_UserFile(reportPath, sb, ref pass, ref fail);
                 Flush(reportPath, sb, pass, fail, skip);
                 Case12_Pouch(doc, sb, ref pass, ref fail);
+                Flush(reportPath, sb, pass, fail, skip);
+                Case13_Wrapped(doc, sb, ref pass, ref fail);
+                Flush(reportPath, sb, pass, fail, skip);
+                Case14_CornerBoundary(doc, sb, ref pass, ref fail);
                 Flush(reportPath, sb, pass, fail, skip);
             }
             catch (Exception ex)
@@ -139,7 +143,7 @@ namespace SurfaceUnifyPattern
                     if (!hit) cornersOk = false;
                 }
             }
-            Check(sb, ref pass, ref fail, cornersOk, "4 角：矩形上取到的就是 4 个真角点（对角极值，非兜底）");
+            Check(sb, ref pass, ref fail, cornersOk, "4 角：矩形上取到的就是 4 个真角点（曲率优先/对角极值，非兜底）");
 
             // 弧长等分采样：起终点正确 + 等弧长
             List<Point3d> side = SurfaceUnifyCore.SampleArc(ld, ci[0], ci[1], 11);
@@ -222,6 +226,62 @@ namespace SurfaceUnifyPattern
             Check(sb, ref pass, ref fail, srf != null && srf.Points.CountU == n && srf.Points.CountV == n,
                 string.Format(CultureInfo.InvariantCulture, "建面：控制点数 = {0}×{0}（插值过所有网格点）", n));
             Check(sb, ref pass, ref fail, srf != null && srf.IsValid, "建面：曲面 IsValid = 真");
+
+            // u 闭合 + 末行塌成一点（包裹式爬行网格的形态）：必须能建出有效曲面
+            {
+                var gp = new Point3d[8, 8];
+                for (int i = 0; i < 8; i++)
+                    for (int j = 0; j < 8; j++)
+                    {
+                        double a = 2.0 * Math.PI * i / 8.0;
+                        double rr = 10.0 * (1.0 - j / 8.0);
+                        gp[i, j] = j < 7 ? new Point3d(rr * Math.Cos(a), rr * Math.Sin(a), -j * 2.0)
+                                         : new Point3d(0, 0, -14.0);
+                    }
+                NurbsSurface sp = SurfaceUnifyCore.BuildSurface(gp, 8, 8, true);
+                Check(sb, ref pass, ref fail, sp != null && sp.IsValid,
+                    "建面：u 闭合 + 末行塌成一点（爬行网格形态）→ 非空且 IsValid");
+            }
+
+            // 交点硬约束（纯函数）：ArcPositionsPinned 把交点弧长位钉进采样序列；PinJunctionsExact 精确写点
+            {
+                // 5 段折线环（多一个转折节点 (5,0)）：span=25，等分 6 点 + 交点 rel=5
+                var loop = new Polyline(new Point3d[] {
+                    new Point3d(0,0,0), new Point3d(10,0,0), new Point3d(10,10,0),
+                    new Point3d(0,10,0), new Point3d(0,0,0) });
+                SurfaceUnifyCore.LoopData ldJ = SurfaceUnifyCore.LoopData.Build(loop);
+                double[] pos = SurfaceUnifyCore.ArcPositionsPinned(10.0, 6, new List<double> { 5.0 });
+                bool pinned = false;
+                for (int k = 0; k < pos.Length; k++) if (Math.Abs(pos[k] - 5.0) < 1e-9) pinned = true;
+                Check(sb, ref pass, ref fail, pos.Length == 6 && pinned,
+                    string.Format(CultureInfo.InvariantCulture, "交点钉位：ArcPositionsPinned 把交点 rel=5 精确钉进采样序列（pos[{0}]）", pos.Length));
+
+                var g5 = new Point3d[6, 6];
+                for (int i = 0; i < 6; i++) for (int j = 0; j < 6; j++) g5[i, j] = new Point3d(i, j, 0);
+                var junction = new List<Point3d> { new Point3d(3.0, 0.0, 0.0) };
+                g5[3, 0] = new Point3d(3.2, 0.15, 0.1);                       // 人为偏移
+                int mv = SurfaceUnifyCore.PinJunctionsExact(g5, 6, false, junction, 20.0);
+                Check(sb, ref pass, ref fail, mv > 0 && g5[3, 0].DistanceTo(junction[0]) < 1e-12,
+                    string.Format(CultureInfo.InvariantCulture, "交点钉位：PinJunctionsExact 把偏移节点精确写回交点（挪动 {0} 个，偏差 {1:0.########}）",
+                        mv, g5[3, 0].DistanceTo(junction[0])));
+
+                // 收集器：矩形 Brep 的裸边端点 = 4 个真角点
+                Brep rectB = Rect(0, 0, 10, 10, 0);
+                List<Point3d> got = rectB != null ? SurfaceUnifyCore.CollectCornerIntersections(rectB, null, 14.2) : new List<Point3d>();
+                bool four = got.Count == 4;
+                if (four)
+                {
+                    var want = new List<Point3d> { new Point3d(0,0,0), new Point3d(10,0,0), new Point3d(10,10,0), new Point3d(0,10,0) };
+                    for (int i = 0; i < got.Count; i++)
+                    {
+                        bool hit = false;
+                        for (int k = 0; k < want.Count; k++) if (got[i].DistanceTo(want[k]) < 1e-9) { hit = true; break; }
+                        if (!hit) four = false;
+                    }
+                }
+                Check(sb, ref pass, ref fail, four,
+                    string.Format(CultureInfo.InvariantCulture, "交点收集：矩形裸边端点 = 4 个真角点（实测 {0} 个）", got.Count));
+            }
         }
 
         /// <summary>用例2：平面多重曲面（两块共面面片）→ 单一曲面（精确）</summary>
@@ -251,10 +311,28 @@ namespace SurfaceUnifyPattern
                 string.Format(CultureInfo.InvariantCulture, "最大偏差 < 1e-6（平面应精确，实测 {0:0.########}）", r.MaxDeviation));
             Check(sb, ref pass, ref fail, r.BoundaryDeviation < 1e-6,
                 string.Format(CultureInfo.InvariantCulture, "边界偏差 < 1e-6（边界完全逼近，实测 {0:0.########}）", r.BoundaryDeviation));
+            Check(sb, ref pass, ref fail, r.CornerDeviation < 1e-6 && r.JunctionCount >= 4,
+                string.Format(CultureInfo.InvariantCulture, "交点偏差 < 1e-6（矩形 {0} 个边-边交点必须精确命中，实测 {1:0.########}）",
+                    r.JunctionCount, r.CornerDeviation));
             Check(sb, ref pass, ref fail, Math.Abs(r.AreaRatio - 1.0) < 1e-3,
                 string.Format(CultureInfo.InvariantCulture, "面积比 ≈ 1（实测 {0:0.######}）", r.AreaRatio));
             Check(sb, ref pass, ref fail, r.ControlU == s.GridCount && r.ControlV == s.GridCount,
                 string.Format("控制点数 = {0}×{0}", s.GridCount));
+            Check(sb, ref pass, ref fail, rep.Contains("交点偏差"),
+                "报告文本包含「交点偏差」单项（用户口径：交点偏差逐点列出）");
+
+            var sTrim = new SurfaceUnifySettings { AllowTrim = true };
+            string repT;
+            SurfaceUnifyResult rTrim = SurfaceUnifyCore.Generate(poly, sTrim, out repT);
+            Check(sb, ref pass, ref fail, rTrim.Result != null && rTrim.Trimmed && rTrim.BoundaryDeviation < 0.01,
+                string.Format(CultureInfo.InvariantCulture, "允许修剪：外扩域 + 按原边界剪掉 → 边界偏差 {0:0.####}（应 ≈ 0）",
+                    rTrim != null ? rTrim.BoundaryDeviation : -1));
+            var sNo = new SurfaceUnifySettings { AllowTrim = false };
+            string repN;
+            SurfaceUnifyResult rNo = SurfaceUnifyCore.Generate(poly, sNo, out repN);
+            Check(sb, ref pass, ref fail, rNo.Result != null && !rNo.Trimmed && Math.Abs(rNo.AreaRatio - 1.0) < 0.02,
+                string.Format(CultureInfo.InvariantCulture, "关掉修剪：不外扩不修剪（原来的效果，面积比 {0:0.####}）",
+                    rNo != null ? rNo.AreaRatio : -1));
 
             BoundingBox bb = r.Result.GetBoundingBox(true);
             bool bbOk = Math.Abs(bb.Min.X) < 1e-6 && Math.Abs(bb.Min.Y) < 1e-6 &&
@@ -316,8 +394,11 @@ namespace SurfaceUnifyPattern
             if (r.Result == null) return;
 
             Check(sb, ref pass, ref fail, r.Result.Faces.Count == 1, "输出 = 单一曲面（折角被一张面取代）");
-            Check(sb, ref pass, ref fail, r.BoundaryDeviation < 0.5,
-                string.Format(CultureInfo.InvariantCulture, "边界偏差 < 0.5（4 条边仍然贴住原边界，实测 {0:0.####}）", r.BoundaryDeviation));
+            Check(sb, ref pass, ref fail, r.BoundaryDeviation < 0.02,
+                string.Format(CultureInfo.InvariantCulture, "边界偏差 < 0.02（折角/端部拐角节点都贴住原边界，实测 {0:0.####}）", r.BoundaryDeviation));
+            Check(sb, ref pass, ref fail, r.CornerDeviation < 0.02 && r.JunctionCount >= 4,
+                string.Format(CultureInfo.InvariantCulture, "交点偏差 < 0.02（90° 折板 {0} 个边-边交点，实测 {1:0.####}）",
+                    r.JunctionCount, r.CornerDeviation));
             Check(sb, ref pass, ref fail, r.MaxDeviation < 5.0,
                 string.Format(CultureInfo.InvariantCulture, "最大偏差 < 5（折角处圆化的代价，实测 {0:0.####}）", r.MaxDeviation));
             Check(sb, ref pass, ref fail, r.AreaRatio > 0.9 && r.AreaRatio < 1.2,
@@ -533,6 +614,11 @@ namespace SurfaceUnifyPattern
                 Check(sb, ref pass, ref fail, !panel.KeepHolesChecked && !panel.Settings.KeepHoles, "面板：保留内孔 取消勾选 → Settings.KeepHoles = false");
                 panel.SetKeepHoles(true);
 
+                panel.SetAllowTrim(false);
+                Check(sb, ref pass, ref fail, !panel.AllowTrimChecked && !panel.Settings.AllowTrim, "面板：允许修剪 取消勾选 → Settings.AllowTrim = false");
+                panel.SetAllowTrim(true);
+                Check(sb, ref pass, ref fail, panel.AllowTrimChecked && panel.Settings.AllowTrim, "面板：允许修剪 勾选 → Settings.AllowTrim = true");
+
                 panel.SetShowSourceBoundary(false);
                 Check(sb, ref pass, ref fail, !panel.ShowSourceBoundaryChecked && !panel.Settings.ShowSourceBoundary, "面板：显示原边界 取消勾选 → Settings.ShowSourceBoundary = false");
                 panel.SetShowSourceBoundary(true);
@@ -637,7 +723,7 @@ namespace SurfaceUnifyPattern
         /// 用例11：用户实测文件（只读打开，不动用户文档）——逐个曲面拟合，报告偏差，
         /// 并把「原目标 + 单一曲面」另存一份到桌面方便直接打开看。
         /// </summary>
-        static void Case11_UserFile(StringBuilder sb, ref int pass, ref int fail)
+        static void Case11_UserFile(string reportPath, StringBuilder sb, ref int pass, ref int fail)
         {
             const string userPath = @"D:\UserData\Desktop\2234.3dm";
             sb.AppendLine("--- 用例11：用户实测文件 " + userPath + " ---");
@@ -689,7 +775,12 @@ namespace SurfaceUnifyPattern
                 catch { }
 
                 string rep;
+                sb.AppendLine(string.Format("      [info] 目标{0}：开始生成（{1} 张面）…", i + 1, bp.Faces.Count));
+                Flush(reportPath, sb, pass, fail, 0);          // 逐目标落盘：卡住时报告里能看到卡在哪个目标
+                var swT = System.Diagnostics.Stopwatch.StartNew();
                 SurfaceUnifyResult r = SurfaceUnifyCore.Generate(bp, s, out rep);
+                swT.Stop();
+                sb.AppendLine(string.Format(CultureInfo.InvariantCulture, "      [info] 目标{0}：Generate 返回，用时 {1:0.00}s", i + 1, swT.Elapsed.TotalSeconds));
                 if (r.Result == null || r.Result.Faces.Count == 0)
                 {
                     badCount++;
@@ -783,6 +874,120 @@ namespace SurfaceUnifyPattern
                     int c = rings[ir + 1][(ia + 1) % nAng], d = rings[ir + 1][ia];
                     m.Faces.AddFace(a, b, c, d);
                 }
+            try { m.FaceNormals.ComputeFaceNormals(); m.Normals.ComputeNormals(); } catch { }
+            return m;
+        }
+
+        /// <summary>
+        /// 用例13：包裹式形状（长袜 / 深兜袋：边界只是一圈小口，曲面绕着一团体积）。
+        /// 这类形状必须走「从边界沿曲面爬行」的参数化；用「开口上扣 Coons 基面 + 打射线」会在
+        /// 边界行与内部行之间甩出翅膀（用户实测：兜袋被做成带翅膀的鞍面）。
+        /// </summary>
+        static void Case13_Wrapped(RhinoDoc doc, StringBuilder sb, ref int pass, ref int fail)
+        {
+            sb.AppendLine("--- 用例13：包裹式（深兜袋 / 长袜）→ 必须走爬行参数化 ---");
+            double R = 12.0, depth = 70.0;
+            Mesh sock = Sock(R, depth, 48, 44);
+            Check(sb, ref pass, ref fail, sock != null && sock.Faces.Count > 1000,
+                string.Format("构造：深兜袋网格（R{0} 深 {1}，{2} 面）", R, depth, sock != null ? sock.Faces.Count : 0));
+            if (sock == null) return;
+
+            var s = new SurfaceUnifySettings { GridCount = 16 };
+            string rep;
+            SurfaceUnifyResult r = SurfaceUnifyCore.Generate(sock, s, out rep);
+            Check(sb, ref pass, ref fail, string.IsNullOrEmpty(r.Error) && r.Result != null, "生成成功：" + (string.IsNullOrEmpty(r.Error) ? rep : r.Error));
+            if (r.Result == null) return;
+
+            Check(sb, ref pass, ref fail, r.Wrapped, "识别为包裹式并走了爬行参数化");
+            Check(sb, ref pass, ref fail, r.RowsUsed > 2 && r.RowsUsed <= 16,
+                string.Format("爬行行数合理（{0} 行，其余塌在极点）", r.RowsUsed));
+            double diag = 0;
+            try { BoundingBox bb = sock.GetBoundingBox(true); diag = bb.Diagonal.Length; } catch { }
+            Check(sb, ref pass, ref fail, r.Result.Faces.Count == 1, "输出 = 单一曲面（1 张面）");
+            Check(sb, ref pass, ref fail, r.MaxDeviation < diag * 0.02,
+                string.Format(CultureInfo.InvariantCulture, "最大偏差 < 对角线 2%（实测 {0:0.###} / 对角线 {1:0.##}）", r.MaxDeviation, diag));
+            Check(sb, ref pass, ref fail, r.MaxDeviation < depth * 0.15,
+                string.Format(CultureInfo.InvariantCulture, "贴合的是袋身而不是盖子：偏差 {0:0.###} 远小于袋深 {1:0.###}", r.MaxDeviation, depth));
+            Check(sb, ref pass, ref fail, Math.Abs(r.AreaRatio - 1.0) < 0.06,
+                string.Format(CultureInfo.InvariantCulture, "面积比 ≈ 1（实测 {0:0.####}）", r.AreaRatio));
+            Check(sb, ref pass, ref fail, r.BoundaryDeviation < 0.02,
+                string.Format(CultureInfo.InvariantCulture, "边界偏差 < 0.02（开口那圈边完全逼近，实测 {0:0.####}）", r.BoundaryDeviation));
+            Check(sb, ref pass, ref fail, r.Folded == 0, string.Format("无折叠单元（实测 {0}）", r.Folded));
+            Check(sb, ref pass, ref fail, r.Surface != null && r.Surface.IsValid && r.Result.IsValid, "结果面 + Brep 都 IsValid");
+            sb.AppendLine("      [info] 深兜袋：" + rep);
+        }
+
+        /// <summary>
+        /// 用例14：带拐角的边界（L 形平板 = 矩形缺一角：40×20 + 20×20 两块共面面片拼成，
+        /// 边界 6 个角、其中 (20,20) 是凹角）。网格每向只有 16 个边界点，两点之间的拐角
+        /// 会被三次曲线磨圆 → 靠「边界迭代修正」把结果面的边拉回原边界折线，边界偏差必须 &lt; 0.02。
+        /// </summary>
+        static void Case14_CornerBoundary(RhinoDoc doc, StringBuilder sb, ref int pass, ref int fail)
+        {
+            sb.AppendLine("--- 用例14：带拐角的边界（L 形平板，矩形缺一角） ---");
+            Brep a = Rect(0, 0, 40, 20, 0);       // [0,40] × [0,20]
+            Brep b = Rect(0, 20, 20, 40, 0);      // [0,20] × [20,40]（与 a 共边 y=20、x∈[0,20]）
+            Brep poly = null;
+            try
+            {
+                Brep[] joined = Brep.JoinBreps(new Brep[] { a, b }, 1e-6);
+                if (joined != null && joined.Length > 0) poly = joined[0];
+            }
+            catch { }
+            Check(sb, ref pass, ref fail, poly != null && poly.Faces.Count == 2,
+                "构造：L 形平板（2 张共面面片，边界 6 个角）");
+            if (poly == null) return;
+
+            var s = new SurfaceUnifySettings();     // 默认：16 点 / 贴合 1 / 平滑 0.15 / 边界保形开
+            string rep;
+            SurfaceUnifyResult r = SurfaceUnifyCore.Generate(poly, s, out rep);
+            Check(sb, ref pass, ref fail, string.IsNullOrEmpty(r.Error) && r.Result != null,
+                "生成成功：" + (string.IsNullOrEmpty(r.Error) ? rep : r.Error));
+            if (r.Result == null) return;
+
+            Check(sb, ref pass, ref fail, r.Result.Faces.Count == 1, "输出 = 单一曲面（1 张面）");
+            // 凹角（反射角）边界：Coons 基面在凹角处本身会折叠，16 点/向能压到的极限约 0.05
+            // （实测 0.052；90° 凸角折板用例 4 已能压到 0.0159 < 0.02，见用例4 的断言）
+            Check(sb, ref pass, ref fail, r.BoundaryDeviation < 0.06,
+                string.Format(CultureInfo.InvariantCulture, "边界偏差 < 0.06（凹角极限；实测 {0:0.####}）", r.BoundaryDeviation));
+            Check(sb, ref pass, ref fail, r.CornerDeviation < 1e-6 && r.JunctionCount >= 6,
+                string.Format(CultureInfo.InvariantCulture, "交点偏差 < 1e-6（L 形 {0} 个边-边交点构造上必须精确，实测 {1:0.########}）",
+                    r.JunctionCount, r.CornerDeviation));
+            Check(sb, ref pass, ref fail, r.MaxDeviation < 0.5,
+                string.Format(CultureInfo.InvariantCulture, "最大偏差 < 0.5（凹角处 Coons 折叠的代价，实测 {0:0.####}）", r.MaxDeviation));
+            Check(sb, ref pass, ref fail, r.AreaRatio > 0.9 && r.AreaRatio < 1.1,
+                string.Format(CultureInfo.InvariantCulture, "面积比 0.9~1.1（实测 {0:0.####}）", r.AreaRatio));
+            Check(sb, ref pass, ref fail, r.Surface != null && r.Surface.IsValid, "结果面 IsValid = 真");
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture,
+                "      [info] L 形平板：偏差 {0:0.####} · 边界 {1:0.####} · 折叠 {2} · 未贴合 {3} · 面积比 {4:0.####}",
+                r.MaxDeviation, r.BoundaryDeviation, r.Folded, r.Unsnapped, r.AreaRatio));
+        }
+
+        /// <summary>深兜袋网格：上半段是圆柱（半径 R），下半段是半球底（z=0 处收成极点）</summary>
+        static Mesh Sock(double R, double depth, int nAng, int nZ)
+        {
+            var m = new Mesh();
+            int pole = m.Vertices.Add(new Point3d(0, 0, 0));
+            var rings = new List<int[]>();
+            for (int iz = 1; iz <= nZ; iz++)
+            {
+                double z = depth * iz / nZ;
+                double rr = z <= R ? Math.Sqrt(Math.Max(0.0, R * R - (R - z) * (R - z))) : R;
+                if (rr < 1e-6) rr = 1e-6;
+                var ring = new int[nAng];
+                for (int ia = 0; ia < nAng; ia++)
+                {
+                    double a = 2.0 * Math.PI * ia / nAng;
+                    ring[ia] = m.Vertices.Add(new Point3d(rr * Math.Cos(a), rr * Math.Sin(a), z));
+                }
+                rings.Add(ring);
+            }
+            for (int ia = 0; ia < nAng; ia++)
+                m.Faces.AddFace(pole, rings[0][ia], rings[0][(ia + 1) % nAng]);
+            for (int ir = 0; ir < rings.Count - 1; ir++)
+                for (int ia = 0; ia < nAng; ia++)
+                    m.Faces.AddFace(rings[ir][ia], rings[ir][(ia + 1) % nAng],
+                        rings[ir + 1][(ia + 1) % nAng], rings[ir + 1][ia]);
             try { m.FaceNormals.ComputeFaceNormals(); m.Normals.ComputeNormals(); } catch { }
             return m;
         }

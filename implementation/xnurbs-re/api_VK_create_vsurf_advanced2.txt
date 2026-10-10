@@ -1,0 +1,28 @@
+### VK_create_vsurf_advanced2 entry RVA = 0x2ed55d0
+
+===== chunk @0x2ed55d0 @ rva 0x2ed55d0 len 0x60 =====
+  02ed55d0  mov      qword ptr [rsp + 0x10], rsi
+  02ed55d5  push     rdi
+  02ed55d6  sub      rsp, 0x20
+  02ed55da  mov      rsi, rdx
+  02ed55dd  mov      dword ptr [rdx], 0
+  02ed55e3  mov      rdi, rcx
+  02ed55e6  call     0x182ef0b10   ; -> 0x2ef0b10
+  02ed55eb  test     eax, eax
+  02ed55ed  jne      0x182ed5632
+  02ed55ef  mov      ecx, 0x278
+  02ed55f4  mov      qword ptr [rsp + 0x30], rbx
+  02ed55f9  call     0x182f8605c   ; -> 0x2f8605c
+  02ed55fe  mov      r8, qword ptr [rdi]
+  02ed5601  mov      edx, 1
+  02ed5606  mov      rcx, rax
+  02ed5609  mov      rbx, rax
+  02ed560c  call     0x182eeadb0   ; -> 0x2eeadb0
+  02ed5611  lea      rax, [rip + 0x1b8950]
+  02ed5618  mov      rdx, rdi
+  02ed561b  mov      rcx, rbx
+  02ed561e  mov      qword ptr [rbx], rax
+  02ed5621  call     0x182ef0820   ; -> 0x2ef0820
+  02ed5626  mov      eax, dword ptr [rbx + 8]
+  02ed5629  mov      rbx, qword ptr [rsp + 0x30]
+  02ed562e  mov      dword ptr [rsi], eax

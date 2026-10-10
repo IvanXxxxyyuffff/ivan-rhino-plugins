@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 $root = 'E:\IVAN-LiquidGlass-preview\implementation'
-$kinds = @('stripe','vape','halftone','voronoi','radialdots','meshfix','diamond','ripple','unify')
+$kinds = @('stripe','vape','halftone','voronoi','radialdots','meshfix','diamond','ripple','unify','patchfill')
 Add-Type -AssemblyName System.Drawing
 $cell = 128; $label = 22; $small = 16; $zoom = 5
 $strip = New-Object System.Drawing.Bitmap(($cell * $kinds.Count), ($cell + $label + $small * $zoom + $label))

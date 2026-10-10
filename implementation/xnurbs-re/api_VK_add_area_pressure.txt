@@ -1,0 +1,35 @@
+### VK_add_area_pressure entry RVA = 0x2ed19f0
+
+===== chunk @0x2ed19f0 @ rva 0x2ed19f0 len 0x60 =====
+  02ed19f0  push     rbx
+  02ed19f2  mov      r11, qword ptr [rip + 0x396e2f]
+  02ed19f9  xor      r10d, r10d
+  02ed19fc  mov      rbx, rdx
+  02ed19ff  mov      r9d, ecx
+  02ed1a02  test     r11, r11
+  02ed1a05  jne      0x182ed1a0d
+  02ed1a07  lea      eax, [r10 + 6]
+  02ed1a0b  pop      rbx
+  02ed1a0c  ret      
+  02ed1a0d  mov      rcx, qword ptr [r11 + 8]
+  02ed1a11  mov      rax, rcx
+  02ed1a14  mov      rdx, qword ptr [rcx + 8]
+  02ed1a18  cmp      byte ptr [rdx + 0x19], r10b
+  02ed1a1c  jne      0x182ed1a38
+  02ed1a1e  nop      
+  02ed1a20  cmp      dword ptr [rdx + 0x20], r9d
+  02ed1a24  jae      0x182ed1a2c
+  02ed1a26  mov      rdx, qword ptr [rdx + 0x10]
+  02ed1a2a  jmp      0x182ed1a32   ; -> 0x2ed1a32
+  02ed1a2c  mov      rax, rdx
+  02ed1a2f  mov      rdx, qword ptr [rdx]
+  02ed1a32  cmp      byte ptr [rdx + 0x19], r10b
+  02ed1a36  je       0x182ed1a20
+  02ed1a38  cmp      rax, rcx
+  02ed1a3b  je       0x182ed1a43
+  02ed1a3d  cmp      r9d, dword ptr [rax + 0x20]
+  02ed1a41  jae      0x182ed1a46
+  02ed1a43  mov      rax, rcx
+  02ed1a46  cmp      rax, rcx
+  02ed1a49  je       0x182ed1a7c
+  02ed1a4b  mov      rcx, qword ptr [rax + 0x28]

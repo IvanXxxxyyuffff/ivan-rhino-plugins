@@ -1,0 +1,26 @@
+### VK_Calc_C3_dd entry RVA = 0x2ed1ca0
+
+===== chunk @0x2ed1ca0 @ rva 0x2ed1ca0 len 0x60 =====
+  02ed1ca0  mov      rax, rsp
+  02ed1ca3  mov      qword ptr [rax + 8], rbx
+  02ed1ca7  mov      qword ptr [rax + 0x10], rbp
+  02ed1cab  mov      qword ptr [rax + 0x18], rsi
+  02ed1caf  push     rdi
+  02ed1cb0  sub      rsp, 0x60
+  02ed1cb4  movaps   xmmword ptr [rax - 0x18], xmm6
+  02ed1cb8  mov      rdi, r9
+  02ed1cbb  movaps   xmmword ptr [rax - 0x28], xmm7
+  02ed1cbf  mov      rsi, r8
+  02ed1cc2  movaps   xmmword ptr [rax - 0x38], xmm8
+  02ed1cc7  mov      rbp, rdx
+  02ed1cca  movsd    xmm8, qword ptr [rcx + 8]
+  02ed1cd0  mov      rbx, rcx
+  02ed1cd3  movaps   xmmword ptr [rax - 0x48], xmm9
+  02ed1cd8  movaps   xmm7, xmm8
+  02ed1cdc  movsd    xmm9, qword ptr [rcx]
+  02ed1ce1  movaps   xmm6, xmm9
+  02ed1ce5  mulsd    xmm7, xmm8
+  02ed1cea  mulsd    xmm6, xmm9
+  02ed1cef  movaps   xmm0, xmm6
+  02ed1cf2  addsd    xmm0, xmm7
+  02ed1cf6  call     0x182fe604e   ; -> 0x2fe604e

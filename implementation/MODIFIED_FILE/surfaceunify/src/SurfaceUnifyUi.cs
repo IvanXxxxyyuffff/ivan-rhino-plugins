@@ -78,7 +78,7 @@ namespace SurfaceUnifyPattern
 
         FlatButton _pick;
         List<Control> _gridRows, _strengthRows, _smoothRows, _snapRows;
-        IvanCheck _lockCheck, _holesCheck, _srcCheck;
+        IvanCheck _lockCheck, _holesCheck, _trimCheck, _srcCheck;
         Label _fitHint;
 
         public SurfaceUnifyPanel(SurfaceUnifySettings settings, string targetDesc)
@@ -155,7 +155,7 @@ namespace SurfaceUnifyPattern
 
             // ---- 边界与输出
             {
-                var card = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 132, Title = "边界与输出" };
+                var card = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 160, Title = "边界与输出" };
                 AddScrollCard(card);
                 int by = 26;
 
@@ -177,6 +177,16 @@ namespace SurfaceUnifyPattern
                     Raise();
                 };
                 card.Controls.Add(_holesCheck);
+                by += 28;
+
+                _trimCheck = new IvanCheck { Text = "允许修剪（域外扩后按原边界剪掉多余部分）", Checked = Settings.AllowTrim };
+                _trimCheck.SetBounds(12, by, W - 48, 22);
+                _trimCheck.CheckedChanged += (s, e) =>
+                {
+                    Settings.AllowTrim = _trimCheck.Checked;
+                    Raise();
+                };
+                card.Controls.Add(_trimCheck);
                 by += 28;
 
                 var bh = new Label();
@@ -475,6 +485,8 @@ namespace SurfaceUnifyPattern
         public bool LockBoundaryChecked { get { return _lockCheck != null && _lockCheck.Checked; } }
         public void SetKeepHoles(bool on) { if (_holesCheck != null) _holesCheck.Checked = on; }
         public bool KeepHolesChecked { get { return _holesCheck != null && _holesCheck.Checked; } }
+        public void SetAllowTrim(bool on) { if (_trimCheck != null) _trimCheck.Checked = on; }
+        public bool AllowTrimChecked { get { return _trimCheck != null && _trimCheck.Checked; } }
         public void SetShowSourceBoundary(bool on) { if (_srcCheck != null) _srcCheck.Checked = on; }
         public bool ShowSourceBoundaryChecked { get { return _srcCheck != null && _srcCheck.Checked; } }
 

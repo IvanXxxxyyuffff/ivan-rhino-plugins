@@ -1,0 +1,771 @@
+# PE RECON: C:/Program Files/Rhino 7/Plug-ins/XNurbsRhino 5/XNurbsRhino.rhp
+size_bytes: 173568
+machine: 0x8664  (0x8664=x64, 0x14c=x86)
+timestamp: 1607592273  (2020-12-10 09:24:33 UTC)
+characteristics: 0x2022
+is_dll: True  is_exe: False
+subsystem: 2
+image_base: 0x180000000
+entry_point(RVA): 0xf5b8
+dll_characteristics: 0x160
+  flags: HIGH_ENTROPY_VA, DYNAMIC_BASE, NX_COMPAT
+
+## CLR / MANAGED DETECTION
+  COM_DESCRIPTOR dir: RVA=0x0 size=0
+  => IS_MANAGED: False
+
+## SECTIONS
+name               VA      VSize     RawPtr    RawSize  Entropy      Flags
+.text          0x1000     0xfc00      0x400     0xfc00   6.1603 0x60000020
+.rdata        0x11000    0x10000    0x10000    0x10000   5.1469 0x40000040
+.data         0x21000     0x3400    0x20000      0x800   3.5584 0xc0000040
+.pdata        0x25000      0xe00    0x20800      0xe00   4.5027 0x40000040
+.rsrc         0x26000     0x8a00    0x21600     0x8a00   6.4915 0x40000040
+.reloc        0x2f000      0x600    0x2a000      0x600   4.7621 0x42000040
+
+## EXPORTS
+  dll_name: XNurbsRhino.rhp
+  ordinal_base: 1
+  export_count: 22
+  named_count: 22
+    ord        RVA name
+      1     0xd8c0 AddOneConstraint
+      2     0xd480 CreateOrSetVSurf
+      3     0xd760 FreeXNSurf
+      4     0xd830 GenerateNewVSurf
+      5     0xdc20 RhinoPlugInDescription
+      6     0xdc50 RhinoPlugInDeveloperAddress
+      7     0xdc60 RhinoPlugInDeveloperCountry
+      8     0xdc90 RhinoPlugInDeveloperEmail
+      9     0xdc80 RhinoPlugInDeveloperFax
+     10     0x1200 RhinoPlugInDeveloperOrganization
+     11     0xdc70 RhinoPlugInDeveloperPhone
+     12     0xdca0 RhinoPlugInDeveloperWebsite
+     13     0xdc30 RhinoPlugInIconResourceId
+     14     0xdc10 RhinoPlugInId
+     15     0xdbc0 RhinoPlugInMfcVersion
+     16     0xdbd0 RhinoPlugInMscVersion
+     17     0x1200 RhinoPlugInName
+     18     0xdc00 RhinoPlugInSdkServiceRelease
+     19     0xdbf0 RhinoPlugInSdkVersion
+     20     0xdca0 RhinoPlugInUpdateURL
+     21     0xdbe0 RhinoPlugInUsesMfc
+     22     0xdc40 RhinoPlugInVersion
+
+## IMPORTS
+  xnkernel.dll  (26 imports)
+      VK_Calc_perpendicular_curvature
+      VK_add_curve_cst
+      VK_add_pt_position_normal_set_cst
+      VK_add_pt_position_set_cst
+      VK_check_open_boundary_difference
+      VK_create_bspline
+      VK_create_multi_pt_cst
+      VK_create_vsurf_without_init_para
+      VK_free_v_object
+      VK_generate_solution
+      VK_get_auto_enforce_tol_flavor
+      VK_get_bsurf
+      VK_get_outcome_status
+      VK_get_outer_boundary_loop
+      VK_get_uv_bcurve_from_curve_cst
+      VK_get_version
+      VK_get_warning_message
+      VK_initialize_kernel
+      VK_modify_curve_cst
+      VK_remove_all_from_multi_pt_cst
+      VK_remove_constraint
+      VK_remove_physical_force
+      VK_remove_pt_from_multi_pt_cst
+      VK_reset_vsurf
+      VK_reset_vsurf_advanced
+      VK_terminate_kernel
+  mfc140u.dll  (159 imports)
+      ORD_10124
+      ORD_1039
+      ORD_1040
+      ORD_10691
+      ORD_11085
+      ORD_11406
+      ORD_11414
+      ORD_11415
+      ORD_11625
+      ORD_11664
+      ORD_11665
+      ORD_11771
+      ORD_11806
+      ORD_11813
+      ORD_11850
+      ORD_11901
+      ORD_11921
+      ORD_11929
+      ORD_11933
+      ORD_11940
+      ORD_11944
+      ORD_12212
+      ORD_12222
+      ORD_12223
+      ORD_12544
+      ORD_12606
+      ORD_12625
+      ORD_12706
+      ORD_12720
+      ORD_13354
+      ORD_13397
+      ORD_13513
+      ORD_13535
+      ORD_13568
+      ORD_13569
+      ORD_14088
+      ORD_14210
+      ORD_14211
+      ORD_14216
+      ORD_14217
+      ORD_14288
+      ORD_14289
+      ORD_14290
+      ORD_14360
+      ORD_1450
+      ORD_1489
+      ORD_1491
+      ORD_1492
+      ORD_1700
+      ORD_1722
+      ORD_1734
+      ORD_1748
+      ORD_1755
+      ORD_2011
+      ORD_2161
+      ORD_2212
+      ORD_2234
+      ORD_2266
+      ORD_2327
+      ORD_2336
+      ORD_2338
+      ORD_2360
+      ORD_2369
+      ORD_2371
+      ORD_2372
+      ORD_2439
+      ORD_2629
+      ORD_265
+      ORD_266
+      ORD_2697
+      ORD_3172
+      ORD_3173
+      ORD_3209
+      ORD_3212
+      ORD_323
+      ORD_324
+      ORD_3278
+      ORD_3279
+      ORD_3718
+      ORD_3728
+      ORD_3731
+      ORD_3812
+      ORD_3949
+      ORD_4011
+      ORD_4335
+      ORD_4352
+      ORD_4360
+      ORD_4445
+      ORD_473
+      ORD_4752
+      ORD_4767
+      ORD_4776
+      ORD_4782
+      ORD_4788
+      ORD_4794
+      ORD_4800
+      ORD_4806
+      ORD_4814
+      ORD_4828
+      ORD_4837
+      ORD_4843
+      ORD_4853
+      ORD_4859
+      ORD_5062
+      ORD_5080
+      ORD_5083
+      ORD_5183
+      ORD_5227
+      ORD_5229
+      ORD_5237
+      ORD_5240
+      ORD_5339
+      ORD_5363
+      ORD_5451
+      ORD_5552
+      ORD_5555
+      ORD_5582
+      ORD_5706
+      ORD_5723
+      ORD_6000
+      ORD_6121
+      ORD_6122
+      ORD_6123
+      ORD_6614
+      ORD_6631
+      ORD_6636
+      ORD_6638
+      ORD_6729
+      ORD_7393
+      ORD_7450
+      ORD_7460
+      ORD_7461
+      ORD_7650
+      ORD_7651
+      ORD_7668
+      ORD_7716
+      ORD_7719
+      ORD_7882
+      ORD_7913
+      ORD_7920
+      ORD_7922
+      ORD_8023
+      ORD_8084
+      ORD_8167
+      ORD_8656
+      ORD_8830
+      ORD_8900
+      ORD_8901
+      ORD_9041
+      ORD_9089
+      ORD_9384
+      ORD_983
+      ORD_9941
+      ORD_9946
+      ORD_9975
+      ORD_9976
+      ORD_9977
+      ORD_9978
+      ORD_9979
+  KERNEL32.dll  (35 imports)
+      CloseHandle
+      CreateEventW
+      DeleteCriticalSection
+      EnterCriticalSection
+      GetCurrentProcess
+      GetCurrentProcessId
+      GetCurrentThreadId
+      GetLastError
+      GetModuleFileNameW
+      GetModuleHandleW
+      GetProcAddress
+      GetSystemTimeAsFileTime
+      InitializeCriticalSectionAndSpinCount
+      InitializeCriticalSectionEx
+      InitializeSListHead
+      IsDebuggerPresent
+      IsProcessorFeaturePresent
+      K32EnumProcessModulesEx
+      K32GetModuleBaseNameW
+      K32GetProcessImageFileNameW
+      LeaveCriticalSection
+      LocalAlloc
+      LocalFree
+      OpenProcess
+      OutputDebugStringW
+      QueryPerformanceCounter
+      ResetEvent
+      RtlCaptureContext
+      RtlLookupFunctionEntry
+      RtlVirtualUnwind
+      SetEvent
+      SetUnhandledExceptionFilter
+      TerminateProcess
+      UnhandledExceptionFilter
+      WaitForSingleObjectEx
+  USER32.dll  (11 imports)
+      EnableWindow
+      EnumWindows
+      GetClientRect
+      GetScrollInfo
+      GetSystemMetrics
+      GetWindowRect
+      GetWindowThreadProcessId
+      IsWindow
+      PostMessageW
+      SendMessageW
+      SystemParametersInfoW
+  SHELL32.dll  (1 imports)
+      ShellExecuteW
+  MSVCP140.dll  (1 imports)
+      ?_Xlength_error@std@@YAXPEBD@Z
+  RhinoCore.dll  (310 imports)
+      ??0?$ON_ClassArray@VCRhinoObjRef@@@@QEAA@XZ
+      ??0CDisplayPipelineMaterial@@QEAA@AEBV0@@Z
+      ??0CRhinoBrepObject@@QEAA@XZ
+      ??0CRhinoCommand@@QEAA@_N0PEBVCRhinoPlugIn@@0@Z
+      ??0CRhinoCommandOptionName@@QEAA@PEB_W0@Z
+      ??0CRhinoCommandOptionValue@@QEAA@PEB_W0@Z
+      ??0CRhinoDisplayConduit@@QEAA@UCSupportChannels@@@Z
+      ??0CRhinoEventWatcher@@QEAA@XZ
+      ??0CRhinoGetObject@@QEAA@XZ
+      ??0CRhinoHistory@@QEAA@AEBVCRhinoCommand@@@Z
+      ??0CRhinoIsIdle@@QEAA@U_GUID@@@Z
+      ??0CRhinoObjRef@@QEAA@XZ
+      ??0CRhinoTabbedDockBarDialog@@QEAA@XZ
+      ??0CRhinoUtilityPlugIn@@QEAA@XZ
+      ??1?$ON_ClassArray@VCRhinoObjRef@@@@UEAA@XZ
+      ??1CDisplayPipelineMaterial@@QEAA@XZ
+      ??1CRhinoBrepObject@@UEAA@XZ
+      ??1CRhinoCommand@@UEAA@XZ
+      ??1CRhinoDisplayConduit@@UEAA@XZ
+      ??1CRhinoEventWatcher@@UEAA@XZ
+      ??1CRhinoGetObject@@UEAA@XZ
+      ??1CRhinoHistory@@QEAA@XZ
+      ??1CRhinoIsIdle@@UEAA@XZ
+      ??1CRhinoObjRef@@QEAA@XZ
+      ??1CRhinoTabbedDockBarDialog@@UEAA@XZ
+      ??1CRhinoUtilityPlugIn@@UEAA@XZ
+      ??2CRhinoEventWatcherEx@@SAPEAX_K@Z
+      ??3CRhinoEventWatcherEx@@SAXPEAX@Z
+      ??4CRhinoObjRef@@QEAAAEAV0@AEBV0@@Z
+      ??A?$ON_ClassArray@VCRhinoObjRef@@@@QEAAAEAVCRhinoObjRef@@H@Z
+      ?ActiveDoc@CRhinoApp@@QEBAPEAVCRhinoDoc@@XZ
+      ?ActiveView@CRhinoApp@@QEBAPEAVCRhinoView@@XZ
+      ?Add@CRhinoUiDialogItemResizer@@QEAAXHI@Z
+      ?AddBrepObject@CRhinoDoc@@QEAAPEAVCRhinoBrepObject@@AEBVON_Brep@@PEBVON_3dmObjectAttributes@@PEAVCRhinoHistory@@H@Z
+      ?AddCommandOption@CRhinoGet@@QEAAHVCRhinoCommandOptionName@@VCRhinoCommandOptionValue@@H@Z
+      ?AddObject@CRhinoDoc@@QEAA_NPEAVCRhinoObject@@_N1@Z
+      ?AddPagesToDocumentPropertiesDialog@CRhinoPlugIn@@UEAAXAEAVCRhinoOptionsPageCollection@@@Z
+      ?AddPagesToObjectPropertiesDialog@CRhinoPlugIn@@UEAAXAEAVCRhinoPropertiesPanelPageCollection@@@Z
+      ?AddPagesToOptionsDialog@CRhinoPlugIn@@UEAAXAEAVCRhinoOptionsPageCollection@@@Z
+      ?AddToDocNotification@CRhinoObject@@UEAAXXZ
+      ?AliasTableEvent@CRhinoEventWatcher@@UEAAXW4alias_event@1@AEBVCRhinoAppAliasList@@HPEBVCRhinoCommandAlias@@@Z
+      ?AnalysisMeshSettings@CRhinoDocProperties@@QEBAAEBVON_MeshParameters@@XZ
+      ?AppSettings@CRhinoApp@@QEAAAEAVCRhinoAppSettings@@XZ
+      ?Attributes@CRhinoObject@@UEBAAEBVCRhinoObjectAttributes@@XZ
+      ?BeginTransform@CRhinoObject@@UEAAXAEAVCRhinoDoc@@_N11@Z
+      ?BoundingBox@CRhinoBrepObject@@UEBA?AVON_BoundingBox@@PEBVCRhinoViewport@@@Z
+      ?BoundingBox@CRhinoBrepObject@@UEBA?AVON_BoundingBox@@XZ
+      ?Brep@CRhinoObjRef@@QEBAPEBVON_Brep@@XZ
+      ?CallWriteDocument@CRhinoPlugIn@@UEAAHAEBVCRhinoFileWriteOptions@@@Z
+      ?Cast@CRhinoBrepObject@@SAPEBV1@PEBVON_Object@@@Z
+      ?ClassId@CRhinoBrepObject@@UEBAPEBVON_ClassId@@XZ
+      ?ClassId@CRhinoUtilityPlugIn@@UEBAPEBVON_ClassId@@XZ
+      ?ClearCommandOptions@CRhinoGet@@QEAAXXZ
+      ?ClearObjects@CRhinoGetObject@@QEAAXXZ
+      ?CommandResult@CRhinoGet@@QEBA?AW4result@CRhinoCommand@@XZ
+      ?ContextHelpURL@CRhinoCommand@@UEBA_NAEAVON_wString@@@Z
+      ?ContinueModal@CRhinoDialog@@MEAAHXZ
+      ?CopyFrom@CRhinoBrepObject@@UEAA_NPEBVON_Object@@@Z
+      ?CopyFrom@CRhinoUtilityPlugIn@@UEAA_NPEBVON_Object@@@Z
+      ?Count@?$ON_ClassArray@VCRhinoObjRef@@@@QEBAHXZ
+      ?Create@CRhinoDialog@@UEAAHIPEAVCWnd@@@Z
+      ?Create@CRhinoDialog@@UEAAHPEB_WPEAVCWnd@@@Z
+      ?CreateIndirect@CRhinoUiDialog@@UEAAHPEAXPEAVCWnd@@@Z
+      ?CreateIndirect@CRhinoUiDialog@@UEAAHPEBUDLGTEMPLATE@@PEAVCWnd@@PEAX@Z
+      ?CreateMeshes@CRhinoBrepObject@@UEAAHW4mesh_type@ON@@AEBVON_MeshParameters@@_N@Z
+      ?Curve@CRhinoObjRef@@QEBAPEBVON_Curve@@XZ
+      ?DeleteFromDocNotification@CRhinoBrepObject@@UEAAXXZ
+      ?DeleteLayerCheck@CRhinoEventWatcher@@UEAAHAEAVCRhinoDoc@@AEAV?$ON_SimpleArray@H@@_N@Z
+      ?DestroyMeshes@CRhinoBrepObject@@UEAAXW4mesh_type@ON@@_N@Z
+      ?DestroyRuntimeCache@CRhinoBrepObject@@UEAAX_N@Z
+      ?DimStyleTableEvent@CRhinoEventWatcher@@UEAAXW4dimstyle_event@1@AEBVCRhinoDimStyleTable@@HPEBVON_DimStyle@@@Z
+      ?Disable@CRhinoDisplayConduit@@QEAAXXZ
+      ?DisplayAttrs@CRhinoDisplayPipeline@@QEBAPEBVCDisplayPipelineAttributes@@XZ
+      ?DoDataExchange@CRhinoDialog@@MEAAXPEAVCDataExchange@@@Z
+      ?DoHelp@CRhinoCommand@@UEAAXXZ
+      ?DoModal@CRhinoDialog@@UEAA_JXZ
+      ?Document@CRhinoHistoryRecord@@QEBAAEAVCRhinoDoc@@XZ
+      ?Draw@CRhinoBrepObject@@UEBAXAEAVCRhinoDisplayPipeline@@@Z
+      ?DrawBrep@CRhinoDisplayPipeline@@QEAAXAEBVON_Brep@@AEBVON_Color@@H@Z
+      ?DrawDot@CRhinoDisplayPipeline@@QEAAXMMPEB_WVON_Color@@1@Z
+      ?DrawGrips@CRhinoObject@@UEBAXAEAVCRhinoDisplayPipeline@@@Z
+      ?DrawHighlightedSubObjects@CRhinoBrepObject@@UEBAXAEAVCRhinoDisplayPipeline@@@Z
+      ?DrawLine@CRhinoDisplayPipeline@@QEAAXAEBVON_3dPoint@@0AEBVON_Color@@HI@Z
+      ?DrawShadedBrep@CRhinoDisplayPipeline@@QEAAXPEBVON_Brep@@PEBVCDisplayPipelineMaterial@@PEAVCRhinoCacheHandle@@@Z
+      ?DrawSubObject@CRhinoBrepObject@@UEBAXAEAVCRhinoDisplayPipeline@@VON_COMPONENT_INDEX@@@Z
+      ?DrawSurface@CRhinoDisplayPipeline@@QEAAXAEBVON_Surface@@H@Z
+      ?DrawV6@CRhinoBrepObject@@UEBAXPEAVCRhinoObjectDrawContext@@@Z
+      ?DrawZebraPreview@CRhinoDisplayPipeline@@QEAAXPEBVON_Brep@@AEBVCRhinoZebraAnalysisSettings@@AEBVON_MeshParameters@@AEBVON_Color@@PEAVCRhinoCacheHandle@@@Z
+      ?DuplicateRhinoObject@CRhinoObject@@UEBAPEAV1@XZ
+      ?DynamicDraw@CRhinoCommand@@UEAAXAEAVCRhinoView@@@Z
+      ?EVF@CRhinoTabbedDockBarDialog@@MEAAPEAXPEB_WPEBX@Z
+      ?Edge@CRhinoObjRef@@QEBAPEBVON_BrepEdge@@XZ
+      ?EditObjects@CRhinoCommand@@UEAAPEAVCRhinoObject@@AEBVCRhinoHistoryRecord@@AEAV?$ON_SimpleArray@VCRhinoObjectPair@@@@@Z
+      ?Empty@?$ON_ClassArray@VCRhinoObjRef@@@@QEAAXXZ
+      ?Enable@CRhinoDisplayConduit@@QEAAXI@Z
+      ?Enable@CRhinoEventWatcher@@QEAAXH@Z
+      ?Enable@CRhinoEventWatcherEx@@QEAAX_N@Z
+      ?EnableAllDlgControls@CRhinoUiDialog@@QEAAX_N@Z
+      ?EnableClearObjectsOnEntry@CRhinoGetObject@@QEAAX_N@Z
+      ?EnableCustomGrips@CRhinoObject@@UEAA_NPEAVCRhinoObjectGrips@@@Z
+      ?EnableDeselectAllBeforePostSelect@CRhinoGetObject@@QEAAX_N@Z
+      ?EnableGrips@CRhinoBrepObject@@UEAAX_N@Z
+      ?EnablePreSelect@CRhinoGetObject@@QEAAXHH@Z
+      ?EnablePressEnterWhenDonePrompt@CRhinoGetObject@@QEAA_N_N@Z
+      ?EnableSubObjectSelect@CRhinoGetObject@@QEAAXH@Z
+      ?EndTransform@CRhinoObject@@UEAAXAEAVCRhinoDoc@@_N11@Z
+      ?EnglishCommandName@CRhinoCommand@@UEBAPEB_WXZ
+      ?Event@CRhinoEventWatcher@@UEAAXW4event_id@1@IHPEBX1@Z
+      ?ForwardLMouseDblClickMessagesToParent@CRhinoUiDialog@@UEAA_NVCPoint@@@Z
+      ?ForwardLMouseDownMessagesToParent@CRhinoUiDialog@@UEAA_NVCPoint@@@Z
+      ?Geometry@CRhinoObjRef@@QEBAPEBVON_Geometry@@XZ
+      ?GeometryComponentIndex@CRhinoObjRef@@QEBA?AVON_COMPONENT_INDEX@@XZ
+      ?GetCS@CRhinoGet@@MEAA?AVON_Plane@@_N0@Z
+      ?GetFrame@CRhinoBrepObject@@UEBA_NAEAVON_Plane@@@Z
+      ?GetGrips@CRhinoObject@@UEBAHAEAV?$ON_SimpleArray@PEAVCRhinoGripObject@@@@@Z
+      ?GetHighlightedSubObjects@CRhinoBrepObject@@UEBAHAEAV?$ON_SimpleArray@VON_COMPONENT_INDEX@@@@@Z
+      ?GetMenuMessageString@CRhinoPlugIn@@UEBAXPEAUHMENU__@@IAEAVON_wString@@@Z
+      ?GetMeshes@CRhinoBrepObject@@UEBAHW4mesh_type@ON@@AEAV?$ON_SimpleArray@PEBVON_Mesh@@@@@Z
+      ?GetObjects@CRhinoGetObject@@QEAA?AW4result@CRhinoGet@@HH@Z
+      ?GetPlugInObjectInterface@CRhinoPlugIn@@UEAAPEAUIUnknown@@AEBU_GUID@@@Z
+      ?GetRhinoObjRefList@CRhinoHistoryRecord@@QEBAHHAEAV?$ON_ClassArray@VCRhinoObjRef@@@@@Z
+      ?GetSafeHwnd@CRhinoView@@QEBAPEAUHWND__@@XZ
+      ?GetSelectedSubObjects@CRhinoBrepObject@@UEBAHAEAV?$ON_SimpleArray@VON_COMPONENT_INDEX@@@@@Z
+      ?GetSubObjects@CRhinoBrepObject@@UEBAHAEAV?$ON_SimpleArray@PEAVCRhinoObject@@@@PEBVCRhinoViewport@@@Z
+      ?GetSubobjectMaterialComponents@CRhinoBrepObject@@MEBAHAEAV?$ON_SimpleArray@VON_COMPONENT_INDEX@@@@@Z
+      ?GetThisClass@CRhinoTabbedDockBarDialog@@SAPEAUCRuntimeClass@@XZ
+      ?GetThisMessageMap@CRhinoDialog@@KAPEBUAFX_MSGMAP@@XZ
+      ?GetTightBoundingBox@CRhinoBrepObject@@UEBA_NAEAVON_BoundingBox@@_NPEBVON_Xform@@@Z
+      ?GetWireframeCurves@CRhinoBrepObject@@UEBAHAEAV?$ON_SimpleArray@PEAVON_Curve@@@@@Z
+      ?GroupTableEvent@CRhinoEventWatcher@@UEAAXW4group_event@1@AEBVCRhinoGroupTable@@HPEBVON_Group@@@Z
+      ?HasSubobjectMaterials@CRhinoBrepObject@@MEBA_NXZ
+      ?HatchPatternTableEvent@CRhinoEventWatcher@@UEAAXW4hatchpattern_event@1@AEBVCRhinoHatchPatternTable@@HPEBVON_HatchPattern@@@Z
+      ?HideObject@CRhinoDoc@@QEAA_NAEBVCRhinoObjRef@@_N@Z
+      ?HighlightRequiresRedraw@CRhinoBrepObject@@UEBA_NXZ
+      ?HighlightSubObject@CRhinoBrepObject@@UEBA_NVON_COMPONENT_INDEX@@_N@Z
+      ?HistoryRecord@CRhinoObject@@QEBAPEBVCRhinoHistoryRecord@@XZ
+      ?HistoryVersion@CRhinoHistoryRecord@@QEBAHXZ
+      ?InstanceDefinitionTableEvent@CRhinoEventWatcher@@UEAAXW4idef_event@1@AEBVCRhinoInstanceDefinitionTable@@HPEBVON_InstanceDefinition@@@Z
+      ?InternalVirtual_IsSelectable@CRhinoObject@@MEBA_N_N000@Z
+      ?Internal_DeepCopy@CRhinoBrepObject@@EEBAPEAVON_Object@@XZ
+      ?Internal_DeepCopy@CRhinoUtilityPlugIn@@EEBAPEAVON_Object@@XZ
+      ?IsActiveInViewport@CRhinoObject@@UEBA_NAEBVCRhinoViewport@@@Z
+      ?IsDeletable@CRhinoObject@@UEBA_NXZ
+      ?IsEnabled@CRhinoDisplayConduit@@QEBA_NXZ
+      ?IsEnabled@CRhinoEventWatcher@@QEBA_NXZ
+      ?IsGroupObject@CRhinoObject@@UEBA_NXZ
+      ?IsInteractive@CRhinoCommandContext@@QEBA_NXZ
+      ?IsMeshable@CRhinoBrepObject@@UEBA_NW4mesh_type@ON@@@Z
+      ?IsRegistered@CRhinoEventWatcherEx@@QEBA_NXZ
+      ?IsSelectableWithGripsOn@CRhinoObject@@MEBA_NXZ
+      ?IsSolid@CRhinoBrepObject@@UEBA_NXZ
+      ?IsSubObjectHighlighted@CRhinoBrepObject@@UEBA_NVON_COMPONENT_INDEX@@@Z
+      ?IsSubObjectSelected@CRhinoBrepObject@@UEBA_NVON_COMPONENT_INDEX@@@Z
+      ?IsTabVisible@CRhinoTabbedDockBarDialog@@SA_NAEBVCRhinoDoc@@AEBU_GUID@@_N@Z
+      ?IsValid@CRhinoObject@@UEBA_NPEAVON_TextLog@@@Z
+      ?IsValid@CRhinoPlugIn@@MEBA_NPEAVON_TextLog@@@Z
+      ?LayerTableEvent@CRhinoEventWatcher@@UEAAXW4layer_event@1@AEBVCRhinoLayerTable@@HPEBVON_Layer@@@Z
+      ?LightTableEvent@CRhinoEventWatcher@@UEAAXW4light_event@1@AEBVCRhinoLightTable@@HPEBVON_Light@@@Z
+      ?LinetypeTableEvent@CRhinoEventWatcher@@UEAAXW4linetype_event@1@AEBVCRhinoLinetypeTable@@HPEBVON_Linetype@@@Z
+      ?LoadProfile@CRhinoCommand@@UEAAXPEB_WAEAVCRhinoProfileContext@@@Z
+      ?LoadProfile@CRhinoPlugIn@@UEAAXPEB_WAEAVCRhinoProfileContext@@@Z
+      ?LocalCommandName@CRhinoCommand@@UEBAPEB_WXZ
+      ?LocalPlugInDescription@CRhinoPlugIn@@UEBAPEB_WXZ
+      ?LocalPlugInName@CRhinoPlugIn@@UEBAPEB_WXZ
+      ?MaterialTableEvent@CRhinoEventWatcher@@UEAAXW4material_event@1@AEBVCRhinoMaterialTable@@HPEBVON_Material@@@Z
+      ?MemoryRelocate@CRhinoObject@@UEAAXXZ
+      ?MeshCount@CRhinoBrepObject@@UEBAHW4mesh_type@ON@@PEBVON_MeshParameters@@@Z
+      ?MeshDisplayAttributes@CRhinoBrepObject@@UEBAPEBVCDisplayPipelineAttributes@@HAEBVON_Mesh@@AEBV2@@Z
+      ?ModelObjectId@CRhinoObject@@UEBA?AU_GUID@@XZ
+      ?ModifyAttributes@CRhinoObject@@UEAA_NAEBVON_3dmObjectAttributes@@_N1@Z
+      ?NotifyConduit@CRhinoDisplayConduit@@UEAAXW4EConduitNotifiers@@AEAVCRhinoDisplayPipeline@@@Z
+      ?Object@CRhinoGetObject@@QEBA?AVCRhinoObjRef@@H@Z
+      ?Object@CRhinoObjRef@@QEBAPEBVCRhinoObject@@XZ
+      ?ObjectCount@CRhinoGetObject@@QEBAHXZ
+      ?ObjectMaterial@CRhinoBrepObject@@MEBAAEBVCRhinoMaterial@@AEBVON_COMPONENT_INDEX@@AEBU_GUID@@PEBVON_3dmObjectAttributes@@@Z
+      ?ObjectMaterial@CRhinoObject@@UEBAAEBVCRhinoMaterial@@AEBU_GUID@@@Z
+      ?ObjectMaterial@CRhinoObject@@UEBAAEBVCRhinoMaterial@@AEBVON_3dmObjectAttributes@@@Z
+      ?ObjectMaterial@CRhinoObject@@UEBAAEBVCRhinoMaterial@@XZ
+      ?ObjectRdkMaterial@CRhinoBrepObject@@MEBAPEBVCRhRdkMaterial@@AEBVON_COMPONENT_INDEX@@AEBU_GUID@@PEBVON_3dmObjectAttributes@@@Z
+      ?ObjectType@CRhinoBrepObject@@UEBA?AW4object_type@ON@@XZ
+      ?OnActiveDocumentChanged@CRhinoEventWatcher@@UEAAXPEAVCRhinoDoc@@@Z
+      ?OnAddObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@@Z
+      ?OnAppSettingsChanged@CRhinoEventWatcher@@UEAAXAEBVCRhinoAppSettings@@@Z
+      ?OnBeginCommand@CRhinoEventWatcher@@UEAAXAEBVCRhinoCommand@@AEBVCRhinoCommandContext@@@Z
+      ?OnBeginOpenDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@PEB_WHH@Z
+      ?OnBeginSaveDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@PEB_WH@Z
+      ?OnCancel@CRhinoDialog@@MEAAXXZ
+      ?OnCloseDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@@Z
+      ?OnCloseRhino@CRhinoEventWatcher@@UEAAXAEAVCRhinoApp@@@Z
+      ?OnColorButtonClicked@CRhinoDialog@@UEAAXI@Z
+      ?OnCommand@CRhinoDialog@@MEAAH_K_J@Z
+      ?OnCreate@CRhinoUiDialog@@QEAAHPEAUtagCREATESTRUCTW@@@Z
+      ?OnCreateView@CRhinoEventWatcher@@UEAAXPEAVCRhinoView@@@Z
+      ?OnDeleteObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@@Z
+      ?OnDeselectAllObjects@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@H@Z
+      ?OnDeselectObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEBVCRhinoObject@@@Z
+      ?OnDeselectObjects@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEBV?$ON_SimpleArray@PEBVCRhinoObject@@@@@Z
+      ?OnDestroy@CRhinoDialog@@IEAAXXZ
+      ?OnDestroyView@CRhinoEventWatcher@@UEAAXPEAVCRhinoView@@@Z
+      ?OnDisplayPlugInHelp@CRhinoPlugIn@@UEBAHPEAUHWND__@@@Z
+      ?OnDockBarPositionChanged@CRhinoTabbedDockBarDialog@@UEAAXK@Z
+      ?OnDockContextStartDrag@CRhinoTabbedDockBarDialog@@UEAA_N_N@Z
+      ?OnDocumentPropertiesChanged@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@@Z
+      ?OnDoubleClick@CRhinoObject@@UEBA?AVON_wString@@AEBVCRhinoDoubleClickContext@@@Z
+      ?OnEnableEventWatcher@CRhinoEventWatcher@@UEAAXH@Z
+      ?OnEndCommand@CRhinoEventWatcher@@UEAAXAEBVCRhinoCommand@@AEBVCRhinoCommandContext@@W4result@2@@Z
+      ?OnEndOpenDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@PEB_WHH@Z
+      ?OnEndSaveDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@PEB_WH@Z
+      ?OnInitDialog@CRhinoTabbedDockBarDialog@@MEAAHXZ
+      ?OnInitPlugInMenuPopups@CRhinoPlugIn@@UEAAX_K_J@Z
+      ?OnInitRhino@CRhinoEventWatcher@@UEAAXAEAVCRhinoApp@@@Z
+      ?OnLoadPlugInErrorString@CRhinoPlugIn@@UEAA_NAEAVON_wString@@@Z
+      ?OnModifyObjectAttributes@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@AEBVCRhinoObjectAttributes@@@Z
+      ?OnNewDocument@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@@Z
+      ?OnOK@CRhinoDialog@@MEAAXXZ
+      ?OnObjectReplaced@CRhinoEventWatcher@@UEAAXIII@Z
+      ?OnPlugInMenuCommand@CRhinoPlugIn@@UEAAH_K@Z
+      ?OnPurgeObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@@Z
+      ?OnRegisterPlugIn@CRhinoPlugIn@@UEAAX_N@Z
+      ?OnRenameView@CRhinoEventWatcher@@UEAAXPEAVCRhinoView@@@Z
+      ?OnReplaceObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@1@Z
+      ?OnSaveAllSettings@CRhinoPlugIn@@UEAAXXZ
+      ?OnSelectObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEBVCRhinoObject@@@Z
+      ?OnSelectObjects@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEBV?$ON_SimpleArray@PEBVCRhinoObject@@@@@Z
+      ?OnSetActiveView@CRhinoEventWatcher@@UEAAXPEAVCRhinoView@@@Z
+      ?OnShowDockBar@CRhinoTabbedDockBarDialog@@UEAAX_N@Z
+      ?OnShowTab@CRhinoTabbedDockBarDialog@@UEAAXAEBVCRhinoUiPanel@@_NAEBU_GUID@@@Z
+      ?OnSize@CRhinoUiDialog@@QEAAXIHH@Z
+      ?OnStartTracking@CRhinoTabbedDockBarDialog@@UEAAX_N@Z
+      ?OnToggleDocking@CRhinoTabbedDockBarDialog@@UEAAX_N@Z
+      ?OnUnDeleteObject@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@@Z
+      ?OnUnhandledEscapeAndEnter@CRhinoUiDialog@@UEAAXI@Z
+      ?OnUnitsChangedWithScaling@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@N@Z
+      ?OnUpdateObjectMesh@CRhinoEventWatcher@@UEAAXAEAVCRhinoDoc@@AEAVCRhinoObject@@W4mesh_type@ON@@@Z
+      ?OpenDockbarTab@CRhinoTabbedDockBarDialog@@SAXAEBVCRhinoDoc@@AEBU_GUID@@_NPEBU3@@Z
+      ?OverrideAllowEscapeAndEnter@CRhinoUiDialog@@UEAA_NPEAUtagMSG@@@Z
+      ?Pick@CRhinoBrepObject@@UEBAHAEBVCRhinoPickContext@@AEAVCRhinoObjRefArray@@@Z
+      ?PickFilter@CRhinoBrepObject@@UEBA_NAEBVCRhinoGetObject@@_N@Z
+      ?PlugInDescription@CRhinoPlugIn@@UEBAPEB_WXZ
+      ?PlugInIcon@CRhinoPlugIn@@UEAAPEAUHICON__@@AEBVON_2iSize@@@Z
+      ?PlugInInstance@CRhinoPlugIn@@QEBAPEAUHINSTANCE__@@XZ
+      ?PlugInLoadTime@CRhinoPlugIn@@UEAA?AW4plugin_load_time@1@XZ
+      ?PlugInProc@CRhinoPlugIn@@UEAA_JI_K_J@Z
+      ?PlugInType@CRhinoUtilityPlugIn@@UEBA?AW4plugin_type@CRhinoPlugIn@@XZ
+      ?Point@CRhinoObjRef@@QEBAPEBVON_Point@@XZ
+      ?PreDrawUpdate@CRhinoObject@@UEBAXAEAVCRhinoDisplayPipeline@@@Z
+      ?PreTranslateMessage@CRhinoTabbedDockBarDialog@@MEAAHPEAUtagMSG@@@Z
+      ?PrepareToWrite@CRhinoObject@@UEAA_NH@Z
+      ?Print@CRhinoApp@@QEBAXPEB_WZZ
+      ?PromotePreviewMeshes@CRhinoBrepObject@@UEAA_NW4mesh_type@ON@@@Z
+      ?Properties@CRhinoDoc@@QEAAAEAVCRhinoDocProperties@@XZ
+      ?ReadDocument@CRhinoPlugIn@@UEAAHAEAVCRhinoDoc@@AEAVON_BinaryArchive@@AEBVCRhinoFileReadOptions@@@Z
+      ?RecordNextCommand@CRhinoHistoryManager@@QEBA_NXZ
+      ?Redraw@CRhinoDoc@@QEAAXXZ
+      ?Regen@CRhinoDoc@@QEAAXXZ
+      ?Register@CRhinoEventWatcher@@QEAAXXZ
+      ?Register@CRhinoEventWatcherEx@@QEAA_NXZ
+      ?Register@CRhinoTabbedDockBarDialog@@SA_NPEAUCRuntimeClass@@IIPEAVAFX_MODULE_STATE@@@Z
+      ?RemoveDocumentPropertiesDialogTabs@CRhinoPlugIn@@UEAAXAEAVCRhinoDocumentPropertiesTabs@@@Z
+      ?ReplaceObject@CRhinoDoc@@QEAA_NAEBVCRhinoObjRef@@PEAVCRhinoObject@@_N@Z
+      ?ReplayHistory@CRhinoCommand@@UEAAPEAVCRhinoObject@@AEBVCRhinoHistoryRecord@@@Z
+      ?ReplayHistory@CRhinoCommand@@UEAA_NAEBVCRhinoHistoryRecord@@AEAV?$ON_SimpleArray@VCRhinoObjectPair@@@@@Z
+      ?ResetMessageBoxes@CRhinoPlugIn@@UEAAXXZ
+      ?Result@CRhinoGet@@QEBA?AW4result@1@XZ
+      ?RhinoApp@@YAAEAVCRhinoApp@@XZ
+      ?RhinoHistoryManager@@YAPEAVCRhinoHistoryManager@@PEAVCRhinoDoc@@@Z
+      ?RhinoMessageBox@@YAHPEB_W0I@Z
+      ?RuntimeSerialNumber@CRhinoDoc@@QEBAIXZ
+      ?SaveAsV3@CRhinoPlugIn@@UEAA_NAEBVCRhinoFileWriteOptions@@@Z
+      ?SaveProfile@CRhinoCommand@@UEAAXPEB_WAEAVCRhinoProfileContext@@@Z
+      ?SaveProfile@CRhinoPlugIn@@UEAAXPEB_WAEAVCRhinoProfileContext@@@Z
+      ?SelectSubObject@CRhinoBrepObject@@UEBAHVON_COMPONENT_INDEX@@_N11@Z
+      ?SelectedObjectColor@CRhinoAppSettings@@QEBA?AVON_Color@@_N@Z
+      ?SetBrep@CRhinoBrepObject@@QEAAXPEAVON_Brep@@@Z
+      ?SetCommandPrompt@CRhinoGet@@QEAAXPEB_W@Z
+      ?SetCommandWndPrompt@CRhinoGet@@MEBAXXZ
+      ?SetGeometryFilter@CRhinoGetObject@@QEAAXI@Z
+      ?SetHistory@CRhinoObject@@QEAA_NAEAVCRhinoHistory@@@Z
+      ?SetHistoryVersion@CRhinoHistory@@QEAA_NH@Z
+      ?SetObjRefValues@CRhinoHistory@@QEAA_NHHPEBVCRhinoObjRef@@@Z
+      ?SetObjectColor@CRhinoDisplayPipeline@@QEAA?AVON_Color@@AEBV2@@Z
+      ?SetRecordNextCommand@CRhinoHistoryManager@@QEAAX_N@Z
+      ?SetRenderMeshParameters@CRhinoBrepObject@@UEAA_NAEBVON_MeshParameters@@@Z
+      ?SetStringValue@CRhinoHistory@@QEAA_NHPEB_W@Z
+      ?SetTextureCoordinates@CRhinoBrepObject@@UEBA_NAEBVON_TextureMapping@@PEBVON_Xform@@_N@Z
+      ?SetTextureCoordinatesFromPlugIn@CRhinoObject@@UEBA_NAEBU_GUID@@H@Z
+      ?SetupDisplayMaterial@CRhinoDisplayPipeline@@QEBA_NAEAVCDisplayPipelineMaterial@@PEBVCRhinoDoc@@PEBVCRhinoObject@@PEBVCRhinoObjectAttributes@@PEBVON_Xform@@@Z
+      ?ShortDescription@CRhinoBrepObject@@UEBAPEB_W_N@Z
+      ?ShowObject@CRhinoDoc@@QEAA_NAEBVCRhinoObjRef@@_N@Z
+      ?SizeOf@CRhinoObject@@UEBAIXZ
+      ?SnapTo@CRhinoBrepObject@@UEBA_NAEBVCRhinoSnapContext@@AEAVCRhinoSnapEvent@@@Z
+      ?SubObjectStatus@CRhinoObject@@UEBA?AVON_ComponentStatus@@XZ
+      ?SubObjectsAreHighlighted@CRhinoBrepObject@@MEBAHXZ
+      ?SubObjectsAreSelected@CRhinoBrepObject@@MEBAHXZ
+      ?SupportsBrepProxyReferenceCounting@CRhinoObject@@UEBA_NXZ
+      ?SynchAttributes@CRhinoObject@@MEAAXXZ
+      ?TextureMappingTableEvent@CRhinoEventWatcher@@UEAAXW4texture_mapping_event@1@AEBVCRhinoTextureMappingTable@@HPEBVON_TextureMapping@@@Z
+      ?UnRegister@CRhinoEventWatcher@@QEAAXXZ
+      ?UndoEvent@CRhinoEventWatcher@@UEAAXW4undo_event@1@IPEBVCRhinoCommand@@@Z
+      ?UnhighlightAllSubObjects@CRhinoBrepObject@@UEAAHXZ
+      ?UnitsAndTolerances@CRhinoDocProperties@@QEBAAEBVON_3dmUnitsAndTolerances@@XZ
+      ?Unregister@CRhinoEventWatcherEx@@QEAA_NXZ
+      ?UnselectAllSubObjects@CRhinoBrepObject@@UEAAHXZ
+      ?UtilityPlugInProc@CRhinoUtilityPlugIn@@UEAA_JI_K_J@Z
+      ?VP@CRhinoDisplayPipeline@@QEBAAEAVON_Viewport@@XZ
+      ?VetoTransformObject@CRhinoObject@@UEBA_NAEAVCRhinoDoc@@_N11@Z
+      ?WindowProc@CRhinoTabbedDockBarDialog@@MEAA_JI_K_J@Z
+      ?WriteDocument@CRhinoPlugIn@@UEAAHAEAVCRhinoDoc@@AEAVON_BinaryArchive@@AEBVCRhinoFileWriteOptions@@@Z
+      ?ZebraAnalysisSettings@CRhinoAppSettings@@QEBAAEBVCRhinoZebraAnalysisSettings@@XZ
+      ?Zero@?$ON_ClassArray@VCRhinoObjRef@@@@QEAAXXZ
+  opennurbs.dll  (117 imports)
+      ??0ON_3dPoint@@QEAA@NNN@Z
+      ??0ON_Color@@QEAA@HHH@Z
+      ??0ON_NurbsCurve@@QEAA@XZ
+      ??0ON_NurbsSurface@@QEAA@XZ
+      ??0ON_Xform@@QEAA@XZ
+      ??0ON_wString@@QEAA@$$QEAV0@@Z
+      ??0ON_wString@@QEAA@AEBV0@@Z
+      ??0ON_wString@@QEAA@XZ
+      ??1ON_NurbsCurve@@UEAA@XZ
+      ??1ON_NurbsSurface@@UEAA@XZ
+      ??1ON_wString@@QEAA@XZ
+      ??2ON_Object@@SAPEAX_K@Z
+      ??3ON_Object@@SAXPEAX@Z
+      ??4ON_wString@@QEAAAEBV0@AEBV0@@Z
+      ??4ON_wString@@QEAAAEBV0@PEBD@Z
+      ??4ON_wString@@QEAAAEBV0@PEB_W@Z
+      ??A?$ON_ClassArray@VON_BrepEdge@@@@QEAAAEAVON_BrepEdge@@H@Z
+      ??A?$ON_ClassArray@VON_BrepEdge@@@@QEBAAEBVON_BrepEdge@@H@Z
+      ??A?$ON_ClassArray@VON_BrepVertex@@@@QEAAAEAVON_BrepVertex@@H@Z
+      ??A?$ON_SimpleArray@H@@QEBAAEBHH@Z
+      ??A?$ON_SimpleArray@PEAVON_Curve@@@@QEAAAEAPEAVON_Curve@@H@Z
+      ??A?$ON_SimpleArray@PEAVON_Surface@@@@QEAAAEAPEAVON_Surface@@H@Z
+      ??BON_3dPoint@@QEAAPEANXZ
+      ??BON_3dPoint@@QEBAPEBNXZ
+      ??BON_3dVector@@QEAAPEANXZ
+      ??BON_wString@@QEBAPEB_WXZ
+      ??D@YA?AVON_3dPoint@@NAEBV0@@Z
+      ??DON_Xform@@QEBA?AVON_3dPoint@@AEBV1@@Z
+      ??HON_3dPoint@@QEBA?AV0@AEBV0@@Z
+      ??YON_wString@@QEAAAEBV0@AEBV0@@Z
+      ??YON_wString@@QEAAAEBV0@PEB_W@Z
+      ?AggregateComponentStatus@ON_Object@@UEBA?AVON_AggregateComponentStatus@@XZ
+      ?Append@?$ON_SimpleArray@PEAVON_Curve@@@@QEAAXAEBQEAVON_Curve@@@Z
+      ?Append@?$ON_SimpleArray@PEAVON_Surface@@@@QEAAXAEBQEAVON_Surface@@@Z
+      ?Array@ON_wString@@QEAAPEA_WXZ
+      ?Cast@ON_ArcCurve@@SAPEBV1@PEBVON_Object@@@Z
+      ?Cast@ON_BrepEdge@@SAPEBV1@PEBVON_Object@@@Z
+      ?Cast@ON_BrepVertex@@SAPEBV1@PEBVON_Object@@@Z
+      ?Cast@ON_Curve@@SAPEBV1@PEBVON_Object@@@Z
+      ?Cast@ON_CurveProxy@@SAPEBV1@PEBVON_Object@@@Z
+      ?Cast@ON_Geometry@@SAPEBV1@PEBVON_Object@@@Z
+      ?Cast@ON_LineCurve@@SAPEBV1@PEBVON_Object@@@Z
+      ?Cast@ON_NurbsCurve@@SAPEAV1@PEAVON_Object@@@Z
+      ?Cast@ON_Point@@SAPEBV1@PEBVON_Object@@@Z
+      ?ClearComponentStates@ON_Object@@UEBAIVON_COMPONENT_INDEX@@VON_ComponentStatus@@@Z
+      ?ClearComponentStates@ON_Object@@UEBAIVON_ComponentStatus@@@Z
+      ?Count@?$ON_ClassArray@VON_BrepEdge@@@@QEBAHXZ
+      ?Count@?$ON_ClassArray@VON_BrepVertex@@@@QEBAHXZ
+      ?Count@?$ON_SimpleArray@PEAVON_Curve@@@@QEBAHXZ
+      ?Create@ON_Brep@@QEAA_NAEAPEAVON_NurbsSurface@@@Z
+      ?DataCRC@ON_Object@@UEBAII@Z
+      ?DeleteComponents@ON_Object@@UEAA_NPEBVON_COMPONENT_INDEX@@_K@Z
+      ?Destroy@ON_Brep@@QEAAXXZ
+      ?DestroyRuntimeCache@ON_Object@@UEAAX_N@Z
+      ?Dump@ON_Object@@UEBAXAEAVON_TextLog@@@Z
+      ?EdgeCount@ON_BrepVertex@@QEBAHXZ
+      ?Empty@ON_wString@@QEAAXXZ
+      ?Ev1Der@ON_Surface@@QEBA_NNNAEAVON_3dPoint@@AEAVON_3dVector@@1HPEAH@Z
+      ?Ev2Der@ON_Surface@@QEBA_NNNAEAVON_3dPoint@@AEAVON_3dVector@@1111HPEAH@Z
+      ?EvNormal@ON_Surface@@QEBA_NNNAEAVON_3dVector@@HPEAH@Z
+      ?EvPoint@ON_Curve@@QEBA_NNAEAVON_3dPoint@@HPEAH@Z
+      ?EvPoint@ON_Surface@@QEBA_NNNAEAVON_3dPoint@@HPEAH@Z
+      ?Face@ON_BrepTrim@@QEBAPEAVON_BrepFace@@XZ
+      ?Find@ON_wString@@QEBAH_W@Z
+      ?GetComponentsWithSetStates@ON_Object@@UEBAIVON_ComponentStatus@@_NAEAV?$ON_SimpleArray@VON_COMPONENT_INDEX@@@@@Z
+      ?GetStringValue@ON_HistoryRecord@@QEBA_NHAEAVON_wString@@@Z
+      ?GetXform@ON_Viewport@@QEBA_NW4coordinate_system@ON@@0AEAVON_Xform@@@Z
+      ?IndexOfTrim@ON_BrepLoop@@QEBAHAEBVON_BrepTrim@@@Z
+      ?IsEmpty@ON_wString@@QEBA_NXZ
+      ?IsNotEmpty@ON_wString@@QEBA_NXZ
+      ?IsSurface@ON_Brep@@QEBA_NXZ
+      ?IsValid@ON_NurbsCurve@@UEBA_NPEAVON_TextLog@@@Z
+      ?IsValid@ON_NurbsSurface@@UEBA_NPEAVON_TextLog@@@Z
+      ?IsValidGeometry@ON_Brep@@QEBA_NPEAVON_TextLog@@@Z
+      ?IsValidTolerancesAndFlags@ON_Brep@@QEBA_NPEAVON_TextLog@@@Z
+      ?IsValidTopology@ON_Brep@@QEBA_NPEAVON_TextLog@@@Z
+      ?Left@ON_wString@@QEBA?AV1@H@Z
+      ?Length@ON_wString@@QEBAHXZ
+      ?LoadResourceString@ON_wString@@QEAA_NPEAUHINSTANCE__@@I@Z
+      ?Loop@ON_BrepTrim@@QEBAPEAVON_BrepLoop@@XZ
+      ?MakeIncreasing@ON_Interval@@QEAA_NXZ
+      ?MarkAggregateComponentStatusAsNotCurrent@ON_Object@@UEBAXXZ
+      ?MemoryRelocate@ON_Object@@UEAAXXZ
+      ?Mid@ON_Interval@@QEBANXZ
+      ?ModelObjectId@ON_Object@@UEBA?AU_GUID@@XZ
+      ?New@ON_Brep@@SAPEAV1@XZ
+      ?New@ON_NurbsCurve@@SAPEAV1@AEBV1@@Z
+      ?New@ON_NurbsSurface@@SAPEAV1@AEBV1@@Z
+      ?NewEdge@ON_Brep@@QEAAAEAVON_BrepEdge@@AEAVON_BrepVertex@@0HPEBVON_Interval@@N@Z
+      ?NewFace@ON_Brep@@QEAAAEAVON_BrepFace@@H@Z
+      ?NewLoop@ON_Brep@@QEAAAEAVON_BrepLoop@@W4TYPE@2@AEAVON_BrepFace@@@Z
+      ?NewTrim@ON_Brep@@QEAAAEAVON_BrepTrim@@AEAVON_BrepEdge@@_NAEAVON_BrepLoop@@H@Z
+      ?NewVertex@ON_Brep@@QEAAAEAVON_BrepVertex@@VON_3dPoint@@N@Z
+      ?ON_UuidFromString@@YA?AU_GUID@@PEB_W@Z
+      ?ObjectType@ON_Object@@UEBA?AW4object_type@ON@@XZ
+      ?Point@ON_BrepVertex@@QEBA?AVON_3dPoint@@XZ
+      ?PointAt@ON_Curve@@QEBA?AVON_3dPoint@@N@Z
+      ?Read@ON_Object@@UEAA_NAEAVON_BinaryArchive@@@Z
+      ?Reverse@ON_3dVector@@QEAAXXZ
+      ?SaturatedMagenta@ON_Color@@2V1@B
+      ?SaturatedYellow@ON_Color@@2V1@B
+      ?Scale@ON_3dmUnitsAndTolerances@@QEBANW4LengthUnitSystem@ON@@@Z
+      ?SetComponentStates@ON_Object@@UEBAIVON_COMPONENT_INDEX@@VON_ComponentStatus@@@Z
+      ?SetComponentStatus@ON_Object@@UEBAIVON_COMPONENT_INDEX@@VON_ComponentStatus@@@Z
+      ?SetPoint@ON_BrepVertex@@QEAA_NAEBVON_3dPoint@@@Z
+      ?SetTolerancesBoxesAndFlags@ON_Brep@@QEAAX_N0000000@Z
+      ?SizeOf@ON_Object@@UEBAIXZ
+      ?SurfaceOf@ON_BrepFace@@QEBAPEBVON_Surface@@XZ
+      ?SurfaceOf@ON_BrepTrim@@QEBAPEBVON_Surface@@XZ
+      ?Trim@ON_BrepEdge@@QEBAPEAVON_BrepTrim@@H@Z
+      ?Trim@ON_BrepLoop@@QEBAPEAVON_BrepTrim@@H@Z
+      ?TrimCount@ON_BrepEdge@@QEBAHXZ
+      ?TrimCount@ON_BrepLoop@@QEBAHXZ
+      ?TrimCurveOf@ON_BrepTrim@@QEBAPEBVON_Curve@@XZ
+      ?UnsetColor@ON_Color@@2V1@B
+      ?UpdateReferencedComponents@ON_Object@@UEAA_NAEBVON_ComponentManifest@@0AEBVON_ManifestMap@@@Z
+      ?Write@ON_Object@@UEBA_NAEAVON_BinaryArchive@@@Z
+  VCRUNTIME140.dll  (8 imports)
+      _CxxThrowException
+      __C_specific_handler
+      __CxxFrameHandler3
+      __std_terminate
+      __std_type_info_destroy_list
+      memset
+      wcsrchr
+      wcsstr
+  api-ms-win-crt-string-l1-1-0.dll  (1 imports)
+      wcscat_s
+  api-ms-win-crt-heap-l1-1-0.dll  (1 imports)
+      free
+  api-ms-win-crt-convert-l1-1-0.dll  (2 imports)
+      _itow_s
+      wcstol
+  api-ms-win-crt-runtime-l1-1-0.dll  (11 imports)
+      _cexit
+      _configure_narrow_argv
+      _crt_atexit
+      _execute_onexit_table
+      _initialize_narrow_environment
+      _initialize_onexit_table
+      _initterm
+      _initterm_e
+      _register_onexit_function
+      _seh_filter_dll
+      terminate
+  api-ms-win-crt-math-l1-1-0.dll  (1 imports)
+      sqrt
+
+## DELAY IMPORTS
+  (none)
+
+## MISC
+  DEBUG entry type=13 size=824 ptr=0x15eb4
+  TLS present: callbacks=6442526296
+  versioninfo CompanyName = XNurbs
+  versioninfo FileDescription = XNurbsRhino Plugin
+  versioninfo FileVersion = 5.0.0.0
+  versioninfo InternalName = XNurbsRhino.rhp
+  versioninfo LegalCopyright = Copyright Â© 2020 XNurbs. All rights reserved.
+  versioninfo OriginalFilename = XNurbsRhino.rhp
+  versioninfo ProductName = XNurbsRhino
+  versioninfo ProductVersion = 5.0.0.0
+  resources: {'784': 1, 'RT_BITMAP': 1, 'RT_ICON': 1, 'RT_DIALOG': 1, 'RT_STRING': 1, 'RT_GROUP_ICON': 1, 'RT_VERSION': 1, 'RT_MANIFEST': 1}
+
+## OVERLAY: overlay_bytes=0 (file=173568, last_section_end=173568)

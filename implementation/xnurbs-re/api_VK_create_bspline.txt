@@ -1,0 +1,22 @@
+### VK_create_bspline entry RVA = 0x2ed0790
+
+===== chunk @0x2ed0790 @ rva 0x2ed0790 len 0x60 =====
+  02ed0790  mov      r11, rsp
+  02ed0793  mov      qword ptr [r11 + 0x10], rbx
+  02ed0797  mov      qword ptr [r11 + 0x18], rbp
+  02ed079b  mov      qword ptr [r11 + 0x20], rsi
+  02ed079f  push     rdi
+  02ed07a0  sub      rsp, 0xd0
+  02ed07a7  mov      rax, qword ptr [rip + 0x353eaa]
+  02ed07ae  xor      rax, rsp
+  02ed07b1  mov      qword ptr [rsp + 0xc0], rax
+  02ed07b9  movdqa   xmm0, xmmword ptr [rip + 0x1c77bf]
+  02ed07c1  xor      ebp, ebp
+  02ed07c3  movdqa   xmm1, xmmword ptr [rip + 0x1c40f5]
+  02ed07cb  xor      eax, eax
+  02ed07cd  movdqa   xmm2, xmmword ptr [rip + 0x1c779b]
+  02ed07d5  mov      rdi, rcx
+  02ed07d8  movdqa   xmm3, xmmword ptr [rip + 0x1c77b0]
+  02ed07e0  movdqa   xmmword ptr [rsp + 0x60], xmm0
+  02ed07e6  lea      esi, [rbp + 0x1e]
+  02ed07e9  movdqa   xmmword ptr [rsp + 0x70], xmm1

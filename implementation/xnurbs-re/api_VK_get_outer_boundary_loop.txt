@@ -1,0 +1,94 @@
+### VK_get_outer_boundary_loop entry RVA = 0x2ed5d60
+
+===== chunk @0x2ed5d60 @ rva 0x2ed5d60 len 0x60 =====
+  02ed5d60  push     rbx
+  02ed5d62  mov      r10, qword ptr [rip + 0x392abf]
+  02ed5d69  xor      eax, eax
+  02ed5d6b  mov      dword ptr [r8], eax
+  02ed5d6e  mov      r11, r9
+  02ed5d71  mov      qword ptr [r9], rax
+  02ed5d74  mov      rbx, r8
+  02ed5d77  test     r10, r10
+  02ed5d7a  je       0x182ed5dd6
+  02ed5d7c  mov      r9, qword ptr [r10 + 8]
+  02ed5d80  mov      rax, r9
+  02ed5d83  mov      r8, qword ptr [r9 + 8]
+  02ed5d87  cmp      byte ptr [r8 + 0x19], 0
+  02ed5d8c  jne      0x182ed5da9
+  02ed5d8e  nop      
+  02ed5d90  cmp      dword ptr [r8 + 0x20], ecx
+  02ed5d94  jae      0x182ed5d9c
+  02ed5d96  mov      r8, qword ptr [r8 + 0x10]
+  02ed5d9a  jmp      0x182ed5da2   ; -> 0x2ed5da2
+  02ed5d9c  mov      rax, r8
+  02ed5d9f  mov      r8, qword ptr [r8]
+  02ed5da2  cmp      byte ptr [r8 + 0x19], 0
+  02ed5da7  je       0x182ed5d90
+  02ed5da9  cmp      rax, r9
+  02ed5dac  je       0x182ed5db3
+  02ed5dae  cmp      ecx, dword ptr [rax + 0x20]
+  02ed5db1  jae      0x182ed5db6
+  02ed5db3  mov      rax, r9
+  02ed5db6  cmp      rax, r9
+  02ed5db9  je       0x182ed5dd6
+  02ed5dbb  mov      rcx, qword ptr [rax + 0x28]
+   >> following jmp to 0x2ed5da2
+
+===== chunk @0x2ed5da2 @ rva 0x2ed5da2 len 0x60 =====
+  02ed5da2  cmp      byte ptr [r8 + 0x19], 0
+  02ed5da7  je       0x182ed5d90
+  02ed5da9  cmp      rax, r9
+  02ed5dac  je       0x182ed5db3
+  02ed5dae  cmp      ecx, dword ptr [rax + 0x20]
+  02ed5db1  jae      0x182ed5db6
+  02ed5db3  mov      rax, r9
+  02ed5db6  cmp      rax, r9
+  02ed5db9  je       0x182ed5dd6
+  02ed5dbb  mov      rcx, qword ptr [rax + 0x28]
+  02ed5dbf  test     rcx, rcx
+  02ed5dc2  je       0x182ed5dd6
+  02ed5dc4  cmp      dword ptr [rcx + 0xc], 3
+  02ed5dc8  jne      0x182ed5dd6
+  02ed5dca  mov      r9, r11
+  02ed5dcd  mov      r8, rbx
+  02ed5dd0  pop      rbx
+  02ed5dd1  jmp      0x182ec6b70   ; -> 0x2ec6b70
+  02ed5dd6  mov      eax, 0x10
+  02ed5ddb  pop      rbx
+  02ed5ddc  ret      
+  02ed5ddd  int3     
+  02ed5dde  int3     
+  02ed5ddf  int3     
+  02ed5de0  push     rbx
+  02ed5de2  sub      rsp, 0x20
+  02ed5de6  mov      r9, qword ptr [rip + 0x392a3b]
+  02ed5ded  test     r9, r9
+  02ed5df0  je       0x182ed5ef4
+  02ed5df6  mov      rdx, qword ptr [r9 + 8]
+  02ed5dfa  mov      rax, rdx
+  02ed5dfd  mov      r8, qword ptr [rdx + 8]
+   >> following jmp to 0x2ec6b70
+
+===== chunk @0x2ec6b70 @ rva 0x2ec6b70 len 0x60 =====
+  02ec6b70  push     rbp
+  02ec6b72  push     rsi
+  02ec6b73  push     rdi
+  02ec6b74  push     r12
+  02ec6b76  push     r13
+  02ec6b78  push     r14
+  02ec6b7a  push     r15
+  02ec6b7c  lea      rbp, [rsp - 0x19d0]
+  02ec6b84  mov      eax, 0x1ad0
+  02ec6b89  call     0x182f86a10   ; -> 0x2f86a10
+  02ec6b8e  sub      rsp, rax
+  02ec6b91  mov      qword ptr [rbp - 0x70], 0xfffffffffffffffe
+  02ec6b99  mov      qword ptr [rsp + 0x1b18], rbx
+  02ec6ba1  movaps   xmmword ptr [rsp + 0x1ac0], xmm6
+  02ec6ba9  movaps   xmmword ptr [rsp + 0x1ab0], xmm7
+  02ec6bb1  mov      rax, qword ptr [rip + 0x35daa0]
+  02ec6bb8  xor      rax, rsp
+  02ec6bbb  mov      qword ptr [rbp + 0x19a0], rax
+  02ec6bc2  mov      r12, r9
+  02ec6bc5  mov      r15, r8
+  02ec6bc8  movzx    r14d, dl
+  02ec6bcc  mov      rdi, rcx
