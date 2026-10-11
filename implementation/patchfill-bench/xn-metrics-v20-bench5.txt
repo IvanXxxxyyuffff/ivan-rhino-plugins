@@ -1,7 +1,9 @@
 === xnmeasure m-bench5 ===
 edgeLayer=xnpickcurves(6) refLayer=xnpickref(7)
-docObjects=18 perLayer: 默认值=1 xnpickcurves=1 bench4=4
-no reference geometry — deviation skipped
-METRIC gap=0.00031254 maxDev=-1 rms=-1 faces=1 cp=6x6
+docObjects=18 perLayer: 默认值=1 xnpickcurves=1 bench4=4 broken=0
+ref name-scan(XNREF): found=0 nonplanar=0 broken/nullAttr=0 docObjects=18
+ref nearest-center scan: breps=0 hit=False
+ref from file: E:/IVAN-LiquidGlass-preview/implementation/patchfill-bench/xnref-bench5.3dm nonplanar=3 hug(maxDev per cand)=[8.6583,5,9.998] picked=4.99999961
+METRIC gap=0.00031254 maxDev=4.99999961 rms=2.34137492 faces=1 cp=6x6
 note: G1 角度与耗时由驱动器阶段补（G1 需相邻面法向；耗时=创建按钮到生成的秒表）
 

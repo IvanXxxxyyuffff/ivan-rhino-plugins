@@ -551,8 +551,10 @@ namespace PatchFillPattern
                         if (refDupLayer < 0) refDupLayer = doc.Layers.Add("xnpickref", System.Drawing.Color.Orange);
                         var refDupAttrs = new ObjectAttributes();
                         refDupAttrs.LayerIndex = refDupLayer;
+                        refDupAttrs.Name = "XNREF";   // v26：对象名标记 —— 度量端不依赖层表（创建会破坏层索引）
                         var toEmit = new List<Curve>();
                         var hideIds = new List<Guid>();
+                        var refDupGeoms = new List<Brep>();
                         bool standaloneFound = false;
                         foreach (RhinoObject o in doc.Objects)
                         {
@@ -576,10 +578,16 @@ namespace PatchFillPattern
                             {
                                 // v23：参考面 dup 到 xnpickref（度量偏差用；原层几何会被创建过程毁掉）。
                                 // dup 本体也进 hideIds —— 拾取阶段它必须不可见，否则遮挡测试全被它挡住。
+                                // v27：dup 同时收集进 refDupGeoms → 末尾另存独立 3dm（创建会连 dup 一起
+                                // 标记删除——Count 还数、枚举不给；会话内已无参考可测，只能跨文件带出去）
+                                // v29：只把「拾取层上的 brep」写进 ref 文件 —— 那才是该洞的参考面
+                                // （文档里同时有别的洞的球面/圆柱，全存会让度量端选错参考，实测 bench4 中招）
                                 try
                                 {
-                                    Guid rid = doc.Objects.AddBrep(brepObj.DuplicateBrep(), refDupAttrs);
+                                    Brep rcopy = brepObj.DuplicateBrep();
+                                    Guid rid = doc.Objects.AddBrep(rcopy, refDupAttrs);
                                     if (rid != Guid.Empty) hideIds.Add(rid);
+                                    if (o.Attributes.LayerIndex == li) refDupGeoms.Add(rcopy);
                                 }
                                 catch { }
                                 hideIds.Add(o.Id);
@@ -650,6 +658,20 @@ namespace PatchFillPattern
                         }
 
                         sb.AppendLine("pick curves listed");
+                        // v27：参考 dup 另存独立 3dm（xnsaveref=<path>）—— 创建过程会连 dup 一起
+                        // 标记删除，会话内已无参考；度量端用 xnm_ref_file 从该文件读回
+                        string refSave = Get(kv, "xnsaveref");
+                        if (!string.IsNullOrEmpty(refSave) && refDupGeoms.Count > 0)
+                        {
+                            try
+                            {
+                                var f3 = new Rhino.FileIO.File3dm();
+                                foreach (Brep rb in refDupGeoms) f3.Objects.AddBrep(rb);
+                                bool wok = f3.Write(refSave, 7);
+                                sb.AppendLine("ref saved: " + refSave + " breps=" + refDupGeoms.Count + " ok=" + wok);
+                            }
+                            catch (Exception ex) { sb.AppendLine("ref save EXC: " + ex.Message); }
+                        }
                     }
                 }
 
@@ -823,14 +845,19 @@ namespace PatchFillPattern
                 RhinoDoc doc = RhinoDoc.ActiveDoc;
                 if (doc == null) { sb.AppendLine("no doc"); XnMeasureFlush(sb, outPath); return; }
                 // v11：拾取阶段隐藏过的 brep 先全部恢复可见（度量要用参考面/裸边）
-                int unrestored = 0;
+                int unrestored = 0, brokenObjs = 0;
                 foreach (RhinoObject o in doc.Objects)
                 {
-                    if (o != null && o.Geometry is Brep && !o.Attributes.Visible)
-                    { try { o.Attributes.Visible = true; o.CommitChanges(); unrestored++; } catch { } }
+                    try
+                    {
+                        if (o != null && o.Geometry is Brep && o.Attributes != null && !o.Attributes.Visible)
+                        { o.Attributes.Visible = true; o.CommitChanges(); unrestored++; }
+                    }
+                    catch { brokenObjs++; }
                 }
                 try { doc.Views.Redraw(); } catch { }
                 if (unrestored > 0) sb.AppendLine("breps restored=" + unrestored);
+                if (brokenObjs > 0) sb.AppendLine("broken objects (unhide skipped)=" + brokenObjs);
                 string edgeLayer = Get(kv, "xnm_edge_layer") ?? "bench1";
                 string refLayer = Get(kv, "xnm_ref_layer");
                 int liEdge = doc.Layers.Find(edgeLayer, true);
@@ -839,36 +866,45 @@ namespace PatchFillPattern
 
                 // 输入边界 = edge 层 Brep 的洞圈（非 Outer 环；与 xnpick 同口径，无内环回退裸边）
                 var edgeList = new List<PatchFillEdge>();
-                // v18 诊断：度量时逐层对象数（查「edge 曲线丢失」）
+                // v18 诊断：度量时逐层对象数（v26：对象级容错，坏对象不再中断统计）
                 try
                 {
                     var lc = new System.Collections.Generic.Dictionary<string, int>();
+                    int broken = 0;
                     foreach (RhinoObject o in doc.Objects)
                     {
-                        if (o == null || o.Attributes == null) continue;
-                        string ln = doc.Layers[o.Attributes.LayerIndex].Name;
-                        if (!lc.ContainsKey(ln)) lc[ln] = 0;
-                        lc[ln]++;
+                        try
+                        {
+                            if (o == null || o.Attributes == null) { broken++; continue; }
+                            string ln = doc.Layers[o.Attributes.LayerIndex].Name;
+                            if (!lc.ContainsKey(ln)) lc[ln] = 0;
+                            lc[ln]++;
+                        }
+                        catch { broken++; }
                     }
                     var parts = new List<string>();
                     foreach (var kvp in lc) parts.Add(kvp.Key + "=" + kvp.Value);
-                    sb.AppendLine("docObjects=" + doc.Objects.Count + " perLayer: " + string.Join(" ", parts));
+                    sb.AppendLine("docObjects=" + doc.Objects.Count + " perLayer: " + string.Join(" ", parts) + " broken=" + broken);
                 }
                 catch { }
                 foreach (RhinoObject o in doc.Objects)
                 {
-                    if (o == null || o.Attributes == null || o.Attributes.LayerIndex != liEdge) continue;
-                    // v20：独立曲线也是合法边界（xnpickcurves 层的 dup 曲线 = 度量时的唯一边界副本）
-                    if (o.Geometry is Curve sc)
-                    { edgeList.Add(new PatchFillEdge(sc, null, -1, null, "bench-curve")); continue; }
-                    Brep bp = o.Geometry as Brep;
-                    if (bp == null) continue;
-                    Curve[] naked = ExtractHoleLoop(bp);
-                    if (naked == null || naked.Length == 0)
-                    { try { naked = bp.DuplicateNakedEdgeCurves(true, true); } catch { naked = null; } }
-                    if (naked == null) continue;
-                    for (int k = 0; k < naked.Length; k++)
-                        edgeList.Add(new PatchFillEdge(naked[k], bp, -1, null, "bench-edge" + (k + 1)));
+                    try
+                    {
+                        if (o == null || o.Attributes == null || o.Attributes.LayerIndex != liEdge) continue;
+                        // v20：独立曲线也是合法边界（xnpickcurves 层的 dup 曲线 = 度量时的唯一边界副本）
+                        if (o.Geometry is Curve sc)
+                        { edgeList.Add(new PatchFillEdge(sc, null, -1, null, "bench-curve")); continue; }
+                        Brep bp = o.Geometry as Brep;
+                        if (bp == null) continue;
+                        Curve[] naked = ExtractHoleLoop(bp);
+                        if (naked == null || naked.Length == 0)
+                        { try { naked = bp.DuplicateNakedEdgeCurves(true, true); } catch { naked = null; } }
+                        if (naked == null) continue;
+                        for (int k = 0; k < naked.Length; k++)
+                            edgeList.Add(new PatchFillEdge(naked[k], bp, -1, null, "bench-edge" + (k + 1)));
+                    }
+                    catch { }
                 }
                 // 参考几何 = ref 层 Brep（若有）。v24：创建过程可能重建层表导致索引失配 →
                 // 索引查不到时按「层名字符串」再扫一遍（只对 xnpickref 这类辅助层名成立）
@@ -902,43 +938,148 @@ namespace PatchFillPattern
                 Guid resultId = Guid.Empty;
                 foreach (RhinoObject o in doc.Objects)
                 {
-                    if (o == null || o.Geometry as Brep == null || o.Attributes == null) continue;
-                    string ln = doc.Layers[o.Attributes.LayerIndex].Name;
-                    if (ln.StartsWith("bench", StringComparison.Ordinal)) continue;
-                    if (ln == PatchFillCore.LayerPatch) continue;
-                    if (ln == "xnpickref" || ln == "xnpickcurves") continue;
-                    result = o.Geometry as Brep;
-                    resultId = o.Id;
+                    try
+                    {
+                        if (o == null || o.Geometry as Brep == null || o.Attributes == null) continue;
+                        string ln = doc.Layers[o.Attributes.LayerIndex].Name;
+                        if (ln.StartsWith("bench", StringComparison.Ordinal)) continue;
+                        if (ln == PatchFillCore.LayerPatch) continue;
+                        if (ln == "xnpickref" || ln == "xnpickcurves") continue;
+                        result = o.Geometry as Brep;
+                        resultId = o.Id;
+                    }
+                    catch { }
                 }
                 if (result == null || result.Faces.Count == 0) { sb.AppendLine("result surface NOT found"); XnMeasureFlush(sb, outPath); return; }
                 if (edgeList.Count == 0) { sb.AppendLine("edge curves NOT found"); XnMeasureFlush(sb, outPath); return; }
-                // v25：参考面最终兜底 = 除结果面外「包围盒最大」的 Brep（层表被创建过程重建后
-                // 索引/层名都可能失配；几何特征不依赖层，bench1-5 的参考面都是文档里最大的面）
+                // v26：参考面按「对象名 XNREF」收集（xnpick 阶段给 ref dup 打了名）——
+                // 对象名不依赖层表/层索引（创建过程会重建层表让两者都失配）；附诊断计数。
+                // 只收非平面候选（平面板带洞的最近点法失真）；最终挑选在结果面识别后按「离中心最近」
+                var xnrefBreps = new List<Brep>();
+                {
+                    int xnref = 0, broken = 0;
+                    foreach (RhinoObject o in doc.Objects)
+                    {
+                        try
+                        {
+                            if (o == null) continue;
+                            ObjectAttributes at = o.Attributes;
+                            if (at == null) { broken++; continue; }
+                            if (at.Name == "XNREF" && o.Geometry is Brep rb && rb.Faces.Count > 0)
+                            {
+                                xnref++;
+                                bool planar2 = rb.Faces.Count == 1 && rb.Faces[0].IsPlanar();
+                                if (!planar2) xnrefBreps.Add(rb);
+                            }
+                        }
+                        catch { broken++; }
+                    }
+                    sb.AppendLine("ref name-scan(XNREF): found=" + xnref + " nonplanar=" + xnrefBreps.Count + " broken/nullAttr=" + broken + " docObjects=" + doc.Objects.Count);
+                }
+                // v26：参考面最终挑选 = 「离结果面中心最近」的非平面 Brep；优先在 XNREF 候选里选
+                // （XNREF = xnpick 阶段 dup 的参考副本，语义最准）；候选空则全文档扫（对象级容错）
                 if (refBrep == null)
                 {
-                    // 仅曲面参考适用（bench4 圆柱/bench5 球面）；平面板带洞的最近点法失真 → 保持未测。
-                    // 判据 = 「离结果面中心最近」的非平面 Brep（补面就长在参考面上）——
-                    // 比「最大包围盒」稳（文档里同时有球面与圆柱时不会选错）。
                     Point3d rc = Point3d.Origin;
                     try { rc = result.GetBoundingBox(true).Center; } catch { }
                     double bestD = double.MaxValue;
-                    foreach (RhinoObject o in doc.Objects)
+                    var pool = xnrefBreps.Count > 0 ? xnrefBreps : null;
+                    if (pool != null)
                     {
-                        if (o == null || o.Attributes == null || o.Id == resultId) continue;
-                        Brep bp = o.Geometry as Brep;
-                        if (bp == null || bp.Faces.Count == 0) continue;
+                        foreach (Brep bp in pool)
+                        {
+                            try
+                            {
+                                Point3d cp; ComponentIndex ci; double su, tv; Vector3d nn;
+                                if (!bp.ClosestPoint(rc, out cp, out ci, out su, out tv, 0.0, out nn)) continue;
+                                double dd = cp.DistanceTo(rc);
+                                if (dd < bestD) { bestD = dd; refBrep = bp; }
+                            }
+                            catch { }
+                        }
+                        sb.AppendLine("ref from XNREF pool: n=" + pool.Count + " hit=" + (refBrep != null) + (refBrep != null ? " dist=" + bestD.ToString("0.###") : ""));
+                    }
+                    else
+                    {
+                        int scanned = 0;
+                        foreach (RhinoObject o in doc.Objects)
+                        {
+                            try
+                            {
+                                if (o == null || o.Id == resultId) continue;
+                                Brep bp = o.Geometry as Brep;
+                                if (bp == null || bp.Faces.Count == 0) continue;
+                                scanned++;
+                                bool planar = bp.Faces.Count == 1 && bp.Faces[0].IsPlanar();
+                                if (planar) continue;
+                                Point3d cp; ComponentIndex ci; double su, tv; Vector3d nn;
+                                if (!bp.ClosestPoint(rc, out cp, out ci, out su, out tv, 0.0, out nn)) continue;
+                                double dd = cp.DistanceTo(rc);
+                                if (dd < bestD) { bestD = dd; refBrep = bp; }
+                            }
+                            catch { }
+                        }
+                        sb.AppendLine("ref nearest-center scan: breps=" + scanned + " hit=" + (refBrep != null) + (refBrep != null ? " dist=" + bestD.ToString("0.###") : ""));
+                    }
+                }
+                // v27b：参考面跨文件兜底 —— xnsaveref 阶段另存的 ref 3dm（会话内参考已被创建过程
+                // 标记删除：Count 还数、枚举不给，只能从文件读回）。
+                // 判据 = 「结果面贴合最好的候选」（对每个候选算结果面 7×7 采样的最大偏差，取最小者）
+                // —— 补面实际依附哪个参考面就选哪个。比「离中心最近」稳：包络型参考（球面裹着
+                // 球带补面）在中心距离上会输给邻近面（实测 bench5 选错到球带，dist=5 全错）。
+                if (refBrep == null)
+                {
+                    string refFile = Get(kv, "xnm_ref_file");
+                    if (!string.IsNullOrEmpty(refFile) && File.Exists(refFile))
+                    {
                         try
                         {
-                            bool planar = bp.Faces.Count == 1 && bp.Faces[0].IsPlanar();
-                            if (planar) continue;
-                            Point3d cp; ComponentIndex ci; double su, tv; Vector3d nn;
-                            if (!bp.ClosestPoint(rc, out cp, out ci, out su, out tv, 0.0, out nn)) continue;
-                            double dd = cp.DistanceTo(rc);
-                            if (dd < bestD) { bestD = dd; refBrep = bp; }
+                            int cand = 0;
+                            double bestHug = double.MaxValue;
+                            var hugLog = new List<string>();
+                            var f3 = Rhino.FileIO.File3dm.Read(refFile);
+                            if (f3 != null)
+                            {
+                                // 结果面采样点（7×7，含边界）
+                                var rs = new List<Point3d>();
+                                try
+                                {
+                                    BrepFace rf = result.Faces[0];
+                                    Interval du2 = rf.Domain(0), dv2 = rf.Domain(1);
+                                    for (int i = 0; i < 7; i++)
+                                        for (int j = 0; j < 7; j++)
+                                            rs.Add(rf.PointAt(du2.ParameterAt(i / 6.0), dv2.ParameterAt(j / 6.0)));
+                                }
+                                catch { }
+                                foreach (Rhino.FileIO.File3dmObject fo in f3.Objects)
+                                {
+                                    try
+                                    {
+                                        Brep bp = fo.Geometry as Brep;
+                                        if (bp == null || bp.Faces.Count == 0) continue;
+                                        bool planar3 = bp.Faces.Count == 1 && bp.Faces[0].IsPlanar();
+                                        if (planar3) continue;
+                                        cand++;
+                                        double maxD = 0; int ok = 0;
+                                        foreach (Point3d sp in rs)
+                                        {
+                                            Point3d cp; ComponentIndex ci; double su, tv; Vector3d nn;
+                                            if (!bp.ClosestPoint(sp, out cp, out ci, out su, out tv, 0.0, out nn)) continue;
+                                            double dd = cp.DistanceTo(sp);
+                                            if (dd > maxD) maxD = dd;
+                                            ok++;
+                                        }
+                                        if (rs.Count > 0 && ok * 2 < rs.Count) continue;   // 一半以上失败 → 排除
+                                        hugLog.Add(maxD.ToString("0.####"));
+                                        if (maxD < bestHug) { bestHug = maxD; refBrep = bp; }
+                                    }
+                                    catch { }
+                                }
+                            }
+                            sb.AppendLine("ref from file: " + refFile + " nonplanar=" + cand + " hug(maxDev per cand)=[" + string.Join(",", hugLog) + "] picked=" + (refBrep != null ? bestHug.ToString("0.########") : "none"));
                         }
-                        catch { }
+                        catch (Exception ex) { sb.AppendLine("ref file EXC: " + ex.Message); }
                     }
-                    if (refBrep != null) sb.AppendLine("ref via nearest-center: dist=" + bestD.ToString("0.###"));
                 }
 
                 double diag = 1;

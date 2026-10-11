@@ -1630,7 +1630,25 @@ namespace PatchFillPattern
 
             int n = Math.Max(MinControl, Math.Min(MaxControl, s.ControlCount));
             ctx.KinksU = kinksU; ctx.KinksV = kinksV;
-            ctx.U = BuildKnots(n + ctx.ExtraU.Count, kinksU, ctx.ExtraU);
+            // T4（2026-10-11）：盘状模式 u 绕整环 —— 边界缝隙 ≈ R·(2π/spans)⁴/384（三次逼近
+            // 圆周的误差由 u 向控制点数直接决定：实测 16 点 → 8.25e-4，XNURBS 同洞 3.1e-4）。
+            // u 向按目标缝隙自动加密（v 向不动）；目标 = max(R·1.5e-5, diag·1e-5)，上限 MaxControl。
+            int nU = n;
+            if (diskMode)
+            {
+                double R = 1.0;
+                try { R = loop.Length / (2.0 * Math.PI); } catch { }
+                if (!(R > 1e-9)) R = Math.Max(ctx.Diag * 0.25, 1.0);
+                double target = Math.Max(R * 1.5e-5, ctx.Diag * 1e-5);
+                double spans = 2.0 * Math.PI * Math.Pow(R / (384.0 * target), 0.25);
+                nU = (int)Math.Ceiling(spans) + Degree + 1;
+                if (nU < n) nU = n;
+                if (nU > MaxControl) nU = MaxControl;
+                if (nU > n)
+                    res.Note = (res.Note ?? "") + string.Format(CultureInfo.InvariantCulture,
+                        " 盘状 u 向加密 {0}→{1}（圆周逼近：目标缝隙 {2:0.####}）。", n, nU, target);
+            }
+            ctx.U = BuildKnots(nU + ctx.ExtraU.Count, kinksU, ctx.ExtraU);
             ctx.V = BuildKnots(n + ctx.ExtraV.Count, kinksV, ctx.ExtraV);
             ctx.Nu = ctx.U.Length - Degree - 1;
             ctx.Nv = ctx.V.Length - Degree - 1;
@@ -1661,7 +1679,9 @@ namespace PatchFillPattern
             var extraUv = new List<Point2d>();
             Point3d[,] lastCpNet = null;
             double lastDev = double.MaxValue;
-            int maxRounds = 4;
+            // T4b（2026-10-11）：G2 模式的带约束收敛更慢（实测轮3 仍降 40% 被 4 轮上限截断，
+            // 偏差 0.577→0.343）→ G2 上限 6 轮；其余模式保持 4 轮。收敛判据仍是逐轮降幅。
+            int maxRounds = s.Continuity >= 2 ? 6 : 4;
             for (int round = 0; round < maxRounds; round++)
             {
                 var rows = new NormalEq(ctx.Nu * ctx.Nv);

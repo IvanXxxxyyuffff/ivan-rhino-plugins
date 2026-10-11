@@ -124,7 +124,10 @@ foreach ($hole in $holes) {
     $variant=$variantByAttempt[$attempt-1]
     Write-Output ("=== {0} attempt {1} (variant {2}) ===" -f $H,$attempt,$variant)
     Remove-Item $flag,$report -Force -EA SilentlyContinue
-    [IO.File]::WriteAllText($flag,"xnrun=v20-$H-a$attempt`nxnpick=$H`n")
+    # v27：xnsaveref —— 拾取阶段把参考面 dup 另存独立 3dm（会话内参考会被创建过程标记删除）
+    $refFile = Join-Path $benchDir ('xnref-' + $H + '.3dm')
+    Remove-Item $refFile -Force -EA SilentlyContinue
+    [IO.File]::WriteAllText($flag,"xnrun=v20-$H-a$attempt`nxnpick=$H`nxnsaveref=" + ($refFile.Replace('\','/')) + "`n")
     $p=Start-Process -FilePath $rhino -ArgumentList '/nosplash',('"' + $bench3dm + '"') -PassThru
     Start-Sleep -Seconds 3
     $sw=[Diagnostics.Stopwatch]::StartNew()
@@ -310,7 +313,8 @@ foreach ($hole in $holes) {
     $mout=Join-Path $benchDir ('xn-metrics-v20-' + $H + '.txt')
     Remove-Item $mout -Force -EA SilentlyContinue
     # v23：参考面也读 dup 安全层 xnpickref（原 bench 层几何会被创建过程吃掉，偏差项必须靠副本）
-    $refLine="xnm_ref_layer=xnpickref`n"
+    # v27：再加跨文件兜底 xnm_ref_file（会话内参考被标记删除 → 从拾取阶段另存的 ref 3dm 读回）
+    $refLine="xnm_ref_layer=xnpickref`nxnm_ref_file=" + ($refFile.Replace('\','/')) + "`n"
     # v20：边界统一读 xnpickcurves 层（唯一活到度量时的 dup 副本）
     [IO.File]::WriteAllText($flag,"xnmeasure=m-$H`nxnm_edge_layer=xnpickcurves`n$refLine" + "xnm_out=" + ($mout.Replace('\','/')) + "`n")
     $sw4=[Diagnostics.Stopwatch]::StartNew()

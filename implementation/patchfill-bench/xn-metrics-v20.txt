@@ -1,7 +1,3 @@
-[bench1 a1 C] METRIC gap=0.0000077 maxDev=-1 rms=-1 faces=1 cp=6x6
-[bench2 a2 C] METRIC gap=0.00000564 maxDev=-1 rms=-1 faces=1 cp=6x6
-[bench3 a2 C] METRIC gap=0.00000705 maxDev=-1 rms=-1 faces=1 cp=6x6
-[bench4 a2 C] METRIC gap=0.00072059 maxDev=-1 rms=-1 faces=1 cp=6x6
-[bench5 a2 C] METRIC gap=0.00031254 maxDev=-1 rms=-1 faces=1 cp=6x6
+[bench4 a1 C] METRIC gap=0.00072059 maxDev=0.07646552 rms=0.02058672 faces=1 cp=6x6
 
 manual-fallback: none
