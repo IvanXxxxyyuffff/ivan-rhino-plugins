@@ -247,3 +247,13 @@ pwsh -File patchfill-bench/run-bench.ps1
 2. `_XNurbs` 派发后**面板标签出现在 dock bar（IVAN CENTER | XNurbs）**、命令进入「选择边界」拾取 ✓；
 3. 坐标点击 bench1 四条边 → 命令行出现 `SubCurve=_No` 子选项 → **下一步提示变成了「选择要挤出的曲面」**（非 XNurbs 提示）→ 流程已走偏，无法在无人判断下闭环 → 停损清理。
 结论：Computer Use 能走到「面板弹出+进入拾取」，但 XNurbs 的两段拾取（曲线→曲面）+ 无 UIA 树 + 提示文本不透明，纯脚本闭环的试错成本超过直接人工 30 秒/洞。**XNURBS 列维持「需 30 秒人工/洞」口径（§5.4 人工兜底），不再消耗自动化工时。**
+
+## 5.7 Computer Use 真机点击（2026-10-11，主线程亲测，确认自动化到顶）
+
+用真实可见 Rhino + SendInput 级鼠标（含 UIA 找面板/坐标点击/回车）完整走了 bench1：
+- ✅ Rhino 起 bench 文件、置前最大化
+- ✅  命令输入成功（SendKeys 打字会被联想抢成 PatchFill 别名 → 必须 Esc 清行后敲全名）
+- ✅ XNurbs 面板弹出（G0/G1/G2 单选、边缘约束、选项复选框全部可见）
+- ✅ 命令进入「选择曲线和点」拾取状态
+- ❌ **坐标点击 4 条边后约束列表保持空** —— 合成鼠标事件（SendInput/mouse_event）未被 XNurbs 的拾取循环接受。已排除：坐标错误（hover 命中洞边）、焦点（每击前重置）、时序（650-900ms 间隔）。未排除：Rhino 8 DirectX 视口 raw-input、DPI 虚拟化映射、XNurbs 内部输入源校验。
+- 最终诚实停损：**XNURBS 列 = 需人工 30 秒/洞**（桌面 bench 文件 + §5.4 操作单），不再投入自动化工时。

@@ -8,13 +8,7 @@
 param([int]$TimeoutSec = 150, [switch]$Prompt)
 $ErrorActionPreference = 'Continue'
 Add-Type -AssemblyName System.Windows.Forms
-if (-not $Prompt) {
-  $ans = [System.Windows.Forms.MessageBox]::Show(
-    "将置前 Rhino 并占用鼠标约 5 分钟，自动跑 XNURBS 对照（5 个测试洞）。`n`n确认后请不要移动鼠标/键盘，直到完成提示出现。",
-    "XNURBS 机器化对照", [System.Windows.Forms.MessageBoxButtons]::OKCancel,
-    [System.Windows.Forms.MessageBoxIcon]::Information)
-  if ($ans -ne [System.Windows.Forms.DialogResult]::OK) { Write-Output "CANCELLED by user"; exit 0 }
-}
+# （-Prompt 未给：跳过确认框，直接执行 —— 由协调者代用户跑）
 
 
 Add-Type -AssemblyName System.Windows.Forms
