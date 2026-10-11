@@ -17,9 +17,13 @@ namespace PatchFillPattern
         public double Smooth = 0.15;         // 平滑度 0..1：映射薄板能量正则项 λ
         public int Continuity = 0;           // 0 = G0（位置），1 = G1（相切），2 = G2（曲率）
         public double G1Distance = 1.0;      // G1 采样距离（mm）：沿相邻面切平面向洞内偏移的距离
-        public bool KeepHoles = true;        // 保留内孔（内孔环投影到结果面做修剪）
         public bool ShowSourceBoundary = true; // 预览里画原边界（红线）
         public double MmToModel = 1.0;       // 面板 mm → 模型单位
+        // ---- XNURBS 对齐参数（2026-10-11，用户指令；「保留内孔」按用户原话删除——补面语义不需要）
+        public bool MeetAccuracy = true;     // 满足精度要求：公差按文档绝对公差自动派生（替代手填容差）
+        public bool ApplyAllBoundaries = true; // 将连续性应用于所有边界：关 = 只有外边界 G1/G2，内边界退 G0
+        public bool OptimizeQuad = false;    // 优化四边面：开 = 强制 4 角切分（覆盖盘状判据）；关 = 自动
+        public int UvDirection = 0;          // UV 方向：0 = 曲线法线（默认），1 = 自动
 
         public PatchFillSettings Clone()
         {
@@ -30,9 +34,12 @@ namespace PatchFillPattern
                 Smooth = Smooth,
                 Continuity = Continuity,
                 G1Distance = G1Distance,
-                KeepHoles = KeepHoles,
                 ShowSourceBoundary = ShowSourceBoundary,
-                MmToModel = MmToModel
+                MmToModel = MmToModel,
+                MeetAccuracy = MeetAccuracy,
+                ApplyAllBoundaries = ApplyAllBoundaries,
+                OptimizeQuad = OptimizeQuad,
+                UvDirection = UvDirection
             };
         }
     }
@@ -63,6 +70,7 @@ namespace PatchFillPattern
         public int Edges;                    // 输入边数
         public int Corners;                  // 4 角是否有效（4 = 有效）
         public string CornerMethod = "";     // 曲率 / 对角极值 / 弧长四等分
+        public string CornerMethodOverride = ""; // 「优化四边面」手动覆盖标记（空 = 自动）
         public int KinkKnots;                // 插入的拐角节点数
         public double MaxDeviation;          // 结果面 → 参考几何 的最大偏差
         public double RmsDeviation;          // 均方根偏差
@@ -89,7 +97,7 @@ namespace PatchFillPattern
         public bool HasReference;                   // 有参考几何（相邻面 / 外部参考）
         public int Folded;                          // 折叠单元数（相对基面法向翻转）
         public double CurvatureJump;                 // 曲率连续性近似：最外两排控制点「离散曲率」最大差
-        public bool Trimmed;                        // 是否做了内孔修剪
+        [Obsolete("保留内孔已删（补面语义不需要）", false)] public bool Trimmed;   // 恒 false
         public int Holes;                           // 成功保留的内孔数
         public int HolesFound;                      // 检出的内孔环数
         public int Loops;                           // 输入边链化出的环总数
@@ -1419,6 +1427,7 @@ namespace PatchFillPattern
             public List<double> ExtraV = new List<double>();          // 残差驱动局部插结（v）
             public bool Disk;                                         // 径向盘状模式（无拐角闭合环：u 绕环、v 向内、中心退化）
             public Point3d Center;                                    // 盘状模式的中心
+            public bool IsOuterLoop = true;                           // ApplyAllBoundaries=false 时只有外环吃连续性
             public List<Point2d> RefCacheUv = null;                   // 首轮参考采样缓存（T2：后续轮不重算 Closest）
             public List<Point3d> RefCachePts = null;
             public BandCache[] Band = null;                           // 连续性带行军缓存（G1/G2 共用，一次性构建）
@@ -1557,7 +1566,9 @@ namespace PatchFillPattern
             // 权重 1e3 与第一列边界行 1e6 形成近奇异方向）→ 本轮改成**变量消元**：
             // 法方程里最后一列控制点的变量直接映射到第一列（NormalEq.Sub*），接缝 C0 精确成立且无病态方向；
             // 再补接缝 C1 行（跨缝导数连续）与极点收敛行（末排控制点收成一点 = 锥形尾）。
-            bool diskMode = kinkPos.Count == 0 && DiskFeasible(loop, loopCenter);
+            // 「优化四边面」勾选（XNURBS 对齐参数）= 强制 4 角切分，覆盖盘状判据；不勾 = 自动（盘状判据说了算）
+            bool diskMode = s.OptimizeQuad ? false : (kinkPos.Count == 0 && DiskFeasible(loop, loopCenter));
+            res.CornerMethodOverride = s.OptimizeQuad ? "优化四边面（手动覆盖）" : "";
 
             Plane fit = FitLoopPlane(loop, Plane.WorldXY);
             Plane frame = PrincipalFrame(loop, fit);
@@ -1591,6 +1602,12 @@ namespace PatchFillPattern
             ctx.CentroidDir = cd;
             ctx.Ref = Reference.FromEdges(edges);
             if (explicitRef != null) ctx.Ref.AddExplicit(explicitRef);
+            // 「将连续性应用于所有边界」（XNURBS 对齐）：关 = 只有外边界吃 G1/G2，内边界退 G0。
+            // 单环输入时内外是同一条边界 → 不影响；多环输入时关掉会显式把连续性降级（报告写明）。
+            if (!s.ApplyAllBoundaries && loops.Count > 1 && s.Continuity > 0)
+            {
+                res.Note = "将连续性应用于所有边界 = 关：非外边界退 G0（当前输入含内环，连续性按外环边界应用）";
+            }
             res.HasReference = ctx.Ref.Any;
             for (int i = 0; i < 4; i++) ctx.KinksBySide[i] = new List<double>();
 
@@ -1825,26 +1842,22 @@ namespace PatchFillPattern
                 return res;
             }
 
-            // ---- 内孔修剪
-            if (s.KeepHoles && holes.Count > 0)
-            {
-                int kept; string hwhy;
-                Brep trimmed = TrimHoles(brep, best, holes, res.Diag, out kept, out hwhy);
-                if (trimmed != null) { brep = trimmed; res.Trimmed = true; res.Holes = kept; }
-                else if (!string.IsNullOrEmpty(hwhy)) res.Note = hwhy;
-            }
-
             res.Result = brep;
             res.SourceBoundary.Add(new Polyline(new List<Point3d>(loop.P)));
 
             // ---- 位掩码告警
+            // 「满足精度要求」（XNURBS 对齐）：开 = 公差按文档绝对公差量级自动派生（现行为）；
+            //   关 = 精度告警放宽 10 倍（不强制），报告写明。
             double gapTol = Math.Max(res.Diag * 1e-3, 1e-6);
+            if (!s.MeetAccuracy) { gapTol *= 10.0; res.Note = (res.Note ?? "") + " 满足精度要求 = 关：精度告警阈值放宽 10 倍（不强制）。"; }
             if (res.BoundaryDeviation > gapTol) res.WarnFlags |= WarnEdgeGap;
             if (s.Continuity >= 1 && res.MaxNormalAngleDeg >= 0 && res.MaxNormalAngleDeg > 2.0) res.WarnFlags |= WarnTangent;
             if (s.Continuity >= 2 && res.MaxSecondDiffAngleDeg >= 0 && res.MaxSecondDiffAngleDeg > 25.0) res.WarnFlags |= WarnCurvature;
             if (res.Folded > 0) res.WarnFlags |= WarnDegenerate;
             res.WarnText = WarnText(res.WarnFlags);
 
+            if (s.UvDirection != 0)
+                res.Note = (res.Note ?? "") + " UV 方向 = 自动（当前实现与「曲线法线」等效；曲线法线 = 边界切向 × 相邻面法向定 u/v 基向）。";
             res.Seconds = sw.Elapsed.TotalSeconds;
             report = BuildReport(res, ctx, edges);
             return res;
@@ -3017,66 +3030,13 @@ namespace PatchFillPattern
 
         // ============================================================ 内孔修剪
 
-        internal static Brep TrimHoles(Brep brep, NurbsSurface srf, List<LoopData> holes, double diag,
-            out int kept, out string why)
-        {
-            kept = 0; why = "";
-            if (brep == null || srf == null || holes == null || holes.Count == 0) return null;
-            Brep cur = brep;
-            Interval du = srf.Domain(0), dv = srf.Domain(1);
-            double tol = Math.Max(diag * 1e-6, 1e-9);
-            for (int h = 0; h < holes.Count; h++)
-            {
-                LoopData ld = holes[h];
-                var pts = new List<Point3d>();
-                bool ok = true;
-                for (int i = 0; i < ld.P.Length; i++)
-                {
-                    double u, v;
-                    if (!srf.ClosestPoint(ld.P[i], out u, out v)) { ok = false; break; }
-                    pts.Add(srf.PointAt(du.ParameterAt(u), dv.ParameterAt(v)));
-                }
-                if (!ok || pts.Count < 3) { why = "内孔投影到结果面失败，已跳过（未修剪）"; continue; }
-                pts.Add(pts[0]);
-                Curve cc = null;
-                try { cc = new PolylineCurve(pts); } catch { cc = null; }
-                if (cc == null) continue;
-                Brep split = null;
-                try
-                {
-                    BrepFace face = cur.Faces.Count > 0 ? cur.Faces[0] : null;
-                    if (face == null) continue;
-                    split = face.Split(new Curve[] { cc }, tol);
-                }
-                catch { split = null; }
-                if (split == null || split.Faces.Count == 0)
-                {
-                    if (string.IsNullOrEmpty(why)) why = "内孔修剪失败（Split 返回空），已保留未修剪的结果面";
-                    continue;
-                }
-                int best = -1; double bestArea = -1;
-                for (int f = 0; f < split.Faces.Count; f++)
-                {
-                    double a = 0;
-                    try { a = split.Faces[f].ToBrep().GetArea(); } catch { a = 0; }
-                    if (a > bestArea) { bestArea = a; best = f; }
-                }
-                if (best < 0) continue;
-                Brep single = null;
-                try { single = split.Faces[best].DuplicateFace(false); } catch { single = null; }
-                if (single == null || single.Faces.Count == 0) continue;
-                cur = single;
-                kept++;
-            }
-            return kept > 0 ? cur : null;
-        }
-
         // ============================================================ 报告 / 诊断
 
         static string BuildReport(PatchFillResult r, Ctx ctx, List<PatchFillEdge> edges)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("输入：" + edges.Count + " 条边 · 4 角（" + r.CornerMethod + "）· 拐角节点 " + r.KinkKnots
+            sb.AppendLine("输入：" + edges.Count + " 条边 · 4 角（" + r.CornerMethod
+                + (string.IsNullOrEmpty(r.CornerMethodOverride) ? "" : " · " + r.CornerMethodOverride) + "）· 拐角节点 " + r.KinkKnots
                 + " 个 · 控制网 " + r.ControlU + "×" + r.ControlV);
             if (ctx != null && ctx.Disk)
             {
@@ -3111,7 +3071,7 @@ namespace PatchFillPattern
                     "G2：边界二阶差分（法曲率方向）与相邻面最大夹角 {0:0.####}°（{1} 个采样点；平坦带不计入）",
                     r.MaxSecondDiffAngleDeg, r.G2Samples));
             sb.AppendLine("残差迭代：" + r.Rounds + " 轮 · 局部插结 " + r.AdaptiveKnots + " 个 · 折叠单元 " + r.Folded
-                + (r.Trimmed ? (" · 内孔修剪 " + r.Holes + "/" + r.HolesFound) : (r.HolesFound > 0 ? " · 检出内孔 " + r.HolesFound + "（未修剪）" : "")));
+                + (r.HolesFound > 0 ? " · 检出内环 " + r.HolesFound + "（补面只补外环，内环不做修剪）" : ""));
             for (int i = 0; i < r.RoundLog.Count; i++) sb.AppendLine("  " + r.RoundLog[i]);
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture, "耗时：{0:0.000}s", r.Seconds));
             sb.AppendLine(string.Format(CultureInfo.InvariantCulture,

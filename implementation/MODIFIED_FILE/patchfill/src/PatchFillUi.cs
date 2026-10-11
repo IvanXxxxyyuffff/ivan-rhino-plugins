@@ -86,7 +86,8 @@ namespace PatchFillPattern
         FlatButton _pick, _pickInner;
         IvanSegmented _seg;
         List<Control> _gridRows, _strengthRows, _smoothRows, _g1Rows;
-        IvanCheck _holesCheck, _srcCheck;
+        IvanCheck _srcCheck, _applyAllCheck, _accCheck, _quadCheck;
+        ComboBox _uvCombo;
         Label _g1Hint;
 
         public PatchFillPanel(PatchFillSettings settings, string targetDesc)
@@ -198,24 +199,52 @@ namespace PatchFillPattern
                 y = card.Bottom + 8;
             }
 
-            // ---- 输出与预览
+            // ---- XNURBS 对齐选项（连续性应用范围 / 精度 / 四边优化 / UV 方向）
             {
-                var opt = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 118, Title = "输出与预览" };
+                var opt = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 150, Title = "XNURBS 对齐" };
                 AddScrollCard(opt);
 
-                _holesCheck = new IvanCheck { Text = "保留内孔（内孔环投影到结果面做修剪）", Checked = Settings.KeepHoles };
-                _holesCheck.SetBounds(12, 26, W - 48, 22);
-                _holesCheck.CheckedChanged += (s, e) => { Settings.KeepHoles = _holesCheck.Checked; Raise(); };
-                opt.Controls.Add(_holesCheck);
+                _applyAllCheck = new IvanCheck { Text = "将连续性应用于所有边界（关 = 只有外边界，内边界退 G0）", Checked = Settings.ApplyAllBoundaries };
+                _applyAllCheck.SetBounds(12, 26, W - 48, 22);
+                _applyAllCheck.CheckedChanged += (s, e) => { Settings.ApplyAllBoundaries = _applyAllCheck.Checked; Raise(); };
+                opt.Controls.Add(_applyAllCheck);
+
+                _accCheck = new IvanCheck { Text = "满足精度要求（公差按文档绝对公差自动派生）", Checked = Settings.MeetAccuracy };
+                _accCheck.SetBounds(12, 52, W - 48, 22);
+                _accCheck.CheckedChanged += (s, e) => { Settings.MeetAccuracy = _accCheck.Checked; Raise(); };
+                opt.Controls.Add(_accCheck);
+
+                _quadCheck = new IvanCheck { Text = "优化四边面（强制 4 角切分；不勾 = 自动判盘状）", Checked = Settings.OptimizeQuad };
+                _quadCheck.SetBounds(12, 78, W - 48, 22);
+                _quadCheck.CheckedChanged += (s, e) => { Settings.OptimizeQuad = _quadCheck.Checked; Raise(); };
+                opt.Controls.Add(_quadCheck);
+
+                var uvLab = new Label { Text = "UV 方向:", ForeColor = Theme.Ink, Font = Theme.Body };
+                uvLab.SetBounds(12, 106, 70, 22);
+                opt.Controls.Add(uvLab);
+                _uvCombo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
+                _uvCombo.Items.AddRange(new object[] { "曲线法线", "自动" });
+                _uvCombo.SelectedIndex = Settings.UvDirection;
+                _uvCombo.SetBounds(88, 104, 120, 24);
+                _uvCombo.SelectedIndexChanged += (s, e) => { Settings.UvDirection = _uvCombo.SelectedIndex; Raise(); };
+                opt.Controls.Add(_uvCombo);
+
+                y = opt.Bottom + 8;
+            }
+
+            // ---- 输出与预览
+            {
+                var opt = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 96, Title = "输出与预览" };
+                AddScrollCard(opt);
 
                 _live.Text = "实时预览";
                 _live.Checked = true;
-                _live.SetBounds(12, 52, 150, 22);
+                _live.SetBounds(12, 26, 150, 22);
                 _live.CheckedChanged += (s, e) => Raise();
                 opt.Controls.Add(_live);
 
                 _srcCheck = new IvanCheck { Text = "显示原边界（红线）", Checked = Settings.ShowSourceBoundary };
-                _srcCheck.SetBounds(12, 78, W - 48, 22);
+                _srcCheck.SetBounds(12, 52, W - 48, 22);
                 _srcCheck.CheckedChanged += (s, e) => { Settings.ShowSourceBoundary = _srcCheck.Checked; Raise(); };
                 opt.Controls.Add(_srcCheck);
 
@@ -477,8 +506,14 @@ namespace PatchFillPattern
         // ---- 供自检切换参数（走的是和用户拖滑杆/敲数字框完全一样的链路）
         public void SetContinuity(int mode) { if (_seg != null) _seg.SelectedIndex = mode; }
         public int ContinuityIndex { get { return _seg != null ? _seg.SelectedIndex : -1; } }
-        public void SetKeepHoles(bool on) { if (_holesCheck != null) _holesCheck.Checked = on; }
-        public bool KeepHolesChecked { get { return _holesCheck != null && _holesCheck.Checked; } }
+        public void SetApplyAllBoundaries(bool on) { if (_applyAllCheck != null) _applyAllCheck.Checked = on; }
+        public bool ApplyAllBoundariesChecked { get { return _applyAllCheck != null && _applyAllCheck.Checked; } }
+        public void SetMeetAccuracy(bool on) { if (_accCheck != null) _accCheck.Checked = on; }
+        public bool MeetAccuracyChecked { get { return _accCheck != null && _accCheck.Checked; } }
+        public void SetOptimizeQuad(bool on) { if (_quadCheck != null) _quadCheck.Checked = on; }
+        public bool OptimizeQuadChecked { get { return _quadCheck != null && _quadCheck.Checked; } }
+        public void SetUvDirection(int i) { if (_uvCombo != null && i >= 0 && i < _uvCombo.Items.Count) _uvCombo.SelectedIndex = i; }
+        public int UvDirectionIndex { get { return _uvCombo != null ? _uvCombo.SelectedIndex : -1; } }
         public void SetShowSourceBoundary(bool on) { if (_srcCheck != null) _srcCheck.Checked = on; }
         public bool ShowSourceBoundaryChecked { get { return _srcCheck != null && _srcCheck.Checked; } }
 

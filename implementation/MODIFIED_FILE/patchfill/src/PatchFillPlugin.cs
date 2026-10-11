@@ -56,6 +56,21 @@ namespace PatchFillPattern
         {
             try
             {
+                // ⚠ 启动时文档可能还没开完（command-line 3dm 异步加载）：首次 Idle 时 ActiveDoc.Objects==0
+                //    就消费 flag 会让 attempt2/3 永远拿不到坐标（实测「no coords」+「dispatch timeout」）。
+                //    等 objects>0（或 60s 超时放弃）再消费。
+                RhinoDoc d = RhinoDoc.ActiveDoc;
+                if (d == null || d.Objects.Count == 0)
+                {
+                    for (int i = 0; i < 120; i++)
+                    {
+                        System.Threading.Thread.Sleep(500);
+                        d = RhinoDoc.ActiveDoc;
+                        if (d != null && d.Objects.Count > 0) break;
+                    }
+                    d = RhinoDoc.ActiveDoc;
+                    if (d == null || d.Objects.Count == 0) { RhinoApp.Idle -= ProbeOnIdle; return; }
+                }
                 RhinoApp.Idle -= ProbeOnIdle;
                 PatchFillProbeCommand.RunFromFlag();
             }
@@ -289,7 +304,6 @@ namespace PatchFillPattern
             if (kv.TryGetValue("smooth", out v) && double.TryParse(v, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out d)) s.Smooth = d;
             if (kv.TryGetValue("g1d", out v) && double.TryParse(v, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out d)) s.G1Distance = d;
             if (kv.TryGetValue("g1", out v)) s.Continuity = (v == "0" || v.Equals("false", StringComparison.OrdinalIgnoreCase)) ? 0 : (v == "2" ? 2 : 1);
-            if (kv.TryGetValue("inner", out v)) s.KeepHoles = !(v == "0" || v.Equals("false", StringComparison.OrdinalIgnoreCase));
 
             RhinoDoc doc = RhinoDoc.ActiveDoc;
             string open = Get(kv, "open");
@@ -524,6 +538,12 @@ namespace PatchFillPattern
                         foreach (RhinoObject o in doc.Objects)
                         {
                             if (o == null || o.Attributes == null || o.Attributes.LayerIndex != li) continue;
+                            // 层上的独立曲线对象也是合法边界（bench4/5 的洞边是曲线，不是 Brep 边）
+                            if (o.Geometry is Curve standalone)
+                            {
+                                EmitPickCurve(sb, vp, standalone, "standalone");
+                                continue;
+                            }
                             Brep bp = o.Geometry as Brep;
                             if (bp == null) continue;
                             Curve[] naked = null;
@@ -531,30 +551,7 @@ namespace PatchFillPattern
                             if (naked == null) continue;
                             foreach (Curve nc in naked)
                             {
-                                // 曲线 1/4、中点、3/4 → viewport client → 屏幕（点中点附近最容易拾取）
-                                double len = 0;
-                                try { len = nc.GetLength(); } catch { }
-                                if (len < 1e-9) continue;
-                                var pts = new string[3];
-                                double[] fr = { 0.25, 0.5, 0.75 };
-                                for (int k = 0; k < 3; k++)
-                                {
-                                    Point3d wp = nc.PointAtLength(len * fr[k]);
-                                    string s = "x";
-                                    if (vp != null)
-                                    {
-                                        try
-                                        {
-                                            // 世界 → viewport 客户区像素 → 屏幕绝对像素（ClientToScreen 吃 client 坐标，实测踩过：直接喂世界坐标会点到 z=0 平面别处）
-                                            Point2d client = vp.WorldToClient(wp);
-                                            System.Drawing.Point sp = vp.ClientToScreen(client);
-                                            s = sp.X + "," + sp.Y;
-                                        }
-                                        catch { }
-                                    }
-                                    pts[k] = s;
-                                }
-                                sb.AppendLine("PICKCURVE " + string.Join(" ", pts));
+                                EmitPickCurve(sb, vp, nc, "brep-naked");
                             }
                         }
                         sb.AppendLine("pick curves listed");
@@ -615,6 +612,31 @@ namespace PatchFillPattern
                 catch { }
             }
             catch { }
+        }
+
+        /// <summary>把一条曲线的 3 个采样点屏幕坐标写进 PICKCURVE 行（供外部驱动器 SendInput 点击）</summary>
+        static void EmitPickCurve(System.Text.StringBuilder sb, Rhino.Display.RhinoViewport vp, Curve nc, string tag)
+        {
+            if (nc == null || vp == null) return;
+            double len = 0;
+            try { len = nc.GetLength(); } catch { }
+            if (len < 1e-9) return;
+            var pts = new string[3];
+            double[] fr = { 0.25, 0.5, 0.75 };
+            for (int k = 0; k < 3; k++)
+            {
+                Point3d wp = nc.PointAtLength(len * fr[k]);
+                string s = "x";
+                try
+                {
+                    Point2d client = vp.WorldToClient(wp);
+                    System.Drawing.Point sp = vp.ClientToScreen(client);
+                    s = sp.X + "," + sp.Y;
+                }
+                catch { }
+                pts[k] = s;
+            }
+            sb.AppendLine("PICKCURVE " + string.Join(" ", pts) + "  #" + tag);
         }
 
         /// <summary>
@@ -1089,7 +1111,6 @@ namespace PatchFillPattern
                     {
                         firstNote = r.Note;
                         if (r.Ok) { breps.Add(r.Result); faces += r.Result.Faces.Count; }
-                        holes += r.Holes;
                         rounds = r.Rounds;
                         warns = r.WarnFlags;
                         if (r.MaxDeviation > worstDev) worstDev = r.MaxDeviation;

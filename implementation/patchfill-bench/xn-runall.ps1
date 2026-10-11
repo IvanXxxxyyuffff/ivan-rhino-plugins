@@ -5,15 +5,17 @@
 # 启动：pwsh -File xn-runall.ps1        （全程约 5 分钟；确认后请勿动鼠标）
 # 产物：patchfill-bench\xn-metrics.txt（六项度量）、xn-result-benchN.3dm、xn-todo-manual.txt
 # =====================================================================
-param([int]$TimeoutSec = 150)
+param([int]$TimeoutSec = 150, [switch]$Prompt)
 $ErrorActionPreference = 'Continue'
+Add-Type -AssemblyName System.Windows.Forms
+if (-not $Prompt) {
+  $ans = [System.Windows.Forms.MessageBox]::Show(
+    "将置前 Rhino 并占用鼠标约 5 分钟，自动跑 XNURBS 对照（5 个测试洞）。`n`n确认后请不要移动鼠标/键盘，直到完成提示出现。",
+    "XNURBS 机器化对照", [System.Windows.Forms.MessageBoxButtons]::OKCancel,
+    [System.Windows.Forms.MessageBoxIcon]::Information)
+  if ($ans -ne [System.Windows.Forms.DialogResult]::OK) { Write-Output "CANCELLED by user"; exit 0 }
+}
 
-# ---- 确认框（用户主动让出鼠标）----
-$ans = [System.Windows.Forms.MessageBox]::Show(
-  "将置前 Rhino 并占用鼠标约 5 分钟，自动跑 XNURBS 对照（5 个测试洞）。`n`n确认后请不要移动鼠标/键盘，直到完成提示出现。",
-  "XNURBS 机器化对照", [System.Windows.Forms.MessageBoxButtons]::OKCancel,
-  [System.Windows.Forms.MessageBoxIcon]::Information)
-if ($ans -ne [System.Windows.Forms.DialogResult]::OK) { Write-Output "CANCELLED by user"; exit 0 }
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -MemberDefinition @'
@@ -68,12 +70,22 @@ foreach ($hole in $holes) {
     Remove-Item $flag,$report -Force -EA SilentlyContinue
     # flag：派发探针（坐标表 + Idle 派发 _XNurbs）
     [IO.File]::WriteAllText($flag, "xnrun=runall-$H-a$attempt`nxnpick=$H`n")
-    if ($attempt -eq 1) {
+    # 每轮 attempt 都确保 Rhino 活着（上一轮失败会把进程杀掉 → 必须重起，否则 dispatch 必超时）
+    if (-not $p -or $p.HasExited) {
       $p = Start-Process -FilePath $rhino -ArgumentList '/nosplash', ('"' + $bench3dm + '"') -PassThru
+      Write-Output ("rhino restarted pid=" + $p.Id)
+      Start-Sleep -Seconds 3
     }
     $sw=[Diagnostics.Stopwatch]::StartNew()
-    while(-not(Test-Path $report) -and $sw.Elapsed.TotalSeconds -lt 60){ Start-Sleep -Milliseconds 500 }
-    if(-not(Test-Path $report)){ Write-Output "dispatch timeout"; continue }
+    while(-not(Test-Path $report) -and $sw.Elapsed.TotalSeconds -lt 180){
+      Start-Sleep -Milliseconds 500
+      # Rhino 活着就继续等（冷启动+开文件+插件 Idle 派发可能 >60s）；死了才算超时
+      if($p.HasExited){ break }
+    }
+    if(-not(Test-Path $report)){
+      Write-Output ("dispatch timeout (rhino alive=" + (-not $p.HasExited) + ")")
+      continue
+    }
     Start-Sleep -Milliseconds 3500    # Idle 派发 + 命令进入拾取
     $dispatch = Get-Content $report -Raw -Encoding utf8
     $curves=@()
@@ -87,7 +99,12 @@ foreach ($hole in $holes) {
     [W3.XC]::ShowWindow($h,9)|Out-Null; [W3.XC]::SetForegroundWindow($h)|Out-Null
     Start-Sleep -Milliseconds 700
     ClickAt 400 30; Start-Sleep -Milliseconds 500    # 激活
-    foreach($c in $curves){ ClickAt $c[0] $c[1]; Start-Sleep -Milliseconds 650 }
+    foreach($c in $curves){
+      [W3.XC]::SetForegroundWindow($h)|Out-Null      # 每条点击前重置前台（防 XNurbs 浮窗抢焦点吞点击）
+      Start-Sleep -Milliseconds 200
+      ClickAt $c[0] $c[1]
+      Start-Sleep -Milliseconds 750
+    }
     SendEnter; Start-Sleep -Milliseconds 1100
     SendEnter; Start-Sleep -Milliseconds 1500
 
@@ -114,7 +131,24 @@ foreach ($hole in $holes) {
       }
       $c4=New-Object System.Windows.Automation.PropertyCondition([System.Windows.Automation.AutomationElement]::NameProperty,'创建')
       $btn=$panel.FindFirst([System.Windows.Automation.TreeScope]::Descendants,$c4)
-      if($btn){ try{ ($btn.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)).Invoke(); Write-Output "CREATE clicked" }catch{ Write-Output "create invoke failed" } }
+      if($btn){
+        $clicked=$false
+        try{ ($btn.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern)).Invoke(); $clicked=$true; Write-Output "CREATE invoked" }catch{}
+        if(-not $clicked){
+          # MFC 按钮常不支持 Invoke → 用 BoundingRectangle 中心做物理点击
+          try{
+            $r=$btn.Current.BoundingRectangle
+            $cx=[int]($r.X + $r.Width/2); $cy=[int]($r.Y + $r.Height/2)
+            Write-Output ("CREATE physical click at $cx,$cy")
+            [W3.XC]::SetForegroundWindow($panel.Current.NativeWindowHandle) | Out-Null
+            Start-Sleep -Milliseconds 300
+            [W3.XC]::SetCursorPos($cx,$cy)|Out-Null; Start-Sleep -Milliseconds 150
+            [W3.XC]::mouse_event(2,0,0,0,[IntPtr]::Zero); Start-Sleep -Milliseconds 90
+            [W3.XC]::mouse_event(4,0,0,0,[IntPtr]::Zero)
+            $clicked=$true; Write-Output "CREATE clicked (physical)"
+          }catch{ Write-Output "create physical click failed: $_" }
+        }
+      }
     } else { Write-Output "panel/buttons not visible via UIA" }
 
     # 等生成 → 度量（探针 flag 通道；结果面 = 非 bench* 层的 Brep）
@@ -124,9 +158,16 @@ foreach ($hole in $holes) {
     Remove-Item $mout -Force -EA SilentlyContinue
     $refLine = ''
     if ($hole.Ref -ne '') { $refLine = "xnm_ref_layer=$($hole.Ref)`n" }
-    [IO.File]::WriteAllText($flag, "xnmeasure=m-$H`nxnm_edge_layer=$($hole.Edge)`n$refLine" + "xnm_out=" + ($mout -replace [char]92,'/') + "`n")
+    [IO.File]::WriteAllText($flag, "xnmeasure=m-$H`nxnm_edge_layer=$($hole.Edge)`n$refLine" + "xnm_out=" + ($mout.Replace([string][char]92,"/")) + "`n")
     $sw3=[Diagnostics.Stopwatch]::StartNew()
-    while(-not(Test-Path $mout) -and $sw3.Elapsed.TotalSeconds -lt 30){ Start-Sleep -Milliseconds 500 }
+    while(-not(Test-Path $mout) -and $sw3.Elapsed.TotalSeconds -lt 45){
+      Start-Sleep -Milliseconds 500
+      if($p.HasExited){ break }
+    }
+    if(-not(Test-Path $mout)){
+      Write-Output "measure timeout — probe report tail:"
+      if(Test-Path $report){ (Get-Content $report -Raw -Encoding utf8).Substring(0, [Math]::Min(900, (Get-Content $report -Raw -Encoding utf8).Length)) | Write-Output }
+    }
     if(Test-Path $mout){
       $mt = Get-Content $mout -Raw -Encoding utf8
       Write-Output $mt

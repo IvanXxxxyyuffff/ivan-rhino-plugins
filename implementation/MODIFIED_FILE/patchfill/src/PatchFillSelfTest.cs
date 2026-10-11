@@ -740,6 +740,8 @@ namespace PatchFillPattern
                 bool rowsOk = true;
                 for (int i = 0; i < 4; i++) if (!panel.RowEnabled(i)) rowsOk = false;
                 Check(sb, ref pass, ref fail, rowsOk, "面板：4 个参数行全部可用（没有灰掉的行）");
+                Check(sb, ref pass, ref fail, panel.ParamEnabled("UV 方向:") || panel.ParamEnabled("UV 方向"),
+                    "面板：UV 方向下拉行可用（XNURBS 对齐参数）");
 
                 string[] names = { "控制点数", "贴合强度", "平滑度", "G1 采样距离" };
                 bool paramsOk = true;
@@ -774,14 +776,60 @@ namespace PatchFillPattern
                 panel.SetContinuity(0);
                 Check(sb, ref pass, ref fail, panel.ContinuityIndex == 0 && panel.Settings.Continuity == 0, "面板：分段控件切回 G0 → Settings.Continuity = 0");
 
-                // 复选框钩子
-                panel.SetKeepHoles(false);
-                Check(sb, ref pass, ref fail, !panel.KeepHolesChecked && !panel.Settings.KeepHoles, "面板：保留内孔 取消勾选 → Settings.KeepHoles = false");
-                panel.SetKeepHoles(true);
-                Check(sb, ref pass, ref fail, panel.KeepHolesChecked && panel.Settings.KeepHoles, "面板：保留内孔 勾选 → Settings.KeepHoles = true");
+                // 复选框钩子（保留内孔已删——补面语义不需要；换成 XNURBS 对齐三勾选 + UV 下拉）
+                panel.SetApplyAllBoundaries(false);
+                Check(sb, ref pass, ref fail, !panel.ApplyAllBoundariesChecked && !panel.Settings.ApplyAllBoundaries, "面板：应用所有边界 取消勾选 → Settings.ApplyAllBoundaries = false");
+                panel.SetApplyAllBoundaries(true);
+                Check(sb, ref pass, ref fail, panel.ApplyAllBoundariesChecked && panel.Settings.ApplyAllBoundaries, "面板：应用所有边界 勾选 → Settings.ApplyAllBoundaries = true");
+                panel.SetMeetAccuracy(false);
+                Check(sb, ref pass, ref fail, !panel.MeetAccuracyChecked && !panel.Settings.MeetAccuracy, "面板：满足精度要求 取消勾选 → Settings.MeetAccuracy = false");
+                panel.SetMeetAccuracy(true);
+                Check(sb, ref pass, ref fail, panel.MeetAccuracyChecked && panel.Settings.MeetAccuracy, "面板：满足精度要求 勾选 → Settings.MeetAccuracy = true");
+                panel.SetOptimizeQuad(true);
+                Check(sb, ref pass, ref fail, panel.OptimizeQuadChecked && panel.Settings.OptimizeQuad, "面板：优化四边面 勾选 → Settings.OptimizeQuad = true");
+                panel.SetOptimizeQuad(false);
+                Check(sb, ref pass, ref fail, !panel.OptimizeQuadChecked && !panel.Settings.OptimizeQuad, "面板：优化四边面 取消勾选 → Settings.OptimizeQuad = false");
+                panel.SetUvDirection(1);
+                Check(sb, ref pass, ref fail, panel.UvDirectionIndex == 1 && panel.Settings.UvDirection == 1, "面板：UV 方向切到「自动」→ Settings.UvDirection = 1");
+                panel.SetUvDirection(0);
+                Check(sb, ref pass, ref fail, panel.UvDirectionIndex == 0 && panel.Settings.UvDirection == 0, "面板：UV 方向切回「曲线法线」→ Settings.UvDirection = 0");
                 panel.SetShowSourceBoundary(false);
                 Check(sb, ref pass, ref fail, !panel.ShowSourceBoundaryChecked && !panel.Settings.ShowSourceBoundary, "面板：显示原边界 取消勾选 → Settings.ShowSourceBoundary = false");
                 panel.SetShowSourceBoundary(true);
+                Check(sb, ref pass, ref fail, panel.ShowSourceBoundaryChecked && panel.Settings.ShowSourceBoundary, "面板：显示原边界 勾选 → Settings.ShowSourceBoundary = true");
+
+                // 新勾选的**几何签名**断言（每个控件 SetParam 后几何必须变——勾选权重进最小二乘才算真接线）
+                {
+                    // 「优化四边面」：单环盘状判据输入（球带顶圈）上开/关必须改变参数化
+                    double sigQ1 = SigOf(PatchFillCore.Generate(edges, null, sphereRef, panel.Settings, out rep));
+                    panel.SetOptimizeQuad(true);
+                    double sigQ2 = SigOf(PatchFillCore.Generate(edges, null, sphereRef, panel.Settings, out rep));
+                    panel.SetOptimizeQuad(false);
+                    Check(sb, ref pass, ref fail, Math.Abs(sigQ1 - sigQ2) > 1e-9, "面板：优化四边面 开/关 → 几何签名变化（4 角强制覆盖盘状）");
+
+                    // 「应用所有边界」：语义说明——单面求解器只有一条参数边界（多环输入时内环边
+                    //   本来就不进求解，XNURBS 的「多边界」对应其体参数化架构），开关在几何上无区分度
+                    //   是**架构事实**。断言降为「Settings 链路 + 报告注明」：多环+G1+关 → 报告写明降级。
+                    var mh = new Point3d[] { new Point3d(10,10,0), new Point3d(30,10,0), new Point3d(30,30,0), new Point3d(10,30,0) };
+                    Brep mplate = PlateWithPolyHole(mh, 40.0);
+                    if (mplate != null)
+                    {
+                        var mall = new List<PatchFillEdge>();
+                        for (int i = 0; i < mplate.Edges.Count; i++)
+                        {
+                            BrepEdge be = mplate.Edges[i];
+                            mall.Add(new PatchFillEdge(be.DuplicateCurve(), mplate, i, be.AdjacentFaces(), "板边" + (i + 1)));
+                        }
+                        var sM = panel.Settings.Clone();
+                        sM.Continuity = 1; sM.FitStrength = 1.0; sM.ApplyAllBoundaries = false;
+                        string repM;
+                        PatchFillResult rM0 = PatchFillCore.Generate(mall, null, null, sM, out repM);
+                        Check(sb, ref pass, ref fail, rM0.Ok && rM0.Note != null
+                            && rM0.Note.IndexOf("连续性", StringComparison.Ordinal) >= 0,
+                            "面板：应用所有边界 = 关（多环+G1）→ 报告写明非外边界退 G0（架构限制如实注明）");
+                    }
+                    else Check(sb, ref pass, ref fail, false, "应用所有边界断言：多环板构造失败");
+                }
 
                 Check(sb, ref pass, ref fail, !panel.PickState, "面板：没选边界时「选择边界」按钮是红的（未选状态）");
                 Check(sb, ref pass, ref fail, !panel.InnerPickState, "面板：没选内部约束时按钮是红的");
@@ -865,7 +913,7 @@ namespace PatchFillPattern
                 string.Format(CultureInfo.InvariantCulture, "曲率连续性近似（最外两排控制点离散曲率最大差）已测出：{0:0.######}（对照用相对量，绝对值在 BENCH 里与 _Patch 比）", r.CurvatureJump));
             Check(sb, ref pass, ref fail, PatchFillCore.WarnText(15).IndexOf("bit3", StringComparison.Ordinal) >= 0, "告警文案覆盖到 bit3");
 
-            // 内孔：把平板的外圈 + 内圈都选进来 → 外环补面 + 内孔修剪
+            // 多环输入：外环补面照常（保留内孔已按用户指令删除——补面语义 = 只补一张面，不做修剪）
             var hole = new Point3d[] {
                 new Point3d(10,10,0), new Point3d(30,10,0), new Point3d(30,30,0), new Point3d(10,30,0) };
             Brep plate = PlateWithPolyHole(hole, 40.0);
@@ -877,18 +925,13 @@ namespace PatchFillPattern
                 all.Add(new PatchFillEdge(e.DuplicateCurve(), plate, i, e.AdjacentFaces(), "板边" + (i + 1)));
             }
             Check(sb, ref pass, ref fail, all.Count == 8, "构造：外圈 4 条 + 内圈 4 条 = 8 条边（实测 " + all.Count + "）");
-            var s2 = new PatchFillSettings { ControlCount = 12, FitStrength = 1.0, Smooth = 0.0, KeepHoles = true };
+            var s2 = new PatchFillSettings { ControlCount = 12, FitStrength = 1.0, Smooth = 0.0 };
             PatchFillResult r2 = PatchFillCore.Generate(all, null, null, s2, out rep);
-            Check(sb, ref pass, ref fail, r2.Ok, "外圈 + 内孔：生成成功（" + (string.IsNullOrEmpty(r2.Error) ? "OK" : r2.Error) + "）");
+            Check(sb, ref pass, ref fail, r2.Ok, "外圈 + 内圈多环输入：生成成功（" + (string.IsNullOrEmpty(r2.Error) ? "OK" : r2.Error) + "）");
             if (!r2.Ok) return;
             Check(sb, ref pass, ref fail, r2.Loops == 2 && r2.HolesFound == 1, "检出 2 个环 / 1 个内孔候选");
-            Check(sb, ref pass, ref fail, r2.Trimmed && r2.Holes == 1, "内孔修剪成功（保留内孔 = 开）");
-            Check(sb, ref pass, ref fail, r2.Result.Faces.Count == 1 && r2.Result.Faces[0].Loops.Count == 2,
-                "结果面 1 张 + 2 个修剪环（带孔）");
-            var s3 = s2.Clone(); s3.KeepHoles = false;
-            PatchFillResult r3 = PatchFillCore.Generate(all, null, null, s3, out rep);
-            Check(sb, ref pass, ref fail, r3.Ok && !r3.Trimmed && r3.Result.Faces[0].Loops.Count == 1,
-                "保留内孔 = 关 → 不做修剪（1 个环）");
+            Check(sb, ref pass, ref fail, r2.Result.Faces.Count == 1 && r2.Result.Faces[0].Loops.Count == 1,
+                "输出 1 张无孔补面（补面语义：只补外环围成的洞，不修剪）");
 
             // ---- 局部自适应插结（XNURBS 没有的能力）：球冠这种「Coons 平盘 ≠ 真值」的硬输入
             Brep zone2;

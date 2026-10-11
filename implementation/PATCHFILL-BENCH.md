@@ -164,11 +164,22 @@ pwsh -File E:\IVAN-LiquidGlass-preview\implementation\patchfill-bench\xn-runall.
 - **产出**：`patchfill-bench\xn-metrics.txt`（汇总）+ 各洞 `xn-metrics-benchN.txt` + `xn-result-benchN.3dm`；数字交回即填第 4 节 XNURBS 列（G1 夹角/耗时两项由该轮日志或秒表补）；
 - **不自动启动**：本脚本只由用户自己决定何时跑（会占鼠标），任何会话都不得代跑。
 
-### 5.5 XNURBS 数字列
+### 5.5 机器化实跑结果（xn-runall 三轮，2026-10-10）
 
-**仍为空（未编数字）。** 上面 5.2/5.3 的卡点闭环后（或用户手动 30 秒兜底后），结果面交给现有度量代码（`Measure`/`NormalAngle`/`DistToLoop`）即可把第 4 节表格第三列填满，按第 7 节机械判定。
+**修掉的两个脚本 bug**（首轮实跑暴露）：① dispatch 等待 60s→180s + Rhino 进程活性检查（死了才算超时）；② `-replace [char]92` 把反斜杠当正则抛异常（改 `.Replace()` 字符串方法）——该异常曾把已成功洞的度量保存炸掉。另修：重试轮也重起 Rhino（旧逻辑只 attempt1 起）、结果面度量等待 45s、探针在 objects=0 时不再消费 flag（attempt2/3「no coords」的根因：命令行 3dm 异步加载完成前首次 Idle 把 flag 吃掉）。
 
----
+**机器化完成度（三轮实跑稳定复现）**：
+- ✅ 全自动：启动 Rhino+开 3dm → 探针派发 `_XNurbs` → 面板弹出停在拾取 → 8 条边界曲线屏幕坐标表（bench4 修复后含 #standalone 4 条 + #brep-naked 2 条）→ UIA 找到含「创建」的面板窗口 → **创建按钮点击成功两种方式**（UIA Invoke 与 BoundingRectangle 物理点击都验证可行）→ 结果面度量通道就绪。
+- ❌ 唯一卡点：**SendInput 坐标点击未被视口拾取循环接受**——点击 6 条曲线后约束列表保持空、命令返回时约束未喂（5 洞 × 3 轮一致）。已排除：坐标错误（hover 世界坐标与洞边吻合）、焦点（每条点击前重置前台）、时序（4s 等待 + 650-750ms 间隔）。未排除嫌疑：Rhino 8 DirectX 视口子窗口的 raw-input/鼠标捕获路径、DPI 虚拟化下 ClientToScreen 的映射层、XNurbs 命令内部对输入源的校验。**未再投入的原因**：继续排查需要逐帧对比真实鼠标与合成鼠标的事件流（ intrusive 且耗时），而手动点击每洞仅 30 秒。
+
+**XNURBS 数字列仍为空（不编数字）。** 拿到数字的两条路：
+1. **手动 30 秒/洞**：跑 `xn-runall.ps1`（会自动停在拾取），手动框选边界→右键→面板点创建→结果面留下，度量自动完成；
+2. Computer Use 实机操作（§5.6 已记录）。
+结果面就位后 `xnmeasure` 通道自动产出六项中可机械复算的四项（缝隙/偏差/面数/控制网），G1 夹角与耗时由该轮记录补。
+
+### 5.6 XNURBS 数字列
+
+**仍为空（不编数字）。** 拿到数字的两条路：① 手动 30 秒/洞（xn-runall.ps1 自动停在拾取后手动框选边界→右键→面板创建，度量自动完成）；② Computer Use 实机操作。结果面就位后 `xnmeasure` 通道自动产出可机械复算的四项（缝隙/偏差/面数/控制网），G1 夹角与耗时由该轮记录补。
 
 ## 6. 我们自己怎么复现（一条命令）
 
