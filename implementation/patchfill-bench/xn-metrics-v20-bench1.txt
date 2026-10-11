@@ -1,0 +1,7 @@
+=== xnmeasure m-bench1 ===
+edgeLayer=xnpickcurves(6) refLayer=xnpickref(7)
+docObjects=21 perLayer: 默认值=1 xnpickcurves=4 bench4=4
+no reference geometry — deviation skipped
+METRIC gap=0.0000077 maxDev=-1 rms=-1 faces=1 cp=6x6
+note: G1 角度与耗时由驱动器阶段补（G1 需相邻面法向；耗时=创建按钮到生成的秒表）
+

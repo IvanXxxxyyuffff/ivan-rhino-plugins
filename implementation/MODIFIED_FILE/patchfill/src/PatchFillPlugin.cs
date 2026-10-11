@@ -52,26 +52,28 @@ namespace PatchFillPattern
             catch { }
         }
 
+        /// <summary>已消费的 flag 内容（v14：Idle 常驻订阅，flag 内容变化才再消费 ——
+        /// 旧版处理一次就退订，驱动器后写的 xnmeasure flag 永远没人读，度量通道从未闭环）</summary>
+        static string lastFlagContent = null;
+
         static void ProbeOnIdle(object sender, EventArgs e)
         {
             try
             {
-                // ⚠ 启动时文档可能还没开完（command-line 3dm 异步加载）：首次 Idle 时 ActiveDoc.Objects==0
-                //    就消费 flag 会让 attempt2/3 永远拿不到坐标（实测「no coords」+「dispatch timeout」）。
-                //    等 objects>0（或 60s 超时放弃）再消费。
+                string dir = Path.Combine(
+                    System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData),
+                    @"IVAN\logs");
+                string flagPath = Path.Combine(dir, "run-patchfill-probe.flag");
+                if (!File.Exists(flagPath)) return;                 // 常驻：下个 tick 再看
+                string content = File.ReadAllText(flagPath);
+                if (string.IsNullOrEmpty(content) || content == lastFlagContent) return;
+                // 启动时文档可能还没开完（command-line 3dm 异步加载）：文档空就等下个 tick（不阻塞 UI 线程）
                 RhinoDoc d = RhinoDoc.ActiveDoc;
                 if (d == null || d.Objects.Count == 0)
                 {
-                    for (int i = 0; i < 120; i++)
-                    {
-                        System.Threading.Thread.Sleep(500);
-                        d = RhinoDoc.ActiveDoc;
-                        if (d != null && d.Objects.Count > 0) break;
-                    }
-                    d = RhinoDoc.ActiveDoc;
-                    if (d == null || d.Objects.Count == 0) { RhinoApp.Idle -= ProbeOnIdle; return; }
+                    if (content.Contains("xnrun") || content.Contains("xnpick") || content.Contains("bench=")) return;
                 }
-                RhinoApp.Idle -= ProbeOnIdle;
+                lastFlagContent = content;
                 PatchFillProbeCommand.RunFromFlag();
             }
             catch (Exception ex)
@@ -296,6 +298,7 @@ namespace PatchFillPattern
             }
             catch { }
             try { File.Delete(flag); } catch { }
+            try { File.AppendAllText(DefaultReportPath, "\n[RunFromFlag] keys=[" + string.Join(",", kv.Keys) + "]\n", new System.Text.UTF8Encoding(false)); } catch { }
 
             var s = new PatchFillSettings();
             int n; double d; string v;
@@ -535,25 +538,117 @@ namespace PatchFillPattern
                         var view = doc.Views.ActiveView;
                         var vp = view != null ? view.ActiveViewport : null;
                         sb.AppendLine("view: " + (vp != null ? vp.Name : "(none)"));
+                        // v11：裸边在视图里会被宿主实体自身遮挡（点击射线先命中面 → XNurbs 曲线
+                        // 过滤器把面拒掉 → 点击无声落空）。把裸边复制成独立曲线（临时层），拾取
+                        // 阶段隐藏全部 brep（xnmeasure 通道会先全部恢复可见再量）→ 点击只可能命中曲线。
+                        int dupLayer = doc.Layers.Find("xnpickcurves", true);
+                        if (dupLayer < 0) dupLayer = doc.Layers.Add("xnpickcurves", System.Drawing.Color.Lime);
+                        var dupAttrs = new ObjectAttributes();
+                        dupAttrs.LayerIndex = dupLayer;
+                        // v23：参考 brep 也 dup 到安全层（XNurbs 创建会毁掉原 bench 层几何，
+                        // 度量偏差要用参考面 —— xnpickref 是唯一活到度量时的参考副本）
+                        int refDupLayer = doc.Layers.Find("xnpickref", true);
+                        if (refDupLayer < 0) refDupLayer = doc.Layers.Add("xnpickref", System.Drawing.Color.Orange);
+                        var refDupAttrs = new ObjectAttributes();
+                        refDupAttrs.LayerIndex = refDupLayer;
+                        var toEmit = new List<Curve>();
+                        var hideIds = new List<Guid>();
+                        bool standaloneFound = false;
+                        foreach (RhinoObject o in doc.Objects)
+                        {
+                            if (o == null || o.Attributes == null) continue;
+                            // 层上的独立曲线对象也是合法边界（bench4/5 的洞边是曲线，不是 Brep 边）
+                            // v20：独立曲线也 dup 到 xnpickcurves 并藏原件 —— XNurbs 创建会毁掉原几何，
+                            // 度量统一改读 xnpickcurves 层（唯一活到度量时的边界副本）
+                            if (o.Geometry is Curve standalone && o.Attributes.LayerIndex == li)
+                            {
+                                standaloneFound = true;
+                                Guid cid2 = doc.Objects.AddCurve(standalone.DuplicateCurve(), dupAttrs);
+                                if (cid2 != Guid.Empty)
+                                {
+                                    RhinoObject co2 = doc.Objects.FindId(cid2);
+                                    if (co2 != null && co2.Geometry is Curve cc2) toEmit.Add(cc2);
+                                }
+                                hideIds.Add(o.Id);
+                                continue;
+                            }
+                            if (o.Geometry is Brep brepObj)
+                            {
+                                // v23：参考面 dup 到 xnpickref（度量偏差用；原层几何会被创建过程毁掉）。
+                                // dup 本体也进 hideIds —— 拾取阶段它必须不可见，否则遮挡测试全被它挡住。
+                                try
+                                {
+                                    Guid rid = doc.Objects.AddBrep(brepObj.DuplicateBrep(), refDupAttrs);
+                                    if (rid != Guid.Empty) hideIds.Add(rid);
+                                }
+                                catch { }
+                                hideIds.Add(o.Id);
+                                continue;
+                            }
+                        }
+                        // v21：层上有独立曲线 = 独立曲线就是边界（bench4/5 设计：洞边界曲线 + 未修剪
+                        // 参考面）→ brep 只当参考被隐藏，绝不再发它的裸边（圆柱接缝边不是边界，
+                        // 混进去会让约束集不闭合 → XNurbs 一直等更多拾取不返回）
+                        if (!standaloneFound)
                         foreach (RhinoObject o in doc.Objects)
                         {
                             if (o == null || o.Attributes == null || o.Attributes.LayerIndex != li) continue;
-                            // 层上的独立曲线对象也是合法边界（bench4/5 的洞边是曲线，不是 Brep 边）
-                            if (o.Geometry is Curve standalone)
-                            {
-                                EmitPickCurve(sb, vp, standalone, "standalone");
-                                continue;
-                            }
                             Brep bp = o.Geometry as Brep;
                             if (bp == null) continue;
-                            Curve[] naked = null;
-                            try { naked = bp.DuplicateNakedEdgeCurves(true, true); } catch { naked = null; }
-                            if (naked == null) continue;
-                            foreach (Curve nc in naked)
+                            // v13：洞圈 = 非 Outer 环的 trim 边。bench1-3 平板带孔的裸边含「外圈+洞圈」
+                            // 两个不连通环，XNurbs 一个约束集只吃一个环（用户手动只框洞圈）→ 只发洞圈。
+                            Curve[] holeEdges = ExtractHoleLoop(bp);
+                            if (holeEdges == null || holeEdges.Length == 0)
+                            { try { holeEdges = bp.DuplicateNakedEdgeCurves(true, true); } catch { holeEdges = null; } }
+                            if (holeEdges == null) continue;
+                            // v24：裸边恰为 2 个环（球带上下圈）→ 只取平均 Z 更高的「顶圈」。
+                            // BENCH §3 bench5 口径 = 球带顶圈；两圈环不连通，XNurbs 会一直等拾取不返回。
+                            if (holeEdges.Length == 2)
                             {
-                                EmitPickCurve(sb, vp, nc, "brep-naked");
+                                try
+                                {
+                                    double z0 = CurveAvgZ(holeEdges[0]), z1 = CurveAvgZ(holeEdges[1]);
+                                    if (Math.Abs(z0 - z1) > 1e-9)
+                                        holeEdges = new Curve[] { z1 > z0 ? holeEdges[1] : holeEdges[0] };
+                                }
+                                catch { }
+                            }
+                            foreach (Curve nc in holeEdges)
+                            {
+                                Curve copy = nc.DuplicateCurve();
+                                Guid cid = doc.Objects.AddCurve(copy, dupAttrs);
+                                if (cid != Guid.Empty)
+                                {
+                                    RhinoObject co = doc.Objects.FindId(cid);
+                                    if (co != null && co.Geometry is Curve cc) toEmit.Add(cc);
+                                }
                             }
                         }
+                        // v12：只对「视线可见」的边发坐标（bench1 通孔箱体 8 条裸边 = 上下两圈环，
+                        // 下圈被箱体遮挡；用户手动只框选可见上圈 → XNurbs 才能从一个环建面）。
+                        // 判据：相机→采样点射线被更近几何先命中 = 遮挡。⚠ 必须在隐藏 brep 之前测，
+                        // 且只对 brep/mesh/surface 做射线（RayShoot 不吃曲线）。
+                        var shootGeoms = new System.Collections.Generic.List<GeometryBase>();
+                        foreach (RhinoObject o in doc.Objects)
+                        {
+                            if (o == null || !o.Visible || o.Geometry == null) continue;
+                            if (o.Geometry is Brep || o.Geometry is Mesh || o.Geometry is Surface) shootGeoms.Add(o.Geometry);
+                        }
+                        // v22：遮挡过滤下沉到「逐采样点」（EmitPickCurve 内部）—— 整曲线跳过的旧判据
+                        // 会把「近侧可见、远侧被球体挡住」的圆（bench5 顶圈）整条误杀，只剩 1 条腿。
+                        int hidden = 0;
+                        foreach (Guid hid in hideIds)
+                        {
+                            RhinoObject ho = doc.Objects.FindId(hid);
+                            if (ho != null) { try { ho.Attributes.Visible = false; ho.CommitChanges(); hidden++; } catch { } }
+                        }
+                        try { doc.Views.Redraw(); } catch { }
+                        sb.AppendLine("dup curves=" + toEmit.Count + " breps hidden=" + hidden);
+                        foreach (Curve c in toEmit)
+                        {
+                            EmitPickCurve(sb, vp, c, "pickable", shootGeoms);
+                        }
+
                         sb.AppendLine("pick curves listed");
                     }
                 }
@@ -614,18 +709,87 @@ namespace PatchFillPattern
             catch { }
         }
 
-        /// <summary>把一条曲线的 3 个采样点屏幕坐标写进 PICKCURVE 行（供外部驱动器 SendInput 点击）</summary>
-        static void EmitPickCurve(System.Text.StringBuilder sb, Rhino.Display.RhinoViewport vp, Curve nc, string tag)
+        /// <summary>
+        /// 洞圈提取： brep 各面的非 Outer 环（inner hole）的 trim 边（3D）。
+        /// 平板带孔的裸边 = 外圈 + 洞圈两个不连通环；XNurbs/补面的合法边界 = 洞圈。
+        /// 无内环（开放壳/单一环）返回 null（调用方回退裸边）。
+        /// </summary>
+        internal static Curve[] ExtractHoleLoop(Brep bp)
+        {
+            if (bp == null) return null;
+            try
+            {
+                var he = new System.Collections.Generic.List<Curve>();
+                foreach (BrepFace bf in bp.Faces)
+                {
+                    if (bf == null) continue;
+                    foreach (BrepLoop lp in bf.Loops)
+                    {
+                        if (lp == null || lp.LoopType == BrepLoopType.Outer) continue;
+                        foreach (BrepTrim tm in lp.Trims)
+                        {
+                            if (tm == null || tm.Edge == null) continue;
+                            Curve ec = tm.Edge.DuplicateCurve();
+                            if (ec != null) he.Add(ec);
+                        }
+                    }
+                }
+                return he.Count > 0 ? he.ToArray() : null;
+            }
+            catch { return null; }
+        }
+
+        /// <summary>曲线 8 点采样平均 Z（用于「球带取顶圈」判据）</summary>
+        internal static double CurveAvgZ(Curve c)
+        {
+            double len = c.GetLength();
+            double sum = 0; int n = 0;
+            for (int k = 0; k < 8; k++)
+            {
+                try { sum += c.PointAtLength(len * k / 8.0).Z; n++; } catch { }
+            }
+            return n > 0 ? sum / n : 0;
+        }
+
+        /// <summary>把一条曲线的 3 个采样点屏幕坐标写进 PICKCURVE 行（供外部驱动器点击）。
+        /// v22：7 个候选点逐个做视线遮挡测试（射线被更近的 brep 先命中 = 该点被挡），
+        /// 可见点优先填进 3 个名额（不足用被挡点补齐、再不足重复首点）——
+        /// 圆类曲线「近侧可见远侧被挡」时仍能给出可点的 3 个点。</summary>
+        static void EmitPickCurve(System.Text.StringBuilder sb, Rhino.Display.RhinoViewport vp, Curve nc, string tag, System.Collections.Generic.List<GeometryBase> shootGeoms)
         {
             if (nc == null || vp == null) return;
             double len = 0;
             try { len = nc.GetLength(); } catch { }
             if (len < 1e-9) return;
+            double[] cand = { 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875 };
+            var good = new System.Collections.Generic.List<double>();
+            var bad = new System.Collections.Generic.List<double>();
+            try
+            {
+                if (shootGeoms != null && shootGeoms.Count > 0)
+                {
+                    Point3d cam = vp.CameraLocation;
+                    foreach (double f in cand)
+                    {
+                        Point3d pt = nc.PointAtLength(len * f);
+                        double tol = cam.DistanceTo(pt) * 0.01 + 1e-6;
+                        var ray = new Rhino.Geometry.Ray3d(cam, pt - cam);
+                        Point3d[] hits = Rhino.Geometry.Intersect.Intersection.RayShoot(ray, shootGeoms, 1);
+                        bool occ = hits != null && hits.Length > 0 && cam.DistanceTo(hits[0]) < cam.DistanceTo(pt) - tol;
+                        if (occ) bad.Add(f); else good.Add(f);
+                    }
+                }
+            }
+            catch { }
+            if (good.Count == 0 && bad.Count == 0) { good.Add(0.25); good.Add(0.5); good.Add(0.75); }
+            var use = new System.Collections.Generic.List<double>();
+            foreach (double f in good) { if (use.Count < 3) use.Add(f); }
+            foreach (double f in bad) { if (use.Count < 3) use.Add(f); }
+            while (use.Count < 3) use.Add(use[0]);
             var pts = new string[3];
-            double[] fr = { 0.25, 0.5, 0.75 };
             for (int k = 0; k < 3; k++)
             {
-                Point3d wp = nc.PointAtLength(len * fr[k]);
+                Point3d wp = nc.PointAtLength(len * use[k]);
                 string s = "x";
                 try
                 {
@@ -636,7 +800,7 @@ namespace PatchFillPattern
                 catch { }
                 pts[k] = s;
             }
-            sb.AppendLine("PICKCURVE " + string.Join(" ", pts) + "  #" + tag);
+            sb.AppendLine("PICKCURVE " + string.Join(" ", pts) + "  #" + tag + " vis" + good.Count + "/" + cand.Length);
         }
 
         /// <summary>
@@ -644,6 +808,12 @@ namespace PatchFillPattern
         /// 缝隙 = 结果面参数边界采样 → 输入边界折线；偏差 = 结果面采样 → 参考几何最近点；
         /// 控制网/面数直读；耗时由驱动器记（面板生成时间无法从插件外拿）。
         /// </summary>
+        static void XnMeasureFlush(System.Text.StringBuilder sb, string outPath)
+        {
+            try { if (!string.IsNullOrEmpty(outPath)) File.AppendAllText(outPath, sb.ToString() + "\n", new System.Text.UTF8Encoding(false)); } catch { }
+            try { WriteReport(DefaultReportPath, sb); } catch { }
+        }
+
         static void RunXnMeasure(Dictionary<string, string> kv, string label)
         {
             var sb = new System.Text.StringBuilder("=== xnmeasure " + label + " ===\n");
@@ -651,27 +821,57 @@ namespace PatchFillPattern
             try
             {
                 RhinoDoc doc = RhinoDoc.ActiveDoc;
-                if (doc == null) { sb.AppendLine("no doc"); return; }
+                if (doc == null) { sb.AppendLine("no doc"); XnMeasureFlush(sb, outPath); return; }
+                // v11：拾取阶段隐藏过的 brep 先全部恢复可见（度量要用参考面/裸边）
+                int unrestored = 0;
+                foreach (RhinoObject o in doc.Objects)
+                {
+                    if (o != null && o.Geometry is Brep && !o.Attributes.Visible)
+                    { try { o.Attributes.Visible = true; o.CommitChanges(); unrestored++; } catch { } }
+                }
+                try { doc.Views.Redraw(); } catch { }
+                if (unrestored > 0) sb.AppendLine("breps restored=" + unrestored);
                 string edgeLayer = Get(kv, "xnm_edge_layer") ?? "bench1";
                 string refLayer = Get(kv, "xnm_ref_layer");
                 int liEdge = doc.Layers.Find(edgeLayer, true);
                 int liRef = string.IsNullOrEmpty(refLayer) ? -1 : doc.Layers.Find(refLayer, true);
                 sb.AppendLine("edgeLayer=" + edgeLayer + "(" + liEdge + ") refLayer=" + refLayer + "(" + liRef + ")");
 
-                // 输入边界 = edge 层 Brep 的裸边
+                // 输入边界 = edge 层 Brep 的洞圈（非 Outer 环；与 xnpick 同口径，无内环回退裸边）
                 var edgeList = new List<PatchFillEdge>();
+                // v18 诊断：度量时逐层对象数（查「edge 曲线丢失」）
+                try
+                {
+                    var lc = new System.Collections.Generic.Dictionary<string, int>();
+                    foreach (RhinoObject o in doc.Objects)
+                    {
+                        if (o == null || o.Attributes == null) continue;
+                        string ln = doc.Layers[o.Attributes.LayerIndex].Name;
+                        if (!lc.ContainsKey(ln)) lc[ln] = 0;
+                        lc[ln]++;
+                    }
+                    var parts = new List<string>();
+                    foreach (var kvp in lc) parts.Add(kvp.Key + "=" + kvp.Value);
+                    sb.AppendLine("docObjects=" + doc.Objects.Count + " perLayer: " + string.Join(" ", parts));
+                }
+                catch { }
                 foreach (RhinoObject o in doc.Objects)
                 {
                     if (o == null || o.Attributes == null || o.Attributes.LayerIndex != liEdge) continue;
+                    // v20：独立曲线也是合法边界（xnpickcurves 层的 dup 曲线 = 度量时的唯一边界副本）
+                    if (o.Geometry is Curve sc)
+                    { edgeList.Add(new PatchFillEdge(sc, null, -1, null, "bench-curve")); continue; }
                     Brep bp = o.Geometry as Brep;
                     if (bp == null) continue;
-                    Curve[] naked = null;
-                    try { naked = bp.DuplicateNakedEdgeCurves(true, true); } catch { naked = null; }
+                    Curve[] naked = ExtractHoleLoop(bp);
+                    if (naked == null || naked.Length == 0)
+                    { try { naked = bp.DuplicateNakedEdgeCurves(true, true); } catch { naked = null; } }
                     if (naked == null) continue;
                     for (int k = 0; k < naked.Length; k++)
                         edgeList.Add(new PatchFillEdge(naked[k], bp, -1, null, "bench-edge" + (k + 1)));
                 }
-                // 参考几何 = ref 层 Brep（若有）
+                // 参考几何 = ref 层 Brep（若有）。v24：创建过程可能重建层表导致索引失配 →
+                // 索引查不到时按「层名字符串」再扫一遍（只对 xnpickref 这类辅助层名成立）
                 Brep refBrep = null;
                 if (liRef >= 0)
                 {
@@ -682,18 +882,64 @@ namespace PatchFillPattern
                         if (bp != null && bp.Faces.Count > 0) { refBrep = bp; break; }
                     }
                 }
-                // 结果面 = 不属于任何 bench* 层的 Brep
+                if (refBrep == null && !string.IsNullOrEmpty(refLayer))
+                {
+                    int refCand = 0;
+                    foreach (RhinoObject o in doc.Objects)
+                    {
+                        if (o == null || o.Attributes == null || o.Geometry as Brep == null) continue;
+                        try
+                        {
+                            string ln2 = doc.Layers[o.Attributes.LayerIndex].Name;
+                            if (ln2 == refLayer) { refCand++; if (refBrep == null) refBrep = o.Geometry as Brep; }
+                        }
+                        catch { }
+                    }
+                    if (refCand > 0) sb.AppendLine("ref via name-scan: " + refCand + " candidates");
+                }
+                // 结果面 = 不属于任何 bench* 层的 Brep（辅助层 xnpickref/xnpickcurves 也不是结果）
                 Brep result = null;
+                Guid resultId = Guid.Empty;
                 foreach (RhinoObject o in doc.Objects)
                 {
                     if (o == null || o.Geometry as Brep == null || o.Attributes == null) continue;
                     string ln = doc.Layers[o.Attributes.LayerIndex].Name;
                     if (ln.StartsWith("bench", StringComparison.Ordinal)) continue;
                     if (ln == PatchFillCore.LayerPatch) continue;
+                    if (ln == "xnpickref" || ln == "xnpickcurves") continue;
                     result = o.Geometry as Brep;
+                    resultId = o.Id;
                 }
-                if (result == null || result.Faces.Count == 0) { sb.AppendLine("result surface NOT found"); return; }
-                if (edgeList.Count == 0) { sb.AppendLine("edge curves NOT found"); return; }
+                if (result == null || result.Faces.Count == 0) { sb.AppendLine("result surface NOT found"); XnMeasureFlush(sb, outPath); return; }
+                if (edgeList.Count == 0) { sb.AppendLine("edge curves NOT found"); XnMeasureFlush(sb, outPath); return; }
+                // v25：参考面最终兜底 = 除结果面外「包围盒最大」的 Brep（层表被创建过程重建后
+                // 索引/层名都可能失配；几何特征不依赖层，bench1-5 的参考面都是文档里最大的面）
+                if (refBrep == null)
+                {
+                    // 仅曲面参考适用（bench4 圆柱/bench5 球面）；平面板带洞的最近点法失真 → 保持未测。
+                    // 判据 = 「离结果面中心最近」的非平面 Brep（补面就长在参考面上）——
+                    // 比「最大包围盒」稳（文档里同时有球面与圆柱时不会选错）。
+                    Point3d rc = Point3d.Origin;
+                    try { rc = result.GetBoundingBox(true).Center; } catch { }
+                    double bestD = double.MaxValue;
+                    foreach (RhinoObject o in doc.Objects)
+                    {
+                        if (o == null || o.Attributes == null || o.Id == resultId) continue;
+                        Brep bp = o.Geometry as Brep;
+                        if (bp == null || bp.Faces.Count == 0) continue;
+                        try
+                        {
+                            bool planar = bp.Faces.Count == 1 && bp.Faces[0].IsPlanar();
+                            if (planar) continue;
+                            Point3d cp; ComponentIndex ci; double su, tv; Vector3d nn;
+                            if (!bp.ClosestPoint(rc, out cp, out ci, out su, out tv, 0.0, out nn)) continue;
+                            double dd = cp.DistanceTo(rc);
+                            if (dd < bestD) { bestD = dd; refBrep = bp; }
+                        }
+                        catch { }
+                    }
+                    if (refBrep != null) sb.AppendLine("ref via nearest-center: dist=" + bestD.ToString("0.###"));
+                }
 
                 double diag = 1;
                 {
@@ -760,12 +1006,7 @@ namespace PatchFillPattern
             {
                 sb.AppendLine("EXC: " + ex.GetType().Name + ": " + ex.Message);
             }
-            try
-            {
-                if (!string.IsNullOrEmpty(outPath)) File.AppendAllText(outPath, sb.ToString() + "\n", new System.Text.UTF8Encoding(false));
-            }
-            catch { }
-            WriteReport(DefaultReportPath, sb);
+            XnMeasureFlush(sb, outPath);
         }
 
         internal static void RunProbe(RhinoDoc doc, PatchFillSettings s, string savePath, string capturePath, string reportPath)
