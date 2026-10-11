@@ -1682,6 +1682,10 @@ namespace PatchFillPattern
             // T4b（2026-10-11）：G2 模式的带约束收敛更慢（实测轮3 仍降 40% 被 4 轮上限截断，
             // 偏差 0.577→0.343）→ G2 上限 6 轮；其余模式保持 4 轮。收敛判据仍是逐轮降幅。
             int maxRounds = s.Continuity >= 2 ? 6 : 4;
+            double tPre = sw.Elapsed.TotalMilliseconds;   // 循环前置（含 Reference 构建 / 盘状判据 / 节点构建）
+            // T5 诊断：分段计时（装配/求解/建面/度量/残差插结）——定位耗时大头用，写在轮日志末尾
+            double tAsm = 0, tSol = 0, tBld = 0, tMea = 0, tRes = 0;
+            var swT = new System.Diagnostics.Stopwatch();
             for (int round = 0; round < maxRounds; round++)
             {
                 var rows = new NormalEq(ctx.Nu * ctx.Nv);
@@ -1695,10 +1699,13 @@ namespace PatchFillPattern
                     for (int j = 0; j < ctx.Nv; j++) map[(ctx.Nu - 1) * ctx.Nv + j] = 0 * ctx.Nv + j;
                     rows.SetMap(map);
                 }
+                swT.Restart();
                 Assemble(ctx, rows, round == 0, extraUv, extraRef);
+                tAsm += swT.Elapsed.TotalMilliseconds;
                 rows.SealMapped();     // 消元变量没有行 → 对角线封 1（解为 0，Unmap 时用映射目标覆盖）
                 if (ctx.Disk) rows.RidgeMapped(1e-6);   // 盘状：消元封口行不参与 ridge 之外的加权，单独加固
 
+                swT.Restart();
                 double[] L;
                 if (!Cholesky(rows.A, rows.N, out L))
                 {
@@ -1709,6 +1716,7 @@ namespace PatchFillPattern
                 CholSolve(L, rows.N, rows.By);
                 CholSolve(L, rows.N, rows.Bz);
                 if (ctx.Disk) { rows.Unmap(rows.Bx); rows.Unmap(rows.By); rows.Unmap(rows.Bz); }
+                tSol += swT.Elapsed.TotalMilliseconds;
 
                 var cpNet = new Point3d[ctx.Nu, ctx.Nv];
                 for (int i = 0; i < ctx.Nu; i++)
@@ -1718,11 +1726,14 @@ namespace PatchFillPattern
                         cpNet[i, j] = new Point3d(rows.Bx[k], rows.By[k], rows.Bz[k]);
                     }
 
+                swT.Restart();
                 NurbsSurface srf = BuildNurbs(cpNet, ctx.U, ctx.V, ctx.Nu, ctx.Nv);
+                tBld += swT.Elapsed.TotalMilliseconds;
                 if (srf == null) { res.Error = "建面失败（" + (string.IsNullOrEmpty(LastBuildError) ? "未知" : LastBuildError) + "）"; break; }
                 lastCpNet = cpNet;
 
                 // 度量
+                swT.Restart();
                 double maxDev, rmsDev, boundaryDev; double[] gaps;
                 Measure(srf, ctx, out maxDev, out rmsDev, out boundaryDev, out gaps);
                 int folded = CountFolded(srf, ctx);
@@ -1731,6 +1742,7 @@ namespace PatchFillPattern
                 // G2 度量（G1/G2 模式都测：G1 模式测出的角就是「不开 G2 行」的对照基线）
                 double sd = -1; int g2n = 0;
                 if (s.G1Distance >= 0 && s.Continuity >= 1 && ctx.Ref.Any) sd = SecondDiffAngle(srf, ctx, out g2n);
+                tMea += swT.Elapsed.TotalMilliseconds;
 
                 if (round == 0) res.FirstRoundDeviation = maxDev;
 
@@ -1789,6 +1801,7 @@ namespace PatchFillPattern
                 // 不整体抬控制点数（XNURBS 的 47 个导出里没有任何 knot/insert/refine，这是我们的差异点）
                 // ⚠ G2 模式停用：权重 100 的曲率带已接管带内形状，插结会重建节点向量、让环带行的
                 //   落点与二阶差分行错位（实测轮 3 偏差 2.08→4.40、G1 0.53°→1.35° 的振荡根源）
+                swT.Restart();
                 if (ctx.Ref.Any && round >= 1 && maxDev > ctx.Diag * 0.002 && round < maxRounds - 1 && s.Continuity < 2)
                 {
                     int ak = AddAdaptiveKnots(srf, ctx);
@@ -1801,6 +1814,7 @@ namespace PatchFillPattern
                             "      ↳ 局部插结 {0} 个 → 控制网 {1}×{2}（在误差最大的参数位置插，不平摊）", ak, ctx.Nu, ctx.Nv));
                     }
                 }
+                tRes += swT.Elapsed.TotalMilliseconds;
 
                 // 残差驱动：误差大的地方补参考采样点
                 bool improved = lastDev > 1e-300 && maxDev < lastDev * 0.95;
@@ -1814,11 +1828,17 @@ namespace PatchFillPattern
                     if (improve > 0.05 && (lastDev - maxDev) > ctx.Diag * 1e-4) res.WarnFlags |= WarnNotConverged;
                     break;
                 }
+                swT.Restart();
                 int added = AddResidualRows(srf, ctx, extraUv, extraRef, maxDev);
+                tRes += swT.Elapsed.TotalMilliseconds;
                 res.Rounds = round + 1;
                 if (added == 0) break;
                 if (round > 0 && !improved && improve < 0.02) break;
             }
+            double tLoopEnd = sw.Elapsed.TotalMilliseconds;
+            res.RoundLog.Add(string.Format(CultureInfo.InvariantCulture,
+                "耗时明细(ms)：前置 {0:0.#} · 循环 {1:0.#}（装配 {2:0.#} · 求解 {3:0.#} · 建面 {4:0.#} · 度量 {5:0.#} · 残差/插结 {6:0.#}）（T5 诊断）",
+                tPre, tLoopEnd - tPre, tAsm, tSol, tBld, tMea, tRes));
 
             if (best == null)
             {
@@ -1879,6 +1899,9 @@ namespace PatchFillPattern
             if (s.UvDirection != 0)
                 res.Note = (res.Note ?? "") + " UV 方向 = 自动（当前实现与「曲线法线」等效；曲线法线 = 边界切向 × 相邻面法向定 u/v 基向）。";
             res.Seconds = sw.Elapsed.TotalSeconds;
+            res.RoundLog.Add(string.Format(CultureInfo.InvariantCulture,
+                "耗时明细·收尾 {0:0.#}ms（总 {1:0.#}ms）（T5 诊断）",
+                sw.Elapsed.TotalMilliseconds - tLoopEnd, sw.Elapsed.TotalMilliseconds));
             report = BuildReport(res, ctx, edges);
             return res;
         }
@@ -2716,8 +2739,9 @@ namespace PatchFillPattern
         static int AddResidualRows(NurbsSurface srf, Ctx ctx, List<Point2d> extraUv, List<Point3d> extraRef, double maxDev)
         {
             if (srf == null || !ctx.Ref.Any) return 0;
-            // 残差轮网格：维持 v1 口径（min(61, 3·Nu)）—— 21×21 的 T2 压缩实测会让球冠迭代振荡
-            //（轮 2→3 偏差 1.1→2.7、折叠 4）；T2 的提速由参考采样缓存 + 达标早退 + 盘状跳基面承担
+            // 残差轮网格：维持 v1 口径（min(61, 3·Nu)）。T5 实测：45 网格上限会改变补点分布
+            // → 偏差退化（0.220→0.286）且度量段异常放大（216ms）→ **回退到 61**；
+            // T5 的净收益只保留「便宜过滤前移」（同一收敛路径，纯省 Closest 调用）。
             int g = Math.Max(15, Math.Min(61, 3 * ctx.Nu));
             // thr 绝对下限 diag*1e-5（旧 1e-4）：均匀节点修好后一轮就能到 0.0008 级，
             // 1e-4 的下限让迭代在「已经挺准」的洞上不再触发（实测轮数掉到 1）→ 下限收紧，
@@ -2725,6 +2749,7 @@ namespace PatchFillPattern
             double thr = Math.Max(maxDev * 0.35, ctx.Diag * 1e-5);
             double cap = ctx.Diag * 0.75;
             Interval du = srf.Domain(0), dv = srf.Domain(1);
+            bool bandOn = ctx.S.Continuity >= 1 && ctx.G1Offset > 1e-12;
             int added = 0;
             for (int i = 0; i < g; i++)
             {
@@ -2732,15 +2757,9 @@ namespace PatchFillPattern
                 for (int j = 0; j < g; j++)
                 {
                     double v = j / (double)(g - 1);
-                    Point3d p;
-                    try { p = srf.PointAt(du.ParameterAt(u), dv.ParameterAt(v)); } catch { continue; }
-                    Point3d q; Vector3d nn; double d; bool atEdge;
-                    if (!ctx.Ref.Closest(p, cap, out q, out nn, out d, out atEdge)) continue;
-                    if (atEdge) continue;
-                    if (d <= thr) continue;
-                    // 连续性带内不放残差行（G1/G2）：带内由 G1 导数行 + 环带行（权重 100）接管，
-                    // 权重 10 的残差行在带内只会和曲率延续的二阶形状打架（实测轮 3 振荡根源之一）
-                    if (ctx.S.Continuity >= 1 && ctx.G1Offset > 1e-12)
+                    // T5：便宜的空间过滤先做，把 Closest 的调用量压下来 ——
+                    // ① 连续性带内（G1/G2）：带内由 G1 导数行 + 环带行接管，残差行会打架（实测振荡根源）
+                    if (bandOn)
                     {
                         double duU = CrossDu(ctx, 0, u, ctx.G1Offset);
                         double dvV = CrossDu(ctx, 3, v, ctx.G1Offset);
@@ -2748,13 +2767,20 @@ namespace PatchFillPattern
                         bool inBand = ctx.Disk ? (v < 2.2 * duU) : (vv < 2.2 * duU || uu < 2.2 * dvV);
                         if (inBand) continue;
                     }
-                    // 太靠近已有补点就跳过（避免重复行把系统搞病态）
+                    // ② 太靠近已有补点（避免重复行把系统搞病态）
                     bool near = false;
                     for (int k = extraUv.Count - 1; k >= 0 && k > extraUv.Count - 60; k--)
                     {
                         if (Math.Abs(extraUv[k].X - u) < 0.02 && Math.Abs(extraUv[k].Y - v) < 0.02) { near = true; break; }
                     }
                     if (near) continue;
+                    // ③ 通过过滤的点才付 Closest 的代价
+                    Point3d p;
+                    try { p = srf.PointAt(du.ParameterAt(u), dv.ParameterAt(v)); } catch { continue; }
+                    Point3d q; Vector3d nn; double d; bool atEdge;
+                    if (!ctx.Ref.Closest(p, cap, out q, out nn, out d, out atEdge)) continue;
+                    if (atEdge) continue;
+                    if (d <= thr) continue;
                     extraUv.Add(new Point2d(u, v));
                     extraRef.Add(q);
                     added++;

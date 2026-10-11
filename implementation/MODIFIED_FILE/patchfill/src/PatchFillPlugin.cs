@@ -1138,10 +1138,48 @@ namespace PatchFillPattern
                 int nu = 0, nv = 0;
                 try { var us = result.Faces[0].UnderlyingSurface() as NurbsSurface; if (us != null) { nu = us.Points.CountU; nv = us.Points.CountV; } } catch { }
 
+                // ⑤ G1 夹角（对拍口径，2026-10-11 补）：结果面边界采样点的面法向 vs 参考面最近点法向。
+                // 与我们自检 NormalAngle 同语义（结果面 vs 相邻面）。无参考面时不给数（-1）。
+                double g1deg = -1;
+                try
+                {
+                    if (refBrep != null)
+                    {
+                        Curve outer2 = null;
+                        try { outer2 = result.Faces[0].OuterLoop.To3dCurve(); } catch { }
+                        if (outer2 != null)
+                        {
+                            double len2 = outer2.GetLength();
+                            BrepFace rf2 = result.Faces[0];
+                            double worst = 0; int cnt2 = 0;
+                            for (int k = 0; k < 121; k++)
+                            {
+                                Point3d bp2 = outer2.PointAtLength(len2 * k / 120.0);
+                                double uu2, vv2;
+                                if (!rf2.ClosestPoint(bp2, out uu2, out vv2)) continue;
+                                Vector3d nRes = rf2.NormalAt(uu2, vv2);
+                                if (!nRes.IsValid || nRes.Length < 1e-12) continue;
+                                nRes.Unitize();
+                                Point3d cp; ComponentIndex ci; double su, tv; Vector3d nn2;
+                                if (!refBrep.ClosestPoint(bp2, out cp, out ci, out su, out tv, 0.0, out nn2)) continue;
+                                if (!nn2.IsValid || nn2.Length < 1e-12) continue;
+                                nn2.Unitize();
+                                double dot = Math.Abs(nRes * nn2);
+                                if (dot > 1.0) dot = 1.0;
+                                double ang = Math.Acos(dot) * 180.0 / Math.PI;
+                                if (ang > worst) worst = ang;
+                                cnt2++;
+                            }
+                            if (cnt2 > 0) g1deg = worst;
+                        }
+                    }
+                }
+                catch { }
+
                 sb.AppendLine(string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                    "METRIC gap={0:0.########} maxDev={1:0.########} rms={2:0.########} faces={3} cp={4}x{5}",
-                    gap, maxDev, rms, result.Faces.Count, nu, nv));
-                sb.AppendLine("note: G1 角度与耗时由驱动器阶段补（G1 需相邻面法向；耗时=创建按钮到生成的秒表）");
+                    "METRIC gap={0:0.########} maxDev={1:0.########} rms={2:0.########} faces={3} cp={4}x{5} g1deg={6:0.####}",
+                    gap, maxDev, rms, result.Faces.Count, nu, nv, g1deg));
+                sb.AppendLine("note: 耗时由驱动器阶段补（创建按钮到生成无外部信号，未测）");
             }
             catch (Exception ex)
             {
