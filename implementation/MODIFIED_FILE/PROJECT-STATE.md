@@ -801,6 +801,14 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - 安装器重建 **3808256 bytes / md5 `432eeb40abed6fb4a6c0fa04ea54e5c5`** → **Release v1.4.1**（id=410462264，附件回下载 md5 一致）；README×4 更新（v1.4.1 入口 + 按钮数 10 修正）；桌面 IVAN-CENTER.exe 已同步；commit `b8a4963` 已推送
 - 本机状态：PatternEmboss rh7/rh8 已 rename-swap 到位（功能=最新）；其余 9 插件源码未变、verify 字节差=构建批次差异（功能等价）；**用户 Rhino 运行中 → 安装器 guard 正确拒装，待关闭后重跑一次安装器即全同步**；验证工具 `run-emboss-check.ps1` / `verify-emboss.ps1`（绕 guard）保留于 implementation/
 
+### 20.2（2026-10-12 深夜）一键平滑升级：QuadRemesh 重构 → SubD → v1.4.2
+- 用户口径：「勾选一键平滑之后 是用QuadRemesh重构 调用QuadRemesh的参数面板出来调」→ 面板新增卡「一键平滑输出（QuadRemesh → SubD）」：启用 + 目标四边形数 / 自适应四边形数 / 目标边长 / 自适应尺寸 / 对称轴（无/X/Y/Z）/ 检测硬边（全部接线）
+- 管线：凹凸网格 → `Mesh.QuadRemesh(prm)` 四边形重构 → `SubD.CreateFromMesh` → 输出 SubD；失败逐级回退（QR → 直接 SubD → 网格）；预览=重构后网格，与生成共用（参数签名失效重算）
+- **关键坑**：`Mesh.QuadRemesh` 要求输入网格**已计算顶点法向**，否则静默返回 null（异常都没有）——探针 `qr=diag` 矩阵定位（球 OK / 浮雕全 null / 补法向后 OK）；Core 自动补 `Normals.ComputeNormals()`
+- Rhino7 TFM RhinoCommon 引用 7.0.20314 → **7.38**（`TargetEdgeLength` 属性需要；本机仅 Rhino 8.30，RH7 为编译保障）
+- 自检 32→**42/0 PASS**（用例9：重构 500→486 面 / 5000→4421 面 / 对称轴 / 自适应 / 重构后转 SubD）；runner=42
+- 安装器 **3840512 bytes / md5 `98124f64eb2204dae1748c3b8819a23e`** → **Release v1.4.2**（id=410481809，回下载 md5 一致）；README×4 更新；桌面已同步；commit `aa43d72` 已推送；探针新增 `qr=diag` 诊断矩阵
+
 ## 19. 第 10 个插件「多边补面 PatchFill」（2026-10-10 第三轮）——**已于 2026-10-12 按用户指令移除**
 
 > **⚠ 移除记录（2026-10-12）**：用户实测「不好用」，指令「砍掉第 10 个插件，然后更新 GH」。执行内容：删 `MODIFIED_FILE/patchfill/`（源码/构建产物）、`implementation/patchfill-*.ps1`、`patchfill-bench/`、`PATCHFILL-BENCH.md`、`XNURBS-ANALYSIS.md`、`xnurbs-re/`、`BASELINE/MODIFIED-PatchFill*`、桌面配套 3dm 与对照基准；从 runner/install-and-verify/refresh-payload-and-center/iconmake/PanelTheme×9/center 项目 全部摘除；卸载本机安装（注册表键已删，安装目录改名 `PatchFill.removed-20261012` 待 Rhino 关闭后删）。**项目回到 9 插件**（= AGENTS.md 记载的九个插件）。安装器重建：IVAN-CENTER.exe 3527168 bytes / md5 `fd568a3e616b9d6d7bd16180cecf9404`（v1.3.2）。以下为历史记录（仅供追溯，勿再引用为现状）。
