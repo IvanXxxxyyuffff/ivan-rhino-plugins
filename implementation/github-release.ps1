@@ -3,17 +3,13 @@ $repo = 'IvanXxxxyyuffff/ivan-rhino-plugins'
 $proxy = 'http://127.0.0.1:7897'
 $exe = 'E:\IVAN-LiquidGlass-preview\implementation\MODIFIED_FILE\stripe\out\center\IVAN-CENTER.exe'
 $helper = '!"C:/Program Files/Git/mingw64/bin/git-credential-manager.exe"'
-$tmp = Join-Path $env:TEMP 'ivan-rel'
+$tmp = Join-Path $env:TEMP 'ivan-rel2'
 New-Item -ItemType Directory -Force -Path $tmp | Out-Null
 
 $cred = ("protocol=https`nhost=github.com`n`n" | git -c credential.helper= -c "credential.helper=$helper" credential fill)
 $token = (($cred | Where-Object { $_ -like 'password=*' }) -replace '^password=', '')
-if (-not $token) { throw '拿不到 PAT' }
-Write-Output ("PAT 长度 {0}" -f $token.Length)
-
-$hdr = @('-H', "Authorization: Bearer $token", '-H', 'Accept: application/vnd.github+json',
-         '-H', 'X-GitHub-Api-Version: 2022-11-28', '-H', 'User-Agent: IVAN-RELEASE', '-x', $proxy,
-         '--ssl-no-revoke', '-sS')
+if (-not $token) { throw 'no PAT' }
+$H = @{ Authorization = "Bearer $token"; Accept = 'application/vnd.github+json'; 'X-GitHub-Api-Version' = '2022-11-28'; 'User-Agent' = 'IVAN-RELEASE' }
 
 $notes = @'
 ## 简体中文
@@ -36,21 +32,21 @@ Full self-test suite ALL-PASS for all 9 plugins.
 
 9 外掛全量自檢 ALL-PASS。
 '@
-$bodyObj = @{ tag_name = 'v1.3.2'; target_commitish = 'main'; name = 'v1.3.2 — 移除第 10 插件（多边补面），回到 9 插件版'; body = $notes; draft = $false; prerelease = $false }
-$bodyFile = Join-Path $tmp 'release.json'
-[IO.File]::WriteAllText($bodyFile, ($bodyObj | ConvertTo-Json -Depth 5), [Text.UTF8Encoding]::new($false))
 
-$resp = Join-Path $tmp 'resp.json'
-curl.exe @hdr -X POST "https://api.github.com/repos/$repo/releases" --data-binary "@$bodyFile" -o $resp
-$rel = [IO.File]::ReadAllText($resp, [Text.UTF8Encoding]::new($false)) | ConvertFrom-Json
-if (-not $rel.id) { Write-Output ([IO.File]::ReadAllText($resp)); throw '建 release 失败' }
-Write-Output ("release id={0} tag={1} url={2}" -f $rel.id, $rel.tag_name, $rel.html_url)
+$body = @{ tag_name = 'v1.3.2'; target_commitish = 'main'; name = 'v1.3.2 — 移除第 10 插件（多边补面），回到 9 插件版'; body = $notes; draft = $false; prerelease = $false } | ConvertTo-Json -Depth 5
+$rel = Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$repo/releases" -Headers $H -Proxy $proxy -TimeoutSec 60 -Body ([Text.Encoding]::UTF8.GetBytes($body)) -ContentType 'application/json'
+Write-Output ("release id={0} tag={1}" -f $rel.id, $rel.tag_name)
+if (-not $rel.id) { throw 'create failed' }
 
-$asset = Join-Path $tmp 'asset.json'
-$upUrl = "https://uploads.github.com/repos/$repo/releases/$($rel.id)/assets"
-curl.exe @hdr -X POST --url "$upUrl`?name=IVAN-CENTER.exe" -H 'Content-Type: application/octet-stream' --data-binary "@$exe" -o $asset
-$a = [IO.File]::ReadAllText($asset, [Text.UTF8Encoding]::new($false)) | ConvertFrom-Json
-if (-not $a.browser_download_url) { Write-Output ([IO.File]::ReadAllText($asset)); throw '传附件失败' }
+$up = "https://uploads.github.com/repos/$repo/releases/$($rel.id)/assets?name=IVAN-CENTER.exe"
+$a = Invoke-RestMethod -Method Post -Uri $up -Headers $H -Proxy $proxy -TimeoutSec 600 -InFile $exe -ContentType 'application/octet-stream'
 Write-Output ("asset {0} bytes state={1}" -f $a.size, $a.state)
-Write-Output ("下载地址：{0}" -f $a.browser_download_url)
-Write-Output ("本地 exe：{0} bytes  md5 {1}" -f (Get-Item $exe).Length, (Get-FileHash -LiteralPath $exe -Algorithm MD5).Hash.ToLower())
+Write-Output ("url {0}" -f $a.browser_download_url)
+
+# 回下载核对 md5
+$dl = Join-Path $tmp 'IVAN-CENTER.exe'
+Invoke-WebRequest -Uri $a.browser_download_url -OutFile $dl -Proxy $proxy -TimeoutSec 600
+$md5 = (Get-FileHash -LiteralPath $dl -Algorithm MD5).Hash.ToLower()
+$local = (Get-FileHash -LiteralPath $exe -Algorithm MD5).Hash.ToLower()
+Write-Output ("local md5 {0}" -f $local)
+Write-Output ("downloaded md5 {0}  match={1}" -f $md5, ($md5 -eq $local))
