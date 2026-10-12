@@ -205,8 +205,12 @@ namespace PatchFillPattern
             go.SubObjectSelect = true;
             if (pickMode == PickMode.Boundary)
             {
-                go.SetCommandPrompt("选择边界：一圈曲线 / 曲面边（可子物件选边；多选后回车结束）");
-                go.GeometryFilter = ObjectType.Curve | ObjectType.Brep | ObjectType.Surface | ObjectType.Extrusion;
+                go.SetCommandPrompt("选择边界：一圈曲线 / 曲面边（点曲面边 = 子物件选边；多选后回车结束）");
+                // 修复（2026-10-12 用户实测「选不到边界、整个物件被选进去」）：旧 filter 只允许
+                // Brep/Surface/Extrusion 整体 → 点子物件边永远命中不了边，点 brep 任意处整个物件入选。
+                // 子物件选边必须显式允许 ObjectType.Edge；整体物件不再作为拾取目标（预选整个 brep
+                // 展开裸边的便利保留在 PatchFillCommand 的预选路径里）。
+                go.GeometryFilter = ObjectType.Curve | ObjectType.EdgeFilter;
             }
             else
             {
