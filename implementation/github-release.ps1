@@ -13,35 +13,39 @@ $H = @{ Authorization = "Bearer $token"; Accept = 'application/vnd.github+json';
 
 $notes = @'
 ## 简体中文
-PatternEmboss（图案压花）两处改进：
-- 「选择曲面」按钮改成**红/绿状态胶囊**（未选择 = 红，已选择 = 绿），与其它插件拾取按钮口径一致
-- 输出新增「**SubD 平滑输出（细分曲面，一键平滑）**」勾选：生成的凹凸纹理由 Catmull-Clark 转换成 SubD 细分曲面对象（一键平滑）；不勾选仍输出网格
+PatternEmboss（图案压花）「一键平滑」升级为 **QuadRemesh 重构**：
+- 勾选「启用一键平滑」后：凹凸网格先经 **QuadRemesh** 四边形重构，再转 **SubD 细分曲面**输出
+- 新增「一键平滑输出（QuadRemesh → SubD）」参数卡：**目标四边形数 / 目标边长 / 自适应尺寸 / 对称轴 / 检测硬边**全部可调，预览与生成共用（改参数即时重算）
+- 修复：QuadRemesh 需要输入网格已计算顶点法向（否则静默失败），已自动补齐；失败时按「QuadRemesh → 直接 SubD → 网格」逐级回退
 
-10 插件全量自检 ALL-PASS（PatternEmboss 32/0）。
+PatternEmboss 自检 42/0 PASS（新增用例9：重构成功 / 面数随目标接线 / 对称轴 / 自适应 / 重构结果转 SubD）。
 
 ## English
-Two improvements to PatternEmboss:
-- The "Select surface" button now uses the **red/green state pill** (red = nothing selected, green = selected), consistent with the pick buttons in the other plugins.
-- New output option "**SubD smooth output (subdivision surface, one-click smoothing)**": the generated embossed mesh is converted to a Catmull-Clark SubD object; leave unchecked to output a mesh.
+PatternEmboss "one-click smooth" now runs a **QuadRemesh rebuild**:
+- When "Enable one-click smooth" is checked, the embossed mesh is first rebuilt as quads with **QuadRemesh**, then converted to a **SubD** subdivision surface.
+- New "One-click smooth output (QuadRemesh → SubD)" card: **target quad count / target edge length / adaptive size / symmetry axis / detect hard edges**, all adjustable; live preview and output share the same parameters.
+- Fix: QuadRemesh requires computed vertex normals on the input mesh (it fails silently otherwise); this is now handled automatically, with staged fallback (QuadRemesh → plain SubD → mesh).
 
-Full self-test suite ALL-PASS for all 10 plugins (PatternEmboss 32/0).
+PatternEmboss self-test 42/0 PASS.
 
 ## 日本語
-PatternEmboss の 2 点を改善：
-- 「サーフェスを選択」ボタンを**赤/緑の状態ピル**に（未選択=赤、選択済み=緑、他プラグインと同口径）
-- 出力に「**SubD スムース出力（サブディビジョン、ワンクリック平滑）**」を追加（Catmull-Clark で SubD に変換）
+PatternEmboss の「ワンクリックスムーズ」が **QuadRemesh 再構築**に：
+- 「ワンクリックスムーズを有効化」で、凹凸メッシュを **QuadRemesh** で四角形に再構築してから **SubD** に変換
+- 新カード「ワンクリックスムーズ出力（QuadRemesh → SubD）」：**ターゲット四角形数 / 目標エッジ長 / 適応サイズ / 対称軸 / ハードエッジ検出**を調整可能
+- 修正：QuadRemesh は入力メッシュの頂点法線が必要（ないと無言で失敗）。自動補正 + 段階フォールバック（QuadRemesh → SubD → メッシュ）
 
-全文プラグイン全自検 ALL-PASS。
+PatternEmboss 自検 42/0 PASS。
 
 ## 繁體中文
-PatternEmboss（圖案壓花）兩處改進：
-- 「選擇曲面」按鈕改為**紅/綠狀態膠囊**（未選 = 紅、已選 = 綠），與其它外掛拾取按鈕同口徑
-- 輸出新增「**SubD 平滑輸出（細分曲面，一鍵平滑）**」勾選：凹凸網格轉 Catmull-Clark SubD 物件；不勾選仍輸出網格
+PatternEmboss（圖案壓花）「一鍵平滑」升級為 **QuadRemesh 重構**：
+- 勾選「啟用一鍵平滑」後：凹凸網格先經 **QuadRemesh** 四邊形重構，再轉 **SubD 細分曲面**輸出
+- 新增「一鍵平滑輸出（QuadRemesh → SubD）」參數卡：**目標四邊形數 / 目標邊長 / 自適應尺寸 / 對稱軸 / 檢測硬邊**全部可調
+- 修復：QuadRemesh 需要輸入網格已計算頂點法向（否則靜默失敗），已自動補齊；失敗時逐級回退（QuadRemesh → 直接 SubD → 網格）
 
-10 外掛全量自檢 ALL-PASS（PatternEmboss 32/0）。
+PatternEmboss 自檢 42/0 PASS。
 '@
 
-$body = @{ tag_name = 'v1.4.1'; target_commitish = 'main'; name = 'v1.4.1 — PatternEmboss：拾取按钮红/绿双态 + SubD 平滑输出（一键平滑）'; body = $notes; draft = $false; prerelease = $false } | ConvertTo-Json -Depth 5
+$body = @{ tag_name = 'v1.4.2'; target_commitish = 'main'; name = 'v1.4.2 — PatternEmboss：一键平滑 = QuadRemesh 重构 → SubD（参数面板可调）'; body = $notes; draft = $false; prerelease = $false } | ConvertTo-Json -Depth 5
 $rel = Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$repo/releases" -Headers $H -Proxy $proxy -TimeoutSec 60 -Body ([Text.Encoding]::UTF8.GetBytes($body)) -ContentType 'application/json'
 Write-Output ("release id={0} tag={1}" -f $rel.id, $rel.tag_name)
 if (-not $rel.id) { throw 'create failed' }

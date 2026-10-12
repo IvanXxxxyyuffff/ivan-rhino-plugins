@@ -33,7 +33,7 @@ $jobs = @(
   @{Name='DiamondFacet';Cmd='DiamondFacetSelfTest';Flag='run-diamondfacet-selftest.flag';Report='DiamondFacetSelfTest.txt';PassWith=86; PassWithout=86; Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''},
   @{Name='WaterRipple'; Cmd='WaterRippleSelfTest'; Flag='run-waterripple-selftest.flag'; Report='WaterRippleSelfTest.txt'; PassWith=101; PassWithout=101; Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''},
   @{Name='SurfaceUnify';Cmd='SurfaceUnifySelfTest';Flag='run-surfaceunify-selftest.flag';Report='SurfaceUnifySelfTest.txt';PassWith=135; PassWithout=130; Fail=9; HiddenDelta=0; UserFile='D:\UserData\Desktop\2234.3dm'; Screenshot=''},
-  @{Name='PatternEmboss'; Cmd='PatternEmbossSelfTest'; Flag='run-emboss-selftest.flag'; Report='PatternEmbossSelfTest.txt'; PassWith=32; PassWithout=32; Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''},
+  @{Name='PatternEmboss'; Cmd='PatternEmbossSelfTest'; Flag='run-emboss-selftest.flag'; Report='PatternEmbossSelfTest.txt'; PassWith=42; PassWithout=42; Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''},
   @{Name='VapeVolume';  Cmd='VapeVolumeSelfTest';  Flag='run-vape-selftest.flag';        Report='VapeVolumeSelfTest.txt';  PassWith=3;  PassWithout=3;  Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''}
 )
 

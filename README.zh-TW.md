@@ -12,7 +12,7 @@
 
 | 版本 | 下載 | 說明 |
 |---|---|---|
-| | **v1.4.1** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.1/IVAN-CENTER.exe) | Windows x64 安裝器（3.6 MB，md5 `432eeb40abed6fb4a6c0fa04ea54e5c5`）
+| | **v1.4.2** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.2/IVAN-CENTER.exe) | Windows x64 安裝器（3.7 MB，md5 `98124f64eb2204dae1748c3b8819a23e`）
 | v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 上一版（8 外掛，2.9 MB，md5 `4a7932421e68dfc91d64618c63f9f648`） | |
 
 1. **先關閉 Rhino**，再雙擊執行安裝器 → 自動安裝到 `%LOCALAPPDATA%\IVAN\plugins`（註冊 10 個外掛 + 寫入工具列）
@@ -34,7 +34,7 @@
 | 7 | 鑽石切面 **DiamondFacet** | `DiamondFacet` | 在平面/封閉曲線邊界內產生凹凸鑽石切面：隨機三角剖分 + 頂點隨機高低，可固定邊界；輸出「僅線框 / 面」二選一，面模式可**每個三角切面細分成一張網格片**並細分 |
 | 8 | 水波紋 **WaterRipple** | `WaterRipple` | 在曲面 / 多重曲面（當成一整個面）/ 封閉平面曲線邊界上產生水波紋：**有機水波 / 定向條帶 / 同心漣漪**三種波形可切換，波長、波高、波數、主方向、方向散佈、波峰形狀可調；**固定邊界 + 邊界過渡**（寬度 / 平滑度）；輸出網格面，勾「一鍵平滑」轉成**細分曲面（SubD）**（邊界自動打 crease、角不收） |
 | 9 | 單一曲面 **SurfaceUnify** | `SurfaceUnify` | 把複雜的多重曲面（或曲面 / 擠出體 / 網格）轉成**一張單一的開放式 NURBS 曲面**：邊界取原裸露邊界並完全逼近，內部按控制點網格**沿基面法向射線貼合**原曲面（控制點數 / 貼合強度 / 平滑度 / 最大貼合距離可調），內孔投影到結果面做修剪保留；面板即時預覽 + 最大 / 平均偏差與邊界偏差報告 |
-| 10 | 圖案壓花 **PatternEmboss** | `PatternEmboss` | 在曲面 / 多重曲面上生成**六邊形（蜂窩）/ 四邊形 / 菱形凹凸紋理**：單元尺寸、高度（正凸負凹）、槽寬、圓潤度、邊緣留邊、採樣密度、**加厚成殼**全部可調；沿面法向偏移建網格，即時預覽 |
+| 10 | 圖案壓花 **PatternEmboss** | `PatternEmboss` | 在曲面 / 多重曲面上生成**六邊形（蜂窩）/ 四邊形 / 菱形凹凸紋理**：單元尺寸、高度（正凸負凹）、槽寬、圓潤度、邊緣留邊、採樣密度、**加厚成殼**全部可調；沿面法向偏移建網格，即時預覽；勾「一鍵平滑」經 **QuadRemesh 重構**輸出**細分曲面（SubD）**（目標四邊形數 / 目標邊長 / 自適應尺寸 / 對稱軸 / 檢測硬邊可調） |
 
 每個外掛都附自檢指令（如 `VoronoiSelfTest`、`DiamondFacetSelfTest`），可在無介面下執行完整幾何斷言。
 

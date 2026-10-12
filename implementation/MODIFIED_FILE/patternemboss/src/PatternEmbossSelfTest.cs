@@ -53,6 +53,7 @@ namespace PatternEmboss
                 Case6_PanelSmoke(sb, ref pass, ref fail);
                 Case7_Thickness(sb, ref pass, ref fail);
                 Case8_SubD(sb, ref pass, ref fail);
+                Case9_QuadRemesh(sb, ref pass, ref fail);
             }
             catch (Exception ex)
             {
@@ -333,6 +334,55 @@ namespace PatternEmboss
             // 加厚成功 → 顶点数应显著多于面片网格（背面 + 侧壁）；失败回退也允许，但必须有说明
             Check(sb, ref pass, ref fail, r.Solid || r.Note.Contains("回退"),
                 "加厚成功 OR 明确回退说明（不静默丢壳）");
+        }
+
+        // ---------------------------------------------------------------- 用例9：QuadRemesh 重构（一键平滑第一步）
+        static void Case9_QuadRemesh(StringBuilder sb, ref int pass, ref int fail)
+        {
+            sb.AppendLine("--- 用例9：QuadRemesh 重构（一键平滑） ---");
+            Brep plate = MakePlate();
+            Check(sb, ref pass, ref fail, plate != null, "构造：60×40 平板");
+            if (plate == null) return;
+
+            var s = Base();
+            string rep;
+            PatternEmbossResult r = PatternEmbossCore.Generate(plate, s, out rep);
+            Check(sb, ref pass, ref fail, r.Mesh != null && r.Faces > 0,
+                string.Format(CultureInfo.InvariantCulture, "网格生成成功（{0} 面）", r.Faces));
+            if (r.Mesh == null || r.Faces == 0) return;
+
+            var s1 = Base(); s1.QrTargetQuadCount = 500;
+            Mesh q1 = PatternEmbossCore.QuadRemesh(r.Mesh, s1);
+            Check(sb, ref pass, ref fail, q1 != null,
+                "QuadRemesh 重构成功（非空）" + (q1 == null && PatternEmbossCore.LastQuadRemeshError.Length > 0 ? "｜错误：" + PatternEmbossCore.LastQuadRemeshError : ""));
+            if (q1 == null) return;
+            Check(sb, ref pass, ref fail, q1.IsValid, "重构网格 IsValid");
+            sb.AppendLine(string.Format(CultureInfo.InvariantCulture, "      [info] 目标 500 → {0} 面（原 {1} 面）", q1.Faces.Count, r.Faces));
+            Check(sb, ref pass, ref fail, q1.Faces.Count < r.Faces, "重构简化了面数");
+
+            var s2 = Base(); s2.QrTargetQuadCount = 5000;
+            Mesh q2 = PatternEmbossCore.QuadRemesh(r.Mesh, s2);
+            Check(sb, ref pass, ref fail, q2 != null && q2.Faces.Count > q1.Faces.Count,
+                string.Format(CultureInfo.InvariantCulture, "目标四边形数接线：5000 → {0} 面 > 500 → {1} 面{2}",
+                    q2 != null ? q2.Faces.Count : 0, q1.Faces.Count,
+                    q2 == null && PatternEmbossCore.LastQuadRemeshError.Length > 0 ? "｜错误：" + PatternEmbossCore.LastQuadRemeshError : ""));
+
+            var s3 = Base(); s3.QrTargetQuadCount = 500; s3.QrSymmetryAxis = 3;
+            Mesh q3 = PatternEmbossCore.QuadRemesh(r.Mesh, s3);
+            Check(sb, ref pass, ref fail, q3 != null && q3.IsValid,
+                "对称轴 Z 参数链路可用（重构成功）" + (q3 == null && PatternEmbossCore.LastQuadRemeshError.Length > 0 ? "｜错误：" + PatternEmbossCore.LastQuadRemeshError : ""));
+
+            var s4 = Base(); s4.QrAdaptiveCount = true;
+            Mesh q4 = PatternEmbossCore.QuadRemesh(r.Mesh, s4);
+            Check(sb, ref pass, ref fail, q4 != null && q4.IsValid,
+                "自适应四边形数参数链路可用" + (q4 == null && PatternEmbossCore.LastQuadRemeshError.Length > 0 ? "｜错误：" + PatternEmbossCore.LastQuadRemeshError : ""));
+
+            SubD subd = PatternEmbossCore.ToSubD(q1);
+            Check(sb, ref pass, ref fail, subd != null && subd.IsValid, "重构结果 → SubD 转换成功且 IsValid");
+            int fcount = 0;
+            try { fcount = subd != null ? subd.Faces.Count : 0; } catch { }
+            Check(sb, ref pass, ref fail, fcount > 0,
+                string.Format(CultureInfo.InvariantCulture, "SubD 面数 > 0（实测 {0}）", fcount));
         }
     }
 }

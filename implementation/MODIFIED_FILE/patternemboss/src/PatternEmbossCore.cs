@@ -18,6 +18,14 @@ namespace PatternEmboss
         public bool SubDOutput = false;  // 输出 = SubD 细分平滑曲面（一键平滑；代替纯网格）
         public double MmToModel = 1.0;   // 面板 mm → 模型单位
 
+        // ---- 一键平滑的 QuadRemesh 重构参数（勾选 SubDOutput 后生效）
+        public int QrTargetQuadCount = 8000; // 目标四边形数
+        public bool QrAdaptiveCount = false; // 自适应四边形数（勾选后忽略目标四边形数）
+        public double QrTargetEdgeLength = 0; // 目标边长 mm（0 = 自动）
+        public double QrAdaptiveSize = 0;    // 自适应尺寸 0..1（越大越随曲率自适应）
+        public int QrSymmetryAxis = 0;       // 对称轴 0=无 1=X 2=Y 3=Z
+        public bool QrDetectHardEdges = true;// 检测硬边（沿硬边布四边形）
+
         public PatternEmbossSettings Clone() { return (PatternEmbossSettings)MemberwiseClone(); }
 
         public static readonly string[] PatternNames = { "六边形", "四边形", "菱形" };
@@ -122,6 +130,32 @@ namespace PatternEmboss
                 return s;
             }
             catch { return null; }
+        }
+
+        /// <summary>一键平滑第一步：QuadRemesh 重拓扑（四边形重构，参数来自设置；失败返回 null）</summary>
+        public static string LastQuadRemeshError = "";
+        public static Mesh QuadRemesh(Mesh m, PatternEmbossSettings s)
+        {
+            LastQuadRemeshError = "";
+            if (m == null || m.Faces.Count == 0 || s == null) return null;
+            try
+            {
+                // QuadRemesh 要求输入网格已计算顶点法向（否则静默返回 null —— 实测 Rhino 8.30）
+                try { m.Normals.ComputeNormals(); } catch { }
+                var prm = new QuadRemeshParameters();
+                prm.AdaptiveQuadCount = s.QrAdaptiveCount;
+                prm.AdaptiveSize = Math.Max(0.0, Math.Min(1.0, s.QrAdaptiveSize));
+                prm.DetectHardEdges = s.QrDetectHardEdges;
+                prm.SymmetryAxis = (QuadRemeshSymmetryAxis)Math.Max(0, Math.Min(3, s.QrSymmetryAxis));
+                if (s.QrTargetQuadCount > 0) prm.TargetQuadCount = s.QrTargetQuadCount;
+                double el = s.QrTargetEdgeLength * s.MmToModel;
+                if (el > 1e-9) prm.TargetEdgeLength = el;
+                Mesh q = m.QuadRemesh(prm);
+                if (q == null) { LastQuadRemeshError = "QuadRemesh 返回 null"; return null; }
+                if (!q.IsValid || q.Faces.Count == 0) { LastQuadRemeshError = "结果无效（IsValid=" + q.IsValid + " faces=" + q.Faces.Count + "）"; return null; }
+                return q;
+            }
+            catch (Exception ex) { LastQuadRemeshError = ex.GetType().Name + ": " + ex.Message; return null; }
         }
 
         // ============================================================ 单面生成
