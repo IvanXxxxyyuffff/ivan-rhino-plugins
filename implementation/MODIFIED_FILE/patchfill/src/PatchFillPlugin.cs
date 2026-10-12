@@ -284,7 +284,22 @@ namespace PatchFillPattern
                 ids.Add(objRef.ObjectId);
                 ComponentIndex ci = ComponentIndex.Unset;
                 try { ci = objRef.GeometryComponentIndex; } catch { ci = ComponentIndex.Unset; }
-                if (ci.ComponentIndexType != ComponentIndexType.InvalidType)
+                // 修复（2026-10-12 用户实测「选到的不是曲线/曲面边」）：曲面对象上点修剪边时，
+                // Rhino 的拾取可能返回 BrepTrim（不是 BrepEdge）——当场映射到所属边再存。
+                if (ci.ComponentIndexType == ComponentIndexType.BrepTrim)
+                {
+                    int ei = -1;
+                    try
+                    {
+                        Brep hb = objRef.Brep();
+                        if (hb != null && ci.Index >= 0 && ci.Index < hb.Trims.Count)
+                            ei = hb.Trims[ci.Index].Edge.EdgeIndex;
+                    }
+                    catch { ei = -1; }
+                    if (ei >= 0) picks.Add(new BoundaryRef(objRef.ObjectId, ComponentIndexType.BrepEdge, ei));
+                    else picks.Add(new BoundaryRef(objRef.ObjectId, ci.ComponentIndexType, ci.Index));
+                }
+                else if (ci.ComponentIndexType != ComponentIndexType.InvalidType)
                     picks.Add(new BoundaryRef(objRef.ObjectId, ci.ComponentIndexType, ci.Index));
                 else picks.Add(BoundaryRef.Whole(objRef.ObjectId));
             }
@@ -433,6 +448,18 @@ namespace PatchFillPattern
                             try { closed2 = plate.Edges[i].IsClosed; } catch { }
                             sb2.AppendLine(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                                 "edge[{0}] len={1:0.###} closed={2} → ok={3} {4}", i, elen, closed2, ok2, ok2 ? "" : ("why=" + why2)));
+                        }
+                        // BrepTrim 用例（复现用户场景：曲面对象点修剪边 → Rhino 可能给 BrepTrim）
+                        sb2.AppendLine("trims=" + plate.Trims.Count);
+                        for (int ti = 0; ti < plate.Trims.Count; ti++)
+                        {
+                            var ciT = new ComponentIndex(ComponentIndexType.BrepTrim, ti);
+                            PatchFillEdge peT = null; string whyT = null;
+                            bool okT = false;
+                            try { okT = PatchFillCore.ResolveEdgeFromComponent(po, ciT, out peT, out whyT); } catch (Exception exT) { whyT = "EXC " + exT.Message; }
+                            int mapped = -1;
+                            try { mapped = plate.Trims[ti].Edge.EdgeIndex; } catch { }
+                            sb2.AppendLine("trim[" + ti + "] → edge#" + mapped + " ok=" + okT + (okT ? "" : (" why=" + whyT)));
                         }
                     }
                 }

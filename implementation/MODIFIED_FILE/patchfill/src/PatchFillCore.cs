@@ -169,8 +169,11 @@ namespace PatchFillPattern
             edge = null; why = "";
             if (obj == null) { why = "对象已删除"; return false; }
 
-            // ① 子物件边（曲面边）
-            if (ci.ComponentIndexType == ComponentIndexType.BrepEdge)
+            // ① 子物件边（曲面边）；BrepTrim 也接受并映射到所属边 —— 曲面对象上点修剪边时
+            //    Rhino 的拾取可能返回 BrepTrim 而不是 BrepEdge（2026-10-12 用户实测
+            //    「选到的不是曲线/曲面边」的根因；trim 索引和边索引不是一个编号空间）。
+            if (ci.ComponentIndexType == ComponentIndexType.BrepEdge
+                || ci.ComponentIndexType == ComponentIndexType.BrepTrim)
             {
                 Brep host = null;
                 try { host = obj.Geometry as Brep; } catch { host = null; }
@@ -178,18 +181,25 @@ namespace PatchFillPattern
                 {
                     try { host = Brep.TryConvertBrep(obj.Geometry); } catch { host = null; }
                 }
-                if (host == null || ci.Index < 0 || ci.Index >= host.Edges.Count)
+                int ei = ci.Index;
+                if (ci.ComponentIndexType == ComponentIndexType.BrepTrim)
+                {
+                    ei = -1;
+                    if (host != null && ci.Index >= 0 && ci.Index < host.Trims.Count)
+                    { try { ei = host.Trims[ci.Index].Edge.EdgeIndex; } catch { ei = -1; } }
+                }
+                if (host == null || ei < 0 || ei >= host.Edges.Count)
                 {
                     why = "曲面边无效（索引越界或对象不是曲面）";
                     return false;
                 }
                 Curve c = null;
-                try { c = host.Edges[ci.Index].DuplicateCurve(); } catch { c = null; }
+                try { c = host.Edges[ei].DuplicateCurve(); } catch { c = null; }
                 if (c == null || !c.IsValid) { why = "这条边的曲线无效"; return false; }
                 int[] faces = null;
-                try { faces = host.Edges[ci.Index].AdjacentFaces(); } catch { faces = null; }
-                edge = new PatchFillEdge(c, host, ci.Index, faces,
-                    Describe(obj) + " · 边" + (ci.Index + 1));
+                try { faces = host.Edges[ei].AdjacentFaces(); } catch { faces = null; }
+                edge = new PatchFillEdge(c, host, ei, faces,
+                    Describe(obj) + " · 边" + (ei + 1));
                 return true;
             }
 
