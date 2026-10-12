@@ -17,25 +17,26 @@ $hdr = @('-H', "Authorization: Bearer $token", '-H', 'Accept: application/vnd.gi
 
 $notes = @'
 ## 简体中文
-第 9 个插件 **多重曲面转单一曲面（SurfaceUnify）**：把复杂的多重曲面 / 曲面 / 挤出体 / 网格转成**一张单一的开放式 NURBS 曲面** —— 边界取原裸露边界并完全逼近，内部沿基面法向**射线贴合**原曲面（凹袋 / 兜形壳体也能贴住，不会扣一个盖子），内孔投影到结果面做修剪保留；面板实时预览并给出最大 / 平均 / 边界偏差。命令：`SurfaceUnify`。
+**本版移除第 10 个插件「多边补面 PatchFill」**（经实测评估后按用户决定下线），项目回到 **9 个插件**：表面条纹 / 烟油容量 / 参数化阵列 / 泰森多边形 / 径向渐变圆点 / 网格修复 / 钻石切面 / 水波纹 / 多重曲面转单一曲面。安装器会自动装好 9 个插件并写入工具条；此前装过 10 插件版的环境重装本版即可。
 
-同时修复 / 改进：
-- 水波纹「同心涟漪」由椭圆改回**正圆**（主方向 = 涟漪源偏移方向，0° = 源居中）
-- 第 9 个插件图标重做（带 S 形曲边的整片曲面 + iso 肋线），与其余 8 个同族
-- 9 插件全量自检 ALL-PASS（Voronoi 150 / Stripe 55 / Halftone 23 / RadialDots 37+1 / MeshFix 14 / DiamondFacet 86 / WaterRipple 101 / SurfaceUnify 114 / VapeVolume 3）
+9 插件全量自检 ALL-PASS（Voronoi 150 / Stripe 55 / Halftone 23 / RadialDots 37+1 / MeshFix 14 / DiamondFacet 86 / WaterRipple 101 / SurfaceUnify 135 / VapeVolume 3）。
 
 ## English
-New plugin **SurfaceUnify — polysurface to single surface**: converts a complex polysurface / surface / extrusion / mesh into **one single open NURBS surface**. The boundary follows the original naked edges exactly, and the interior is fitted by ray-casting along the base-surface normal (works for pouch / bowl shells — no "lid" artefacts). Inner holes are projected and trimmed. Live preview with max / RMS / boundary deviation. Command: `SurfaceUnify`.
+**This release removes the 10th plugin "PatchFill"** (retired after hands-on evaluation), bringing the bundle back to **9 plugins**: Surface Stripes / Vape Volume / Parametric Array / Voronoi / Radial Dots / Mesh Fix / Diamond Facet / Water Ripple / SurfaceUnify. The installer sets up all 9 plugins and writes the toolbar; just re-run it over an older 10-plugin install.
 
-Also fixed / improved: concentric ripples are now perfect circles (main direction = ripple source offset, 0° = centred); redesigned icon for the new plugin; full self-test suite ALL-PASS for all 9 plugins.
+Full self-test suite ALL-PASS for all 9 plugins.
 
 ## 日本語
-新プラグイン **SurfaceUnify（ポリサーフェス → 単一サーフェス）**：複雑なポリサーフェス / サーフェス / 押し出し / メッシュを**1 枚の開いた NURBS サーフェス**に変換します。境界は元の裸エッジに完全追従し、内部はベース面法線に沿った**レイキャストでフィット**（ポーチ / ボウル形状でも「蓋」になりません）。内側の穴は投影してトリム。最大 / 平均 / 境界偏差を表示。コマンド：`SurfaceUnify`。同心円リップルは正円に修正、アイコンも作り直しました。
+**本リリースで 10 番目のプラグイン「PatchFill」を削除**しました（実機評価の結果、ユーザー判断で終了）。バンドルは **9 プラグイン**に戻ります：サーフェスストライプ / ベイプ容量 / パラメトリック配列 / ボロノイ / ラジアルドット / メッシュ修復 / ダイヤモンドファセット / 水面リップル / SurfaceUnify。インストーラーは 9 プラグインを導入しツールバーを書き込みます。
+
+9 プラグイン全自検 ALL-PASS。
 
 ## 繁體中文
-第 9 個外掛 **多重曲面轉單一曲面（SurfaceUnify）**：把複雜的多重曲面 / 曲面 / 擠出體 / 網格轉成**一張單一的開放式 NURBS 曲面** —— 邊界取原裸露邊界並完全逼近，內部沿基面法向**射線貼合**原曲面（凹袋 / 兜形殼體也不會變成扣一個蓋子），內孔投影到結果面做修剪保留；面板即時預覽並給出最大 / 平均 / 邊界偏差。指令：`SurfaceUnify`。另修正水波紋「同心漣漪」為正圓、重做第 9 個外掛圖示。
+**本版移除第 10 個外掛「多邊補面 PatchFill」**（實測評估後依使用者決定下線），專案回到 **9 個外掛**：表面條紋 / 煙油容量 / 參數化陣列 / 泰森多邊形 / 徑向漸變圓點 / 網格修復 / 鑽石切面 / 水波紋 / 多重曲面轉單一曲面。安裝器會裝好 9 個外掛並寫入工具列；裝過 10 外掛版的環境重裝本版即可。
+
+9 外掛全量自檢 ALL-PASS。
 '@
-$bodyObj = @{ tag_name = 'v1.3.1'; target_commitish = 'main'; name = 'v1.3.1 — PatchFill 功能对齐 XNURBS（删内孔 + 满足精度要求 + 应用所有边界 + 优化四边面 + UV 方向）'; body = $notes; draft = $false; prerelease = $false }
+$bodyObj = @{ tag_name = 'v1.3.2'; target_commitish = 'main'; name = 'v1.3.2 — 移除第 10 插件（多边补面），回到 9 插件版'; body = $notes; draft = $false; prerelease = $false }
 $bodyFile = Join-Path $tmp 'release.json'
 [IO.File]::WriteAllText($bodyFile, ($bodyObj | ConvertTo-Json -Depth 5), [Text.UTF8Encoding]::new($false))
 

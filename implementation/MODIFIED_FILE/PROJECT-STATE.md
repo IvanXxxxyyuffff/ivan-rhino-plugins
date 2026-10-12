@@ -787,7 +787,9 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - ⚠ **GCM 弹「Select an account」的根因与修法**：Windows 凭据里存了两个 github.com 账号（`x-access-token` + `IvanXxxxyyuffff`），不指定用户名时 GCM 每次都问 → `git config --global credential.https://github.com.username IvanXxxxyyuffff` 钉死后 1.0s 无弹窗返回；本机全局 `credential.helper` 还指向已不存在的 PortableGit 路径，要改成 `!"C:/Program Files/Git/mingw64/bin/git-credential-manager.exe"`（带空格必须用 `!` + 引号）。
 - 发布脚本：`implementation/github-release.ps1`（PAT 走 `git credential fill` + REST API，附件回下载核对 md5）
 
-## 19. 第 10 个插件「多边补面 PatchFill」（2026-10-10 第三轮）
+## 19. 第 10 个插件「多边补面 PatchFill」（2026-10-10 第三轮）——**已于 2026-10-12 按用户指令移除**
+
+> **⚠ 移除记录（2026-10-12）**：用户实测「不好用」，指令「砍掉第 10 个插件，然后更新 GH」。执行内容：删 `MODIFIED_FILE/patchfill/`（源码/构建产物）、`implementation/patchfill-*.ps1`、`patchfill-bench/`、`PATCHFILL-BENCH.md`、`XNURBS-ANALYSIS.md`、`xnurbs-re/`、`BASELINE/MODIFIED-PatchFill*`、桌面配套 3dm 与对照基准；从 runner/install-and-verify/refresh-payload-and-center/iconmake/PanelTheme×9/center 项目 全部摘除；卸载本机安装（注册表键已删，安装目录改名 `PatchFill.removed-20261012` 待 Rhino 关闭后删）。**项目回到 9 插件**（= AGENTS.md 记载的九个插件）。安装器重建：IVAN-CENTER.exe 3527168 bytes / md5 `fd568a3e616b9d6d7bd16180cecf9404`（v1.3.2）。以下为历史记录（仅供追溯，勿再引用为现状）。
 
 用户口径：选一圈边界（曲线 / 曲面边，N ≥ 2，N≠4 也行）补出一张光滑的 NURBS 面；G0 位置必须精确、G1 相切可选、内部可给曲线/点约束；随后追加硬要求**「不能比 XNURBS 差，可以学它的算法并且超过」**（计划文件：`E:\.zcode\workspace\default\IVAN-第十个插件-多边补面-计划.md`，算法参考 `implementation/XNURBS-ANALYSIS.md`）。
 

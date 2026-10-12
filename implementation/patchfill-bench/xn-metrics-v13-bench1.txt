@@ -1,5 +1,0 @@
-=== xnmeasure m-bench1 ===
-edgeLayer=bench1(1) refLayer=(-1)
-docObjects=15 perLayer: 默认值=1 xnpickcurves=4 bench4=4
-edge curves NOT found
-

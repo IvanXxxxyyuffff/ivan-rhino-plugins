@@ -13,7 +13,7 @@
 
 | バージョン | ダウンロード | 備考 |
 |---|---|---|
-| | **v1.3.1** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.3.1/IVAN-CENTER.exe) | Windows x64 インストーラー（3.3 MB、md5 `ddf66a708a37a431e7ba337c1f2dad9f`）
+| | **v1.3.2** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.3.2/IVAN-CENTER.exe) | Windows x64 インストーラー（3.4 MB、md5 `fd568a3e616b9d6d7bd16180cecf9404`）
 | v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 前バージョン（8 プラグイン、2.9 MB、md5 `4a7932421e68dfc91d64618c63f9f648`） | |
 
 1. **Rhino を終了してから**インストーラーを実行 → `%LOCALAPPDATA%\IVAN\plugins` にインストール（10 プラグインを登録し、ツールバーにボタンを追加）
@@ -35,7 +35,6 @@
 | 7 | **DiamondFacet** | `DiamondFacet` | 平面/閉曲線境界内に凹凸のあるダイヤモンドカット面を生成：ランダム三角分割 + 頂点のランダム高低、境界固定オプション。出力は「ワイヤーフレームのみ / 面」の二択で、面モードでは**各三角ファセットが 1 枚のメッシュパッチ**になり細分化できます |
 | 8 | **WaterRipple** | `WaterRipple` | サーフェス / ポリサーフェス（1 枚の面として扱う）/ 閉平面境界に水面の波紋を生成：3 つの波形（**オーガニック / 方向性バンド / 同心円リップル**）を切替、波長・波高・波数・主方向・広がり・波頭形状を調整可；**境界固定**と境界ブレンド（幅 / 滑らかさ）；メッシュ出力、ワンクリックスムーズで **SubD**（境界に crease を入れて角を保つ） |
 | 9 | **SurfaceUnify** | `SurfaceUnify` | 複雑なポリサーフェス（またはサーフェス / 押し出し / メッシュ）を**1 枚の開いた NURBS サーフェス**へ変換：境界は元の裸エッジに完全追従、内部はベース面法線に沿ったレイキャストでフィット（分割数 / フィット強度 / スムーズ度 / 最大スナップ距離を調整可）、内側の穴は投影してトリム。ライブプレビューと最大 / 平均 / 境界偏差の表示 |
-| 10 | **PatchFill** | `PatchFill` | 境界曲線/サーフェス エッジのループ（N≥2）を選び**1 枚の滑らかな NURBS サーフェス**で補填：境界連続性 **G0 / G1 / G2**（G2=曲率）、隣接面の微分サンプリング、内部曲線/点拘束、**面積圧力エネルギー項**、**残差駆動の局所適応ノット挿入**、辺ごとギャップ+ビットマスク診断；ライブプレビュー |
 
 各プラグインには自己テストコマンド（例：`VoronoiSelfTest`、`DiamondFacetSelfTest`）があり、ヘッドレスで幾何アサーションを実行できます。
 

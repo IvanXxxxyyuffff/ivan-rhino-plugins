@@ -33,7 +33,6 @@ $jobs = @(
   @{Name='DiamondFacet';Cmd='DiamondFacetSelfTest';Flag='run-diamondfacet-selftest.flag';Report='DiamondFacetSelfTest.txt';PassWith=86; PassWithout=86; Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''},
   @{Name='WaterRipple'; Cmd='WaterRippleSelfTest'; Flag='run-waterripple-selftest.flag'; Report='WaterRippleSelfTest.txt'; PassWith=101; PassWithout=101; Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''},
   @{Name='SurfaceUnify';Cmd='SurfaceUnifySelfTest';Flag='run-surfaceunify-selftest.flag';Report='SurfaceUnifySelfTest.txt';PassWith=135; PassWithout=135; Fail=9; HiddenDelta=0; UserFile=''; Screenshot=''},
-  @{Name='PatchFill';   Cmd='PatchFillSelfTest';   Flag='run-patchfill-selftest.flag';   Report='PatchFillSelfTest.txt';   PassWith=159; PassWithout=159; Fail=0; HiddenDelta=0; UserFile=''; Screenshot='PatchFillPanel-smoke.png'},
   @{Name='VapeVolume';  Cmd='VapeVolumeSelfTest';  Flag='run-vape-selftest.flag';        Report='VapeVolumeSelfTest.txt';  PassWith=3;  PassWithout=3;  Fail=0; HiddenDelta=0; UserFile=''; Screenshot=''}
 )
 
