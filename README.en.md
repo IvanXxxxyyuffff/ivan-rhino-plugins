@@ -2,7 +2,7 @@
 
 [简体中文](README.md) | **English** | [日本語](README.ja.md) | [繁體中文](README.zh-TW.md)
 
-A .NET plugin suite for **Rhino 7 / Rhino 8**: **7 parametric modeling plugins** plus a glassmorphism-style **Plugin Center** (installer / launcher).
+A .NET plugin suite for **Rhino 7 / Rhino 8**: **10 plugins** plus a glassmorphism-style **Plugin Center** (installer / launcher).
 Every plugin is "one command + one parameter panel + live preview + headless self-test", with **no third-party dependencies** (only RhinoCommon / WinForms).
 
 > UI and interaction follow the in-repo *Design Consistency Spec*: unified glass cards, semantic controls
@@ -13,8 +13,8 @@ Every plugin is "one command + one parameter panel + live preview + headless sel
 
 | Version | Download | Notes |
 |---|---|---|
-| | **v1.4.3** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.3/IVAN-CENTER.exe) | Windows x64 installer (3.7 MB, md5 `c5aa76116efaf3ffe6f363315a34d259`)
-| v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | Previous release (8 plugins, 2.9 MB, md5 `4a7932421e68dfc91d64618c63f9f648`) | |
+| **v1.4.3** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.3/IVAN-CENTER.exe) | Windows x64 installer (3.7 MB, md5 `c5aa76116efaf3ffe6f363315a34d259`) |
+| v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | Previous release (8 plugins, 2.9 MB, md5 `4a7932421e68dfc91d64618c63f9f648`) |
 
 1. **Close Rhino first**, then run the installer → installs to `%LOCALAPPDATA%\IVAN\plugins` (registers 10 plugins + writes the toolbar)
 2. Open Rhino: 10 buttons appear on the toolbar — click one to open its panel
@@ -29,7 +29,7 @@ Every plugin is "one command + one parameter panel + live preview + headless sel
 | 1 | **StripeOnSurface** | `StripeOnSurface` | Generates stripes on surfaces/polysurfaces; ends can be rounded / flush / fully boundary-fitted (inset by edge distance, ends trimmed to the boundary); hard edges can be filleted; width, spacing, angle and edge distance are edited live in real mm |
 | 2 | **VapeVolume** | `VapeVolume`, `VapeVolumeWatch` | Computes container/tank capacity and fill volume, displayed live |
 | 3 | **HalftoneDots** (Parametric Texture) | `ParametricTexture` | 6 patterns (grid / staggered / hex / concentric rings / spiral / jittered) × 4 shapes (circle / triangle / square / hexagon); rings, spiral and jitter can spread from a picked center; shapes stay undistorted on curved surfaces and tile the whole face |
-| 4 | **VoronoiTexture** | `VoronoiTexture` | Voronoi cell relief texture inside a planar boundary: cell centers, cell-wall thickness, gradient object for density; output is either **wireframe** or **mesh**, and "one-click smooth" converts it into a **SubD (subdivision surface)** |
+| 4 | **VoronoiTexture** | `VoronoiTexture` | Voronoi cell relief texture inside a planar boundary (planar faces / closed planar curves, multi-select): cell size, relief depth, transition width, bump shape (flat-top / dome), regularity, random seed, wall thickness and edge flattening are adjustable; an optional gradient object controls density. Output is either **wireframe** or **mesh**, and "one-click smooth" converts it into a **SubD (subdivision surface)** |
 | 5 | **RadialDots** | `RadialDots` | Radially graded dot pattern: 4 arrays × 5 shapes, sized by peak position and falloff; overlapping shapes are boolean-unioned automatically |
 | 6 | **MeshFix** | `MeshFix` | One-click fix for "in shaded/rendered mode a complex trimmed surface shows only edges": sets the object's render-mesh maximum aspect ratio from 0 to 6 and rebuilds it. **No panel** — fixes the selection, or scans the whole file when nothing is selected |
 | 7 | **DiamondFacet** | `DiamondFacet` | Faceted diamond relief inside a planar/closed-curve boundary: random triangulation + random vertex heights, optional locked boundary; output is either **wireframe only** or **faces**, where each triangle facet becomes its own mesh patch and can be subdivided |
@@ -46,7 +46,8 @@ implementation/
   MODIFIED_FILE/                  plugin sources
     stripe/                       StripeOnSurface + Plugin Center (center: installer / launcher)
     voronoi/  halftone/  radialdots/  meshfix/  diamondfacet/
-                                  the other 5 plugins (each with dual-TFM Rhino7 + Rhino8 projects)
+    waterripple/  surfaceunify/  patternemboss/
+                                  the other 8 plugins (each with dual-TFM Rhino7 + Rhino8 projects)
     src/VapeVolume/               VapeVolume
     shared/PanelTheme.cs          shared custom controls + motion + icon rendering (byte-identical copies inside each plugin)
     iconmake/                     icon renderer (the whole linear icon family is generated from code, no bitmaps)
@@ -77,7 +78,7 @@ Artifacts land in each plugin's `out/rhino7|rhino8/` (the `.rhp` can be dragged 
 ```bash
 pwsh -File implementation/refresh-payload-and-center.ps1   # collect payload + build the Plugin Center exe
 pwsh -File implementation/install-and-verify.ps1           # silent install + assertions (registry / toolbar / payload byte-identical)
-pwsh -File implementation/run-native-selftests.ps1         # run all 7 self-tests (hidden window, no popups)
+pwsh -File implementation/run-native-selftests.ps1         # run all 10 self-tests (hidden window, no popups)
 pwsh -File implementation/run-native-selftests.ps1 -Only Voronoi   # single plugin
 ```
 

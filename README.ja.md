@@ -1,8 +1,8 @@
-# IVAN プラグインセンター · Rhino 7/10 プラグイン集
+# IVAN プラグインセンター · Rhino 7/8 プラグイン集
 
 [简体中文](README.md) | [English](README.en.md) | **日本語** | [繁體中文](README.zh-TW.md)
 
-**Rhino 7 / Rhino 8** 向けの .NET プラグイン集です：**7 つのパラメトリックモデリングプラグイン** + グラスモーフィズム調の**プラグインセンター**（インストーラー / ランチャー）。
+**Rhino 7 / Rhino 8** 向けの .NET プラグイン集です：**10 プラグイン** + グラスモーフィズム調の**プラグインセンター**（インストーラー / ランチャー）。
 各プラグインは「1 コマンド + パラメータパネル + リアルタイムプレビュー + ヘッドレス自己テスト」で構成され、**サードパーティ依存はありません**（RhinoCommon / WinForms のみ）。
 
 > UI と操作はリポジトリ内の『デザイン一貫性仕様』に準拠：統一されたガラス調カード、セマンティックコントロール
@@ -13,8 +13,8 @@
 
 | バージョン | ダウンロード | 備考 |
 |---|---|---|
-| | **v1.4.3** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.3/IVAN-CENTER.exe) | Windows x64 インストーラー（3.7 MB、md5 `c5aa76116efaf3ffe6f363315a34d259`）
-| v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 前バージョン（8 プラグイン、2.9 MB、md5 `4a7932421e68dfc91d64618c63f9f648`） | |
+| **v1.4.3** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.3/IVAN-CENTER.exe) | Windows x64 インストーラー（3.7 MB、md5 `c5aa76116efaf3ffe6f363315a34d259`） |
+| v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 前バージョン（8 プラグイン、2.9 MB、md5 `4a7932421e68dfc91d64618c63f9f648`） |
 
 1. **Rhino を終了してから**インストーラーを実行 → `%LOCALAPPDATA%\IVAN\plugins` にインストール（10 プラグインを登録し、ツールバーにボタンを追加）
 2. Rhino を起動：ツールバーに 10 個のボタンが表示され、クリックでパネルが開きます
@@ -29,7 +29,7 @@
 | 1 | **StripeOnSurface** | `StripeOnSurface` | サーフェス/ポリサーフェス上にストライプを生成。端部は面取り / フラット / 境界に完全追従（エッジ距離で内側にオフセットし、端部は境界形状でトリム）。ハードエッジはフィレット可能。幅・間隔・角度・エッジ距離を実寸 mm でリアルタイム調整 |
 | 2 | **VapeVolume** | `VapeVolume`, `VapeVolumeWatch` | ボトル/タンクの容量と注入量を計算し、リアルタイム表示 |
 | 3 | **HalftoneDots**（パラメトリックテクスチャ） | `ParametricTexture` | 6 配列（グリッド / 千鳥 / 六角 / 同心円 / スパイラル / ジッター）× 4 形状（円 / 三角 / 四角 / 六角）。同心円・スパイラル・ジッターは中心を指定して外側へ拡散。曲面でも図形が歪まず、面全体に自動で敷き詰め |
-| 4 | **VoronoiTexture** | `VoronoiTexture` | 平面境界内にボロノイ（Voronoi）セルの凹凸テクスチャを生成：セル中心点、セル壁の厚み、グラデーションオブジェクトで密度制御。出力は「ワイヤーフレーム / メッシュ」の二択で、「ワンクリックスムーズ」で**SubD（サブディビジョンサーフェス）**に変換 |
+| 4 | **VoronoiTexture** | `VoronoiTexture` | 平面境界内（平面 / 閉平面曲線を複数選択可）にボロノイ（Voronoi）セルの凹凸テクスチャを生成：セルサイズ、凹凸深さ、遷移幅、突起形状（フラットトップ / ドーム）、規則性、乱数シード、壁厚、境界フラット化を調整可。グラデーションオブジェクトで密度制御も可能。出力は「ワイヤーフレーム / メッシュ」の二択で、「ワンクリックスムーズ」で **SubD（サブディビジョンサーフェス）**に変換 |
 | 5 | **RadialDots** | `RadialDots` | 半径方向にグラデーションするドットパターン：4 配列 × 5 形状。サイズはピーク位置と減衰で変化。重なった図形は自動でブーリアン結合 |
 | 6 | **MeshFix** | `MeshFix` | 「シェーディング/レンダリング表示で複雑なトリムサーフェスがエッジ線だけになる」問題をワンクリック修復：オブジェクトのレンダーメッシュ「最大アスペクト比」を 0 → 6 に変更して再構築。**パネルなし**（選択があれば選択分、なければファイル全体をスキャン） |
 | 7 | **DiamondFacet** | `DiamondFacet` | 平面/閉曲線境界内に凹凸のあるダイヤモンドカット面を生成：ランダム三角分割 + 頂点のランダム高低、境界固定オプション。出力は「ワイヤーフレームのみ / 面」の二択で、面モードでは**各三角ファセットが 1 枚のメッシュパッチ**になり細分化できます |
@@ -46,7 +46,8 @@ implementation/
   MODIFIED_FILE/                  プラグインのソース
     stripe/                       StripeOnSurface + プラグインセンター（center：インストーラー / ランチャー）
     voronoi/  halftone/  radialdots/  meshfix/  diamondfacet/
-                                  残り 5 プラグイン（それぞれ Rhino7 + Rhino8 のデュアル TFM プロジェクト）
+    waterripple/  surfaceunify/  patternemboss/
+                                  残り 8 プラグイン（それぞれ Rhino7 + Rhino8 のデュアル TFM プロジェクト）
     src/VapeVolume/               VapeVolume
     shared/PanelTheme.cs          全パネル共通のカスタムコントロール + モーション + アイコン描画（各プラグイン内はバイト単位で同一のコピー）
     iconmake/                     アイコンレンダラー（リニアアイコン一式をコードから生成、ビットマップ素材なし）

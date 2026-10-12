@@ -2,7 +2,7 @@
 
 [简体中文](README.md) | [English](README.en.md) | [日本語](README.ja.md) | **繁體中文**
 
-一套在 **Rhino 7 / Rhino 8** 上執行的 .NET 外掛合集：**7 個參數化建模外掛** + 一個玻璃擬態風格的**外掛中心**（安裝器 / 啟動器）。
+一套在 **Rhino 7 / Rhino 8** 上執行的 .NET 外掛合集：**10 個外掛** + 一個玻璃擬態風格的**外掛中心**（安裝器 / 啟動器）。
 每個外掛都是「一條指令 + 一個參數面板 + 即時預覽 + 無介面自檢」，**不依賴任何第三方套件**（只用 RhinoCommon / WinForms）。
 
 > 介面與互動遵循倉庫內的《設計一致性規範》：統一的玻璃卡片面板、語意控制項（滑桿 + 數字框連動）、
@@ -12,8 +12,8 @@
 
 | 版本 | 下載 | 說明 |
 |---|---|---|
-| | **v1.4.3** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.3/IVAN-CENTER.exe) | Windows x64 安裝器（3.7 MB，md5 `c5aa76116efaf3ffe6f363315a34d259`）
-| v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 上一版（8 外掛，2.9 MB，md5 `4a7932421e68dfc91d64618c63f9f648`） | |
+| **v1.4.3** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.3/IVAN-CENTER.exe) | Windows x64 安裝器（3.7 MB，md5 `c5aa76116efaf3ffe6f363315a34d259`） |
+| v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 上一版（8 外掛，2.9 MB，md5 `4a7932421e68dfc91d64618c63f9f648`） |
 
 1. **先關閉 Rhino**，再雙擊執行安裝器 → 自動安裝到 `%LOCALAPPDATA%\IVAN\plugins`（註冊 10 個外掛 + 寫入工具列）
 2. 開啟 Rhino：工具列上出現 10 個按鈕，點按鈕開面板即可使用
@@ -28,7 +28,7 @@
 | 1 | 表面條紋 **StripeOnSurface** | `StripeOnSurface` | 在曲面/多重曲面上產生條紋；端部可選圓角 / 平齊 / 完全貼合邊界（依邊緣距離內縮、端部隨邊界裁剪）；硬邊可倒可調圓角；寬度、間距、角度、邊緣距離以真實 mm 即時調整 |
 | 2 | 煙油容量計算器 **VapeVolume** | `VapeVolume`、`VapeVolumeWatch` | 計算瓶/倉體容量與注入量並即時顯示 |
 | 3 | 參數化陣列紋理 **HalftoneDots** | `ParametricTexture` | 6 種陣列（網格/交錯/六邊/同心環/螺旋/抖動）× 4 種形狀（圓/三角/方/六邊）；同心環/螺旋/抖動可點選圓心向外擴散；曲面上圖形不變形、自動鋪滿整張面 |
-| 4 | 泰森多邊形紋 **VoronoiTexture** | `VoronoiTexture` | 在平面邊界內產生泰森多邊形（Voronoi）胞元凹凸紋理：中心點、細胞壁壁厚、漸變物件控疏密；輸出「線框 / 網格面」二選一，勾選「一鍵平滑」可輸出**細分曲面（SubD）** |
+| 4 | 泰森多邊形紋 **VoronoiTexture** | `VoronoiTexture` | 在平面邊界內（可多選平面 / 封閉平面曲線）產生泰森多邊形（Voronoi）胞元凹凸紋理：胞元尺寸、凹凸深度、過渡寬度、凸起形狀（平頂 / 穹頂）、規整度、隨機種子、壁厚、邊界收平可調，可選「漸變物件」控疏密；輸出「線框 / 網格面」二選一，勾選「一鍵平滑」可輸出**細分曲面（SubD）** |
 | 5 | 徑向漸變圓點 **RadialDots** | `RadialDots` | 依半徑漸變的圓點圖案：4 種陣列 × 5 種圖形，尺寸依峰值位置與衰減漸變；重疊圖形自動布林合併 |
 | 6 | 網格修復 **MeshFix** | `MeshFix` | 一鍵修復「著色/渲染模式下複雜修剪曲面只剩邊緣線、面體不顯示」：把物件渲染網格的「最大長寬比」由 0 改成 6 並重建；**無面板**，有選取就修選取的、沒選取自動掃描整份檔案 |
 | 7 | 鑽石切面 **DiamondFacet** | `DiamondFacet` | 在平面/封閉曲線邊界內產生凹凸鑽石切面：隨機三角剖分 + 頂點隨機高低，可固定邊界；輸出「僅線框 / 面」二選一，面模式可**每個三角切面細分成一張網格片**並細分 |
@@ -45,7 +45,8 @@ implementation/
   MODIFIED_FILE/                  外掛原始碼
     stripe/                       表面條紋外掛 + 外掛中心（center：安裝器 / 啟動器）
     voronoi/  halftone/  radialdots/  meshfix/  diamondfacet/
-                                  其餘 5 個外掛（各自 Rhino7 + Rhino8 雙 TFM 專案）
+    waterripple/  surfaceunify/  patternemboss/
+                                  其餘 8 個外掛（各自 Rhino7 + Rhino8 雙 TFM 專案）
     src/VapeVolume/               煙油容量計算器
     shared/PanelTheme.cs          全部面板共用的自繪控制項 + 動效 + 圖示算繪（各外掛內為逐位元組一致的副本）
     iconmake/                     圖示算繪器（整套線性圖示由程式碼產生，不用點陣素材）
