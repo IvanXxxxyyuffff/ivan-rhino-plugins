@@ -357,7 +357,6 @@ namespace PatternEmboss
                          ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
                 BackColor = Theme.Canvas;
             }
-            public void SetSub(string sub) { _sub = sub; Invalidate(); }
             protected override void OnPaint(PaintEventArgs e)
             {
                 Theme.DrawHeader(e.Graphics, new Rectangle(0, 0, Width, Height), _title, _sub, _kind);
@@ -491,11 +490,6 @@ namespace PatternEmboss
         }
 
         static double ClampD(double v, double lo, double hi) { return v < lo ? lo : (v > hi ? hi : v); }
-
-        public void SetPlace(string desc)
-        {
-            try { if (_header != null) _header.SetSub(desc); } catch { }
-        }
 
         public void SetTarget(string desc) { SetTarget(desc, true); }
 

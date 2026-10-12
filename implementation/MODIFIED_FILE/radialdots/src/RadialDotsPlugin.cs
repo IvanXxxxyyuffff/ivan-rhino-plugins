@@ -146,11 +146,6 @@ namespace RadialDotsPattern
             _panel = new RadialDotsPanel(settings, RadialDotsCore.PlaneDesc(_plane));
         }
 
-        internal static RadialDotsSession Active
-        {
-            get { return _live.Count > 0 ? _live[_live.Count - 1] : null; }
-        }
-
         public void Start()
         {
             foreach (RadialDotsSession s in _live.ToArray()) s.ClosePanel();

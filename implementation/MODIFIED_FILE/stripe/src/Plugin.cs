@@ -13,18 +13,6 @@ namespace StripeOnSurface
     [Guid("B7A1C3D2-5E64-4F7A-9B21-3C0D5E7F8A91")]
     public class StripeOnSurfacePlugin : PlugIn
     {
-        static StripeOnSurfacePlugin _instance;
-
-        public StripeOnSurfacePlugin()
-        {
-            _instance = this;
-        }
-
-        public static StripeOnSurfacePlugin Instance
-        {
-            get { return _instance; }
-        }
-
         public override PlugInLoadTime LoadTime
         {
             get { return PlugInLoadTime.AtStartup; }

@@ -41,7 +41,6 @@ namespace WaterRipplePattern
         public int Faces, Vertices;
         public double MinH, MaxH;      // 实际位移范围（模型单位）
         public double Wavelength, WaveHeight;
-        public double BoundaryDistance = -1;   // 到边界的最近距离（诊断）
         public double Seconds;
         public string Note = "";
         public string Error = "";
@@ -346,7 +345,7 @@ namespace WaterRipplePattern
 
             // ④ 位移：沿顶点法向，相位取参考平面 2D 坐标（多重曲面跨面连续）
             double k = 2.0 * Math.PI / wl;
-            double lo = double.MaxValue, hi = double.MinValue, minEdge = double.MaxValue;
+            double lo = double.MaxValue, hi = double.MinValue;
             int moved = 0, locked = 0;
             for (int i = 0; i < mesh.Vertices.Count; i++)
             {
@@ -355,7 +354,6 @@ namespace WaterRipplePattern
                 if (naked != null && naked.Length > 0)
                 {
                     double d = DistToPolylines(naked, p);
-                    if (d < minEdge) minEdge = d;
                     double t = fadeW > 1e-9 ? d / fadeW : 1.0;
                     if (t > 1) t = 1;
                     if (d <= 1e-9) locked++;                 // 边界顶点：硬锁（一点不动）
@@ -378,7 +376,6 @@ namespace WaterRipplePattern
             res.MaxH = hi == double.MinValue ? 0 : hi;
             res.Wavelength = wl;
             res.WaveHeight = s.WaveHeight;
-            res.BoundaryDistance = minEdge == double.MaxValue ? -1 : minEdge;
 
             // ⑤ 一键平滑 → 细分曲面
             if (s.Smooth)
@@ -488,13 +485,6 @@ namespace WaterRipplePattern
             }
             catch { }
             return string.IsNullOrEmpty(name) ? kind : (name + "（" + kind + "）");
-        }
-
-        internal static double Smoothstep(double t)
-        {
-            if (t <= 0) return 0;
-            if (t >= 1) return 1;
-            return t * t * (3.0 - 2.0 * t);
         }
 
         /// <summary>

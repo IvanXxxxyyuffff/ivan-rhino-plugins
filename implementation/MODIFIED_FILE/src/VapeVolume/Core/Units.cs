@@ -107,13 +107,6 @@ namespace VapeVolume.Core
             return s;
         }
 
-        /// <summary>立方厘米数值（与毫升数值相同，单独格式化便于阅读）。</summary>
-        public static string Cm3(double ml, int decimals)
-        {
-            decimals = Clamp(decimals, 0, 6);
-            return ml.ToString("N" + decimals.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture) + " cm³";
-        }
-
         public static int Clamp(int v, int lo, int hi)
         {
             if (v < lo) return lo;

@@ -114,11 +114,6 @@ namespace VapeVolume.Core
             return changed;
         }
 
-        public void InvalidateCache()
-        {
-            _cache.Clear();
-        }
-
         static bool SameAs(List<Item> a, List<Item> b)
         {
             if (ReferenceEquals(a, b)) return true;

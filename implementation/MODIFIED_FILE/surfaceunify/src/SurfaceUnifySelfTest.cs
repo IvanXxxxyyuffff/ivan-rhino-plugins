@@ -376,6 +376,7 @@ namespace SurfaceUnifyPattern
         static void Case4_LFold(RhinoDoc doc, StringBuilder sb, ref int pass, ref int fail)
         {
             sb.AppendLine("--- 用例4：L 形折板（90° 多重曲面） ---");
+            sb.AppendLine("      [note] 已知缺口：折角边界收敛未达 0.02（实测 ~0.25，迭代未降）；本用例 1 条失败断言为预期状态（见 PROJECT-STATE §20.4）。");
             Brep flat = Rect(0, 0, 20, 10, 0);                                  // 水平板 y ∈ [0,10]
             Brep wall = RectXZ(0, 10, 20, 10);                                  // 竖直墙 y = 10
             Brep poly = null;
@@ -413,6 +414,7 @@ namespace SurfaceUnifyPattern
         static void Case5_PlateWithHole(RhinoDoc doc, StringBuilder sb, ref int pass, ref int fail)
         {
             sb.AppendLine("--- 用例5：带内孔的方板（40×40，孔 R8） ---");
+            sb.AppendLine("      [note] 已知缺口：带孔板外边界逼近 ~0.0033 小幅超差；本用例 1 条失败断言为预期状态（见 PROJECT-STATE §20.4）。");
             Brep plate = Rect(0, 0, 40, 40, 0);
             Curve circle = null;
             try { circle = new Circle(new Plane(new Point3d(20, 20, 0), Vector3d.ZAxis), 8.0).ToNurbsCurve(); } catch { }
@@ -886,6 +888,7 @@ namespace SurfaceUnifyPattern
         static void Case13_Wrapped(RhinoDoc doc, StringBuilder sb, ref int pass, ref int fail)
         {
             sb.AppendLine("--- 用例13：包裹式（深兜袋 / 长袜）→ 必须走爬行参数化 ---");
+            sb.AppendLine("      [note] 已知限制：爬行参数化在 Core 中标注『实验，未完成（未收敛）』，自动路径不启用；本用例 6 条失败断言为预期状态（runner 以 Fail=9 记账，见 PROJECT-STATE §20.4）。");
             double R = 12.0, depth = 70.0;
             Mesh sock = Sock(R, depth, 48, 44);
             Check(sb, ref pass, ref fail, sock != null && sock.Faces.Count > 1000,
@@ -925,6 +928,7 @@ namespace SurfaceUnifyPattern
         static void Case14_CornerBoundary(RhinoDoc doc, StringBuilder sb, ref int pass, ref int fail)
         {
             sb.AppendLine("--- 用例14：带拐角的边界（L 形平板，矩形缺一角） ---");
+            sb.AppendLine("      [note] 已知缺口：凹角边界偏差 ~0.20 > 0.06；本用例 1 条失败断言为预期状态（见 PROJECT-STATE §20.4）。");
             Brep a = Rect(0, 0, 40, 20, 0);       // [0,40] × [0,20]
             Brep b = Rect(0, 20, 20, 40, 0);      // [0,20] × [20,40]（与 a 共边 y=20、x∈[0,20]）
             Brep poly = null;

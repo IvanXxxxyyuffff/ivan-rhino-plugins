@@ -10,10 +10,8 @@ namespace StripeOnSurface
     public class StripePreviewConduit : DisplayConduit
     {
         public List<Curve> Curves = new List<Curve>();
-        public bool ShowCenterline = false;
 
         static readonly Color StripeColor = Color.FromArgb(255, 0, 150, 136);
-        static readonly Color EdgeColor = Color.FromArgb(255, 230, 100, 30);
 
         protected override void DrawForeground(DrawEventArgs e)
         {

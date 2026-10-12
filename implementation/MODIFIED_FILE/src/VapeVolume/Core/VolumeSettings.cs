@@ -30,9 +30,6 @@ namespace VapeVolume.Core
         /// <summary>小数位。</summary>
         public int Decimals = 3;
 
-        /// <summary>是否在模型上放置文字点标注。</summary>
-        public bool Annotate = false;
-
         /// <summary>网格精度：0 = 快速，1 = 标准。</summary>
         public int Quality = 1;
 
@@ -132,7 +129,6 @@ namespace VapeVolume.Core
                 Mode = (VolumeMode)Fmt.Clamp(store.GetInteger("mode", (int)Mode), 0, ModeNames.Length - 1);
                 UnitIndex = Fmt.Clamp(store.GetInteger("unit", UnitIndex), 0, UnitNames.Length - 1);
                 Decimals = Fmt.Clamp(store.GetInteger("decimals", Decimals), 0, 6);
-                Annotate = store.GetInteger("annotate", Annotate ? 1 : 0) != 0;
                 Quality = Fmt.Clamp(store.GetInteger("quality", Quality), 0, 1);
                 RatePercent = Fmt.Clamp(store.GetInteger("rate", RatePercent), 50, 75);
                 RateAuto = store.GetInteger("rateauto", RateAuto ? 1 : 0) != 0;
@@ -158,7 +154,6 @@ namespace VapeVolume.Core
                 store.SetInteger("mode", (int)Mode);
                 store.SetInteger("unit", UnitIndex);
                 store.SetInteger("decimals", Decimals);
-                store.SetInteger("annotate", Annotate ? 1 : 0);
                 store.SetInteger("quality", Quality);
                 store.SetInteger("rate", Fmt.Clamp(RatePercent, 50, 75));
                 store.SetInteger("rateauto", RateAuto ? 1 : 0);

@@ -682,23 +682,6 @@ namespace WaterRipplePattern
             return false;
         }
 
-        /// <summary>某个参数行当前是否可调（自检用）</summary>
-        public bool ParamEnabled(string name)
-        {
-            if (string.IsNullOrEmpty(name)) return false;
-            foreach (Control card in Controls)
-            {
-                foreach (Control c in card.Controls)
-                {
-                    Label lab = c as Label;
-                    if (lab == null || string.IsNullOrEmpty(lab.Text)) continue;
-                    if (!lab.Text.StartsWith(name, StringComparison.Ordinal)) continue;
-                    return lab.Enabled;
-                }
-            }
-            return false;
-        }
-
         /// <summary>拾取按钮当前状态（true = 绿/已选可用，false = 红；自检用）</summary>
         public bool PickState
         {
@@ -709,12 +692,6 @@ namespace WaterRipplePattern
         public bool SmoothBlockVisible
         {
             get { return _smoothCheck != null && _smoothCheck.Visible; }
-        }
-
-        /// <summary>平滑参数当前是否可调（水波纹没有从属参数 → 恒 true；自检用）</summary>
-        public bool SmoothParamsEnabled
-        {
-            get { return _smoothCheck != null && _smoothCheck.Enabled; }
         }
 
         /// <summary>波形行的可用状态（自检用）：波数 / 主方向 / 方向散布</summary>

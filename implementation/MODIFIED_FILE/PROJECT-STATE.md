@@ -817,6 +817,15 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - **全机同步**（Rhino 关闭窗口期）：全量安装器 exit=0；payload↔已装 **10/10 逐字节一致**；注册表 8.0 **10/10**（7.0 键本机无 Rhino 7 属预期）；verify-emboss.ps1 GUID 清单修正为安装器真值 + 增 7.0 信息行
 - **遗留**：其余 9 插件同款旗标机制建议做同类加固（暴露面小：其旗标仅由受 guard 约束的全量脚本写入）
 
+### 20.4（2026-10-12 深夜）全量代码审查：死代码清理 + 已知限制登记 → v1.4.4
+- **审查方法**：10 插件全源码——23 工程强制 Rebuild（0 警告 0 失败）· 声明↔引用扫描 · 设置↔接线扫描 · 自检报告逐条 · 专项 grep（TODO/Obsolete/PanelTheme 副本 md5）
+- **删除死代码 19 处**（声明后零引用，13 文件）：stripe `Instance`/`ShowCenterline`/`EdgeColor`/`WorstTurnInfo`/`WorstTurnPoints` · halftone `FirstSelected` · radialdots `Active`/`SetPlace`/`HeaderBand.SetSub` · waterripple `ParamEnabled`/`SmoothParamsEnabled`/`Smoothstep`/`BoundaryDistance`（只写不读）· surfaceunify `MeshCentroid`/`JunctionDistance` · patternemboss `SetPlace`/`HeaderBand.SetSub` · VapeVolume `Cm3`/`InvalidateCache`/`Annotate`（空转设置，decl+load+save 三处）
+- **有意保留**：stripe 布尔刻槽 `Engraver.cs` + `Settings.Depth`（代码注释「保留，当前不使用」，仅自检用例4 触达）——接 UI 或下线待用户决定
+- **SurfaceUnify 9 条失败断言正式登记**（此前只体现在 runner Fail=9）：用例13 深兜袋/长袜 ×6（爬行参数化 Core 标注『实验，未完成（未收敛）』，自动路径不启用 → 输出近似盖板、面积比 0.0857）· 用例4 折角边界 0.2468>0.02 · 用例5 带孔板外边界 0.00325 · 用例14 凹角边界 0.1998>0.06；**自检 4 处用例头加 `[note]` 注记，断言与阈值未动**（不放水）
+- **RadialDots 1 条失败**（密集螺旋 8 对交叠 ≤0.35mm）维持「原已知残留」口径
+- **验证**：全量自检 **ALL-PASS（183.7s）逐项与清理前一致**：150/0 · 55/0 · 23/0 · 37/1 · 14/0 · 86/0 · 101/0 · 130/9 · 42/0 · 3/0
+- **发布**：安装器 **3841536 bytes / md5 `627537ce8a52b31f73e85d14949d7089`** → **Release v1.4.4**（id=410542712，回下载 md5 一致）；README×4 更新；已全量安装（exit=0，payload↔已装 10/10）
+
 ## 19. 第 10 个插件「多边补面 PatchFill」（2026-10-10 第三轮）——**已于 2026-10-12 按用户指令移除**
 
 > **⚠ 移除记录（2026-10-12）**：用户实测「不好用」，指令「砍掉第 10 个插件，然后更新 GH」。执行内容：删 `MODIFIED_FILE/patchfill/`（源码/构建产物）、`implementation/patchfill-*.ps1`、`patchfill-bench/`、`PATCHFILL-BENCH.md`、`XNURBS-ANALYSIS.md`、`xnurbs-re/`、`BASELINE/MODIFIED-PatchFill*`、桌面配套 3dm 与对照基准；从 runner/install-and-verify/refresh-payload-and-center/iconmake/PanelTheme×9/center 项目 全部摘除；卸载本机安装（注册表键已删，安装目录改名 `PatchFill.removed-20261012` 待 Rhino 关闭后删）。**项目回到 9 插件**（= AGENTS.md 记载的九个插件）。安装器重建：IVAN-CENTER.exe 3527168 bytes / md5 `fd568a3e616b9d6d7bd16180cecf9404`（v1.3.2）。以下为历史记录（仅供追溯，勿再引用为现状）。

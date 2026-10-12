@@ -214,25 +214,6 @@ namespace HalftonePattern
             return pts;
         }
 
-        /// <summary>文档里预选中的第一个可用物件（转不成 Brep 的忽略）</summary>
-        internal static ObjRef FirstSelected(RhinoDoc doc)
-        {
-            try
-            {
-                var objs = doc.Objects.GetSelectedObjects(false, false);
-                if (objs == null) return null;
-                foreach (RhinoObject o in objs)
-                {
-                    if (o == null || o.Id == Guid.Empty) continue;
-                    if (Brep.TryConvertBrep(o.Geometry) == null) continue;
-                    // 用 ObjRef(Guid)：Rhino 7 没有 ObjRef(RhinoDoc, Guid) 这个重载
-                    return new ObjRef(o.Id);
-                }
-            }
-            catch { }
-            return null;
-        }
-
         /// <summary>物件当前的位置（包围盒中心；每次现取 —— 物件移动后中心就变了）</summary>
         internal static Point3d ObjectCenter(RhinoDoc doc, Guid id)
         {

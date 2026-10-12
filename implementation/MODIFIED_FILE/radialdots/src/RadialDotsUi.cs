@@ -336,7 +336,6 @@ namespace RadialDotsPattern
                          ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
                 BackColor = Theme.Canvas;
             }
-            public void SetSub(string sub) { _sub = sub; Invalidate(); }
             protected override void OnPaint(PaintEventArgs e)
             {
                 Theme.DrawHeader(e.Graphics, new Rectangle(0, 0, Width, Height), _title, _sub, _kind);
@@ -487,11 +486,6 @@ namespace RadialDotsPattern
             if (Settings.Shape == 4) return "圆方交替：相邻图形一圆一方";
             if (Settings.Shape == 0) return "圆形：真圆弧输出";
             return "多边形：外接圆直径 = 直径参数";
-        }
-
-        public void SetPlace(string desc)
-        {
-            try { if (_header != null) _header.SetSub(desc); } catch { }
         }
 
         public void SetInfo(string text)

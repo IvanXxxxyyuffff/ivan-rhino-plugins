@@ -1303,23 +1303,6 @@ namespace SurfaceUnifyPattern
             return new Point3d(x / pts.Count, y / pts.Count, z / pts.Count);
         }
 
-        internal static Point3d MeshCentroid(Mesh m)
-        {
-            if (m == null) return Point3d.Origin;
-            double x = 0, y = 0, z = 0; int cnt = 0;
-            try
-            {
-                int stride = Math.Max(1, m.Vertices.Count / 400);
-                for (int i = 0; i < m.Vertices.Count; i += stride)
-                {
-                    Point3d p = m.Vertices.Point3dAt(i);
-                    x += p.X; y += p.Y; z += p.Z; cnt++;
-                }
-            }
-            catch { }
-            return cnt > 0 ? new Point3d(x / cnt, y / cnt, z / cnt) : Point3d.Origin;
-        }
-
         /// <summary>网格 → NURBS：CreateThroughPoints 按 u 慢变（points[i*vCount + j]）展平，插值过所有网格点</summary>
         internal static NurbsSurface BuildSurface(Point3d[,] g, int nu, int nv)
         {
@@ -1843,19 +1826,6 @@ namespace SurfaceUnifyPattern
                 taken.Add(best);
             }
             return moved;
-        }
-
-        /// <summary>集合里离 p 最近的交点距离（无交点返回 double.MaxValue）</summary>
-        internal static double JunctionDistance(List<Point3d> junctions, Point3d p)
-        {
-            if (junctions == null || junctions.Count == 0) return double.MaxValue;
-            double best = double.MaxValue;
-            for (int i = 0; i < junctions.Count; i++)
-            {
-                double d = junctions[i].DistanceTo(p);
-                if (d < best) best = d;
-            }
-            return best;
         }
 
         /// <summary>

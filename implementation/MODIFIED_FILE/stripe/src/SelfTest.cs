@@ -1225,68 +1225,6 @@ namespace StripeOnSurface
             return rs[rs.Count / 2];
         }
 
-        /// <summary>找出圆角后残余最大转角的位置及其两侧边长，用于定位「倒不掉的硬角」</summary>
-        static string WorstTurnInfo(List<StripeFaceResult> res, double minLen)
-        {
-            double worst = 0; string where = "-"; double e1 = 0, e2 = 0; int idx = -1; double wlen = 0;
-            foreach (StripeFaceResult r in res)
-                foreach (Curve c in r.Stripes)
-                {
-                    if (minLen > 0 && c.GetLength() < minLen) continue;
-                    Polyline pl;
-                    if (!c.TryGetPolyline(out pl)) continue;
-                    Point3d[] p = pl.ToArray();
-                    int n = p.Length;
-                    for (int i = 0; i < n; i++)
-                    {
-                        Point3d a = p[(i - 1 + n) % n], b = p[i], d = p[(i + 1) % n];
-                        Vector3d v1 = a - b, v2 = d - b;
-                        double l1 = v1.Length, l2 = v2.Length;
-                        if (l1 < 1e-4 || l2 < 1e-4) continue;
-                        if (!v1.Unitize() || !v2.Unitize()) continue;
-                        double turn = Math.PI - Math.Acos(Math.Max(-1.0, Math.Min(1.0, Dot(v1, v2))));
-                        if (turn > 2.8) continue;
-                        if (turn > worst) { worst = turn; where = b.ToString(); e1 = l1; e2 = l2; idx = i; wlen = c.GetLength(); }
-                    }
-                }
-            return string.Format("残余最大转角 {0:0.####} rad @ {1}，两侧边长 {2:0.###}/{3:0.###}（顶点序 {4}，所在条纹长 {5:0.#}）",
-                worst, where, e1, e2, idx, wlen);
-        }
-
-        /// <summary>把最大转角所在条纹、该顶点附近的折线点打出来</summary>
-        static string WorstTurnPoints(List<StripeFaceResult> res, double minLen)
-        {
-            double worst = 0; Point3d[] pp = null; int idx = -1;
-            foreach (StripeFaceResult r in res)
-                foreach (Curve c in r.Stripes)
-                {
-                    if (minLen > 0 && c.GetLength() < minLen) continue;
-                    Polyline pl;
-                    if (!c.TryGetPolyline(out pl)) continue;
-                    Point3d[] p = pl.ToArray();
-                    int n = p.Length;
-                    for (int i = 0; i < n; i++)
-                    {
-                        Point3d a = p[(i - 1 + n) % n], b = p[i], d = p[(i + 1) % n];
-                        Vector3d v1 = a - b, v2 = d - b;
-                        if (v1.Length < 1e-5 || v2.Length < 1e-5) continue;
-                        if (!v1.Unitize() || !v2.Unitize()) continue;
-                        double turn = Math.PI - Math.Acos(Math.Max(-1.0, Math.Min(1.0, Dot(v1, v2))));
-                        if (turn > 2.8) continue;
-                        if (turn > worst) { worst = turn; pp = p; idx = i; }
-                    }
-                }
-            if (pp == null) return "-";
-            int nn = pp.Length;
-            var sb = new System.Text.StringBuilder();
-            for (int k = -4; k <= 4; k++)
-            {
-                int i = ((idx + k) % nn + nn) % nn;
-                sb.AppendFormat("{0}{1:0.####},{2:0.####}  ", k == 0 ? "*" : "", pp[i].X, pp[i].Y);
-            }
-            return sb.ToString();
-        }
-
         static string RadiusList(List<double[]> pairs)
         {
             pairs.Sort((a, b) => a[0].CompareTo(b[0]));
