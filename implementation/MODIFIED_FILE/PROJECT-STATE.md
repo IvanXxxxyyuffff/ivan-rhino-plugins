@@ -795,6 +795,12 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - **交付**：双 TFM（Rhino7 net48 / Rhino8 net7）· 新 GUID（RH7 FD17B96E… / RH8 719FCC1D…）· 命令 `PatternEmboss` / `PatternEmbossPick` / `PatternEmbossSelfTest` / `PatternEmbossProbe` · 自检 **26/0**（平板六边形高度范围 / 球面法向偏移壳层 / 菱形负高 / 留边渐隐 / 确定性 / 面板烟测 / 加厚 Solid）· 图标 kind `emboss`（青蓝蜂窝，PanelTheme×11 + iconmake md5 全等）· 工具链全集成（runner/verify/refresh/Installer/csproj 嵌入）
 - **安装器**：IVAN-CENTER.exe 3803648 bytes / md5 `dd0acf55d7fcfcc16d8581c7bb426139`（10 插件版，v1.4.0）；安装核对 10/10 PASS
 
+### 20.1（2026-10-12 深夜）用户实测修复轮：红/绿双态 + SubD 平滑输出 → v1.4.1
+- 用户反馈：①「选择曲面」未遵守红/绿胶囊规则（未选=红、已选=绿）②输出要「一键平滑」→ 拾取按钮改 `PickStyle=true` + `SetTarget(desc, picked)` 双态同步；新增 `SubDOutput`（面板勾选「SubD 平滑输出（细分曲面，一键平滑）」）→ `SubD.CreateFromMesh` 转细分曲面输出，失败自动回退网格
+- 自检 26→**32/0**（+Case6 双态断言、+Case8 SubD IsValid 断言）；runner 26→32 同步
+- 安装器重建 **3808256 bytes / md5 `432eeb40abed6fb4a6c0fa04ea54e5c5`** → **Release v1.4.1**（id=410462264，附件回下载 md5 一致）；README×4 更新（v1.4.1 入口 + 按钮数 10 修正）；桌面 IVAN-CENTER.exe 已同步；commit `b8a4963` 已推送
+- 本机状态：PatternEmboss rh7/rh8 已 rename-swap 到位（功能=最新）；其余 9 插件源码未变、verify 字节差=构建批次差异（功能等价）；**用户 Rhino 运行中 → 安装器 guard 正确拒装，待关闭后重跑一次安装器即全同步**；验证工具 `run-emboss-check.ps1` / `verify-emboss.ps1`（绕 guard）保留于 implementation/
+
 ## 19. 第 10 个插件「多边补面 PatchFill」（2026-10-10 第三轮）——**已于 2026-10-12 按用户指令移除**
 
 > **⚠ 移除记录（2026-10-12）**：用户实测「不好用」，指令「砍掉第 10 个插件，然后更新 GH」。执行内容：删 `MODIFIED_FILE/patchfill/`（源码/构建产物）、`implementation/patchfill-*.ps1`、`patchfill-bench/`、`PATCHFILL-BENCH.md`、`XNURBS-ANALYSIS.md`、`xnurbs-re/`、`BASELINE/MODIFIED-PatchFill*`、桌面配套 3dm 与对照基准；从 runner/install-and-verify/refresh-payload-and-center/iconmake/PanelTheme×9/center 项目 全部摘除；卸载本机安装（注册表键已删，安装目录改名 `PatchFill.removed-20261012` 待 Rhino 关闭后删）。**项目回到 9 插件**（= AGENTS.md 记载的九个插件）。安装器重建：IVAN-CENTER.exe 3527168 bytes / md5 `fd568a3e616b9d6d7bd16180cecf9404`（v1.3.2）。以下为历史记录（仅供追溯，勿再引用为现状）。
