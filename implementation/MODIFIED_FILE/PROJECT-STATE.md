@@ -787,6 +787,14 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - ⚠ **GCM 弹「Select an account」的根因与修法**：Windows 凭据里存了两个 github.com 账号（`x-access-token` + `IvanXxxxyyuffff`），不指定用户名时 GCM 每次都问 → `git config --global credential.https://github.com.username IvanXxxxyyuffff` 钉死后 1.0s 无弹窗返回；本机全局 `credential.helper` 还指向已不存在的 PortableGit 路径，要改成 `!"C:/Program Files/Git/mingw64/bin/git-credential-manager.exe"`（带空格必须用 `!` + 引号）。
 - 发布脚本：`implementation/github-release.ps1`（PAT 走 `git credential fill` + REST API，附件回下载核对 md5）
 
+## 20. 第 10 个插件「图案压花 PatternEmboss」（2026-10-12）—— 当前第 10 插件
+
+用户口径：做一个生成「六边形 / 四边形 / 菱形、带凹凸」纹理的插件（参考产品图：曲面上的蜂窝圆凸 + 菱格深槽）。
+- **架构**：曲面 → UV 域细网格（采样密度受控）→ 图案高度场（pointy-top 蜂窝 SDF / 方格 L∞ / 错位菱形）→ 沿面法向偏移建网格 → 可选 `Mesh.Offset` 加厚成壳；平面走 Frame 直投无扭曲，曲面走尺度换算；边缘留边 = 多源 BFS 距离场线性渐隐
+- **参数**：图案类型（六边形/四边形/菱形）· 单元尺寸 · 高度（正凸负凹）· 槽宽 · 圆润度 · 边缘留边 · 采样密度 · 加厚 · 实时预览
+- **交付**：双 TFM（Rhino7 net48 / Rhino8 net7）· 新 GUID（RH7 FD17B96E… / RH8 719FCC1D…）· 命令 `PatternEmboss` / `PatternEmbossPick` / `PatternEmbossSelfTest` / `PatternEmbossProbe` · 自检 **26/0**（平板六边形高度范围 / 球面法向偏移壳层 / 菱形负高 / 留边渐隐 / 确定性 / 面板烟测 / 加厚 Solid）· 图标 kind `emboss`（青蓝蜂窝，PanelTheme×11 + iconmake md5 全等）· 工具链全集成（runner/verify/refresh/Installer/csproj 嵌入）
+- **安装器**：IVAN-CENTER.exe 3803648 bytes / md5 `dd0acf55d7fcfcc16d8581c7bb426139`（10 插件版，v1.4.0）；安装核对 10/10 PASS
+
 ## 19. 第 10 个插件「多边补面 PatchFill」（2026-10-10 第三轮）——**已于 2026-10-12 按用户指令移除**
 
 > **⚠ 移除记录（2026-10-12）**：用户实测「不好用」，指令「砍掉第 10 个插件，然后更新 GH」。执行内容：删 `MODIFIED_FILE/patchfill/`（源码/构建产物）、`implementation/patchfill-*.ps1`、`patchfill-bench/`、`PATCHFILL-BENCH.md`、`XNURBS-ANALYSIS.md`、`xnurbs-re/`、`BASELINE/MODIFIED-PatchFill*`、桌面配套 3dm 与对照基准；从 runner/install-and-verify/refresh-payload-and-center/iconmake/PanelTheme×9/center 项目 全部摘除；卸载本机安装（注册表键已删，安装目录改名 `PatchFill.removed-20261012` 待 Rhino 关闭后删）。**项目回到 9 插件**（= AGENTS.md 记载的九个插件）。安装器重建：IVAN-CENTER.exe 3527168 bytes / md5 `fd568a3e616b9d6d7bd16180cecf9404`（v1.3.2）。以下为历史记录（仅供追溯，勿再引用为现状）。

@@ -201,6 +201,23 @@ namespace IvanCenter
                 Deps8Name = "SurfaceUnify.deps.json", Runtime8Name = "SurfaceUnify.runtimeconfig.json",
                 IconKind = "unify"
             },
+            new PluginDef
+            {
+                Key = "PatternEmboss",
+                Name = "图案压花",
+                EnName = "PatternEmboss",
+                Desc = "在曲面 / 多重曲面上生成六边形（蜂窝）/ 四边形 / 菱形凹凸纹理：单元尺寸、高度（正凸负凹）、槽宽、圆润度、边缘留边、采样密度、加厚成壳全部可调；沿面法向偏移建网格，实时预览，输出带凹凸的网格（可加厚为实体壳）",
+                Guid7 = "FD17B96E-7D68-4E36-AF3D-D24837F3F8BF",
+                Guid8 = "719FCC1D-E8AE-4B5F-AE71-AE3DBF6699EA",
+                Cmd = "PatternEmboss",
+                ExtraCommands = "PatternEmbossSelfTest;PatternEmbossPick;PatternEmbossProbe",
+                Res7 = "p_pe7", Res8 = "p_pe8",
+                File7 = "PatternEmboss-rh7.rhp", File8 = "PatternEmboss.rhp",
+                Res8Dll = "p_pe8_dll",
+                Res8Deps = "j_pe8_deps", Res8Runtime = "j_pe8_rt",
+                Deps8Name = "PatternEmboss.deps.json", Runtime8Name = "PatternEmboss.runtimeconfig.json",
+                IconKind = "emboss"
+            },
         };
 
         public static string RootDir

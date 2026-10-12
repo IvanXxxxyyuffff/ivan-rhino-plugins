@@ -18,6 +18,7 @@ $fail = @()
 
 $defs = @(
   @{ Key='StripeOnSurface'; Guid='b7a1c3d2-5e64-4f7a-9b21-3c0d5e7f8a91'; Res='StripeOnSurface-rh8.rhp'; Installed='StripeOnSurface.rhp'; Cmd='StripeOnSurface' },
+  @{ Key='PatternEmboss';  Guid='719FCC1D-E8AE-4B5F-AE71-AE3DBF6699EA'; Res='PatternEmboss-rh8.rhp';  Installed='PatternEmboss.rhp';   Cmd='PatternEmboss' },
   @{ Key='VapeVolume';      Guid='A3F27B54-9C41-4E88-B0D6-7E5C1A93D842'; Res='VapeVolume-Rhino8.rhp';      Installed='VapeVolume.rhp';      Cmd='VapeVolume' },
   @{ Key='HalftoneDots';    Guid='4B8D2E63-7A19-4C5F-91B2-6E3A8D0C4F27'; Res='HalftoneDots-rh8.rhp';     Installed='HalftoneDots.rhp';    Cmd='ParametricTexture' },
   @{ Key='VoronoiTexture';  Guid='5D2A9F41-7C63-4E18-B095-8A4F1D6C3E72'; Res='VoronoiTexture-rh8.rhp';   Installed='VoronoiTexture.rhp';  Cmd='VoronoiTexture' },

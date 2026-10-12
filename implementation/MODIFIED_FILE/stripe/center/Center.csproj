@@ -71,6 +71,11 @@
     <EmbeddedResource Include="payload\SurfaceUnify.dll" LogicalName="p_unf8_dll" />
     <EmbeddedResource Include="payload\SurfaceUnify.deps.json" LogicalName="j_unf8_deps" />
     <EmbeddedResource Include="payload\SurfaceUnify.runtimeconfig.json" LogicalName="j_unf8_rt" />
+    <EmbeddedResource Include="payload\PatternEmboss-rh7.rhp" LogicalName="p_pe7" />
+    <EmbeddedResource Include="payload\PatternEmboss-rh8.rhp" LogicalName="p_pe8" />
+    <EmbeddedResource Include="payload\PatternEmboss.dll" LogicalName="p_pe8_dll" />
+    <EmbeddedResource Include="payload\PatternEmboss.deps.json" LogicalName="j_pe8_deps" />
+    <EmbeddedResource Include="payload\PatternEmboss.runtimeconfig.json" LogicalName="j_pe8_rt" />
   </ItemGroup>
 
 </Project>

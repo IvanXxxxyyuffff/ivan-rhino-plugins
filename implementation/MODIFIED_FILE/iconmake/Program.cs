@@ -40,6 +40,7 @@ namespace IconMake
                     else if (string.Equals(kind, "diamond", StringComparison.OrdinalIgnoreCase)) GlassDrawDiamond(g, side, accent);
                     else if (string.Equals(kind, "ripple", StringComparison.OrdinalIgnoreCase)) GlassDrawRipple(g, side, accent);
                     else if (string.Equals(kind, "unify", StringComparison.OrdinalIgnoreCase)) GlassDrawUnify(g, side, accent);
+                    else if (string.Equals(kind, "emboss", StringComparison.OrdinalIgnoreCase)) GlassDrawEmboss(g, side, accent);
                     else GlassDrawStripe(g, side, accent);
                 }
                 return bitmap;
@@ -61,6 +62,7 @@ namespace IconMake
             if (string.Equals(kind, "diamond", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 92, 76, 208);
             if (string.Equals(kind, "ripple", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 22, 132, 152);
             if (string.Equals(kind, "unify", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 168, 69, 111);
+            if (string.Equals(kind, "emboss", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 26, 132, 152);
             if (string.Equals(kind, "app", StringComparison.OrdinalIgnoreCase)) return Color.FromArgb(255, 38, 59, 89);
             return Color.FromArgb(255, 8, 127, 150);
         }
@@ -560,6 +562,53 @@ namespace IconMake
             }
         }
         /// <summary>多重曲面转单一曲面：一张带 S 形曲边的整片曲面（透视收分 + 两条 iso 肋线）</summary>
+        private static void GlassDrawEmboss(Graphics g, int size, Color accent)
+        {
+            float s = size;
+            // 蜂窝：两行错位六边形（平顶），渐变填充 + 白高光 = 凸起质感
+            float R = s * 0.150f;                    // 六边形外接半径
+            float cx = s * 0.50f, cy = s * 0.50f;
+            float dx = R * 1.7320508f;               // 水平间距 = √3 R
+            float dy = R * 1.5f;                     // 行距
+            var centers = new PointF[]
+            {
+                new PointF(cx - dx * 0.5f, cy - dy),
+                new PointF(cx + dx * 0.5f, cy - dy),
+                new PointF(cx, cy),
+                new PointF(cx - dx, cy + dy),
+                new PointF(cx, cy + dy),
+                new PointF(cx + dx, cy + dy),
+            };
+            using (Pen rib = new Pen(Color.FromArgb(150, 14, 26, 38), Math.Max(0.45f, s * 0.020f)))
+            {
+                rib.LineJoin = LineJoin.Round;
+                foreach (PointF c in centers)
+                {
+                    if (c.X - R * 0.9f > s * 0.98f || c.Y - R * 0.9f > s * 0.98f) continue;
+                    using (var hex = new GraphicsPath())
+                    {
+                        for (int k = 0; k < 6; k++)
+                        {
+                            double a = Math.PI / 3.0 * k + Math.PI / 6.0;   // 平顶
+                            float px = c.X + (float)Math.Cos(a) * R;
+                            float py = c.Y + (float)Math.Sin(a) * R;
+                            if (k == 0) hex.StartFigure();
+                            if (k == 0) hex.AddLine(new PointF(px, py), new PointF(px, py));
+                            else hex.AddLine(px, py, px, py);
+                        }
+                        hex.CloseFigure();
+                        var box = new RectangleF(c.X - R, c.Y - R, R * 2f, R * 2f);
+                        using (LinearGradientBrush fill = new LinearGradientBrush(box,
+                            GlassBlend(accent, Color.White, 0.50f), GlassBlend(accent, Color.Black, 0.22f), 90f))
+                            g.FillPath(fill, hex);
+                        using (Pen edge = new Pen(Color.FromArgb(120, 255, 255, 255), Math.Max(0.4f, s * 0.012f)))
+                            g.DrawPath(edge, hex);
+                        g.DrawPath(rib, hex);
+                    }
+                }
+            }
+        }
+
         private static void GlassDrawUnify(Graphics g, int size, Color accent)
         {
             float s = size;
