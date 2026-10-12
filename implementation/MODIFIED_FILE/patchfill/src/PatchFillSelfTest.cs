@@ -743,17 +743,17 @@ namespace PatchFillPattern
                 Check(sb, ref pass, ref fail, panel.ParamEnabled("UV 方向:") || panel.ParamEnabled("UV 方向"),
                     "面板：UV 方向下拉行可用（XNURBS 对齐参数）");
 
-                string[] names = { "控制点数", "贴合强度", "平滑度", "G1 采样距离" };
+                string[] names = { "控制点数", "G0 精确度", "G1 精确度", "质量控制", "平坦控制", "G1 采样距离" };
                 bool paramsOk = true;
                 for (int i = 0; i < names.Length; i++) if (!panel.ParamEnabled(names[i])) paramsOk = false;
-                Check(sb, ref pass, ref fail, paramsOk, "面板：4 个参数名都能查到且可用");
+                Check(sb, ref pass, ref fail, paramsOk, "面板：6 个参数名都能查到且可用（XNURBS 四滑杆 + 控制点数 + G1 采样距离）");
 
                 string rep;
                 PatchFillResult r0 = PatchFillCore.Generate(edges, null, sphereRef, panel.Settings, out rep);
                 Check(sb, ref pass, ref fail, r0.Ok, "面板默认参数生成成功");
                 double sig0 = SigOf(r0);
 
-                double[] values = { 22.0, 0.35, 0.9, 3.0 };
+                double[] values = { 22.0, 0.8, 0.9, 0.9, 0.7, 3.0 };
                 for (int i = 0; i < names.Length; i++)
                 {
                     bool set = panel.SetParam(names[i], values[i]);
@@ -1505,8 +1505,10 @@ namespace PatchFillPattern
             switch (name)
             {
                 case "控制点数": return s.ControlCount;
-                case "贴合强度": return s.FitStrength;
-                case "平滑度": return s.Smooth;
+                case "G0 精确度": return s.G0Accuracy;
+                case "G1 精确度": return s.G1Accuracy;
+                case "质量控制": return s.QualityControl;
+                case "平坦控制": return s.FlatControl;
                 case "G1 采样距离": return s.G1Distance;
             }
             return double.NaN;

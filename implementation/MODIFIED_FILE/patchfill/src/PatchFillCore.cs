@@ -24,6 +24,14 @@ namespace PatchFillPattern
         public bool ApplyAllBoundaries = true; // 将连续性应用于所有边界：关 = 只有外边界 G1/G2，内边界退 G0
         public bool OptimizeQuad = false;    // 优化四边面：开 = 强制 4 角切分（覆盖盘状判据）；关 = 自动
         public int UvDirection = 0;          // UV 方向：0 = 曲线法线（默认），1 = 自动
+        // ---- XNURBS 参数体系复刻（2026-10-12 用户指令「完全复刻 XNURBS 的效果与操作方式」）
+        public double G0Accuracy = 0.5;      // G0 精确度滑杆 0..1 → 边界行权重 10^(4+5x)
+        public double G1Accuracy = 0.5;      // G1 精确度滑杆 0..1 → 连续性带权重 10^(1+3x)
+        public double QualityControl = 0.25; // 质量控制滑杆 0..1 → 薄板能量 λ = 0.05+0.4x（默认 0.25 → 0.15，与旧 Smooth 默认一致）
+        public double FlatControl = 0.0;     // 平坦控制滑杆 0..1 → 贴合强度反向（高 = 更平，低 = 更贴参考）
+        public bool TrimResult = false;      // 修剪生成的曲面：生成后按边界环精确修剪结果面
+        public bool ZebraPreview = false;    // 斑马纹预览
+        public bool EdgeConstraint = true;   // 边缘约束（拓扑：结果面边界受边缘约束）
 
         public PatchFillSettings Clone()
         {
@@ -39,7 +47,14 @@ namespace PatchFillPattern
                 MeetAccuracy = MeetAccuracy,
                 ApplyAllBoundaries = ApplyAllBoundaries,
                 OptimizeQuad = OptimizeQuad,
-                UvDirection = UvDirection
+                UvDirection = UvDirection,
+                G0Accuracy = G0Accuracy,
+                G1Accuracy = G1Accuracy,
+                QualityControl = QualityControl,
+                FlatControl = FlatControl,
+                TrimResult = TrimResult,
+                ZebraPreview = ZebraPreview,
+                EdgeConstraint = EdgeConstraint
             };
         }
     }
@@ -133,7 +148,20 @@ namespace PatchFillPattern
 
         // 约束行权重（照 XNURBS 分析给出的口径）
         internal const double WData = 1.0;        // 数据行（Coons 基面采样）
-        internal const double WBoundary = 1e6;    // 边界行（硬约束）
+        internal const double WBoundary = 1e6;    // 边界行（硬约束）——默认值；实际由 G0 精确度滑杆驱动
+        /// <summary>G0 精确度滑杆 0..1 → 边界行权重。乘性映射：x=0.5 精确等于旧常量 1e6（自检数字零漂移），
+        /// x=0 → 1e3.5（松），x=1 → 1e8.5（紧）。</summary>
+        internal static double BoundaryWeightOf(PatchFillSettings s)
+        {
+            double x = s == null ? 0.5 : Clamp01(s.G0Accuracy);
+            return 1e6 * Math.Pow(10.0, 5.0 * (x - 0.5));
+        }
+        /// <summary>G1 精确度滑杆 0..1 → 连续性带权重。乘性映射：x=0.5 精确等于旧常量 300（盘状）。</summary>
+        internal static double BandWeightOf(PatchFillSettings s)
+        {
+            double x = s == null ? 0.5 : Clamp01(s.G1Accuracy);
+            return 300.0 * Math.Pow(10.0, 3.0 * (x - 0.5));
+        }
         internal const double WTangent = 0.1;     // G1 切线带
         internal const double WInner = 10.0;      // 内部曲线 / 点采样
 
@@ -1436,6 +1464,7 @@ namespace PatchFillPattern
             public List<double> ExtraU = new List<double>();          // 残差驱动局部插结（u）
             public List<double> ExtraV = new List<double>();          // 残差驱动局部插结（v）
             public bool Disk;                                         // 径向盘状模式（无拐角闭合环：u 绕环、v 向内、中心退化）
+            public double WBnd = 1e6;                                 // 边界行权重（G0 精确度滑杆驱动）
             public Point3d Center;                                    // 盘状模式的中心
             public bool IsOuterLoop = true;                           // ApplyAllBoundaries=false 时只有外环吃连续性
             public List<Point2d> RefCacheUv = null;                   // 首轮参考采样缓存（T2：后续轮不重算 Closest）
@@ -1605,7 +1634,8 @@ namespace PatchFillPattern
 
             var ctx = new Ctx();
             ctx.Loop = loop; ctx.P = cp; ctx.Ci = ci; ctx.CornerMethod = method;
-            ctx.CornerFallback = fallback; ctx.S = s; ctx.Diag = res.Diag; ctx.Inner = inner;
+            ctx.CornerFallback = fallback; ctx.S = s;
+            ctx.WBnd = BoundaryWeightOf(s); ctx.Diag = res.Diag; ctx.Inner = inner;
             ctx.Disk = diskMode; ctx.Center = loopCenter; ctx.Centroid = loopCenter;
             Vector3d cd = ctx.Centroid - loop.P[0];
             if (cd.Length > 1e-12) cd.Unitize();
@@ -1895,6 +1925,42 @@ namespace PatchFillPattern
             res.Result = brep;
             res.SourceBoundary.Add(new Polyline(new List<Point3d>(loop.P)));
 
+            // 「修剪生成的曲面」（XNURBS 对齐，2026-10-12）：生成后按边界环精确修剪结果面 ——
+            // 结果面边界本来是边界采样折线的插值（缝隙 1e-5 级），修剪后边界 100% 落在原环上。
+            // 失败（Split 不闭合/无交点等）→ 回退未修剪面并在报告注明，绝不丢面。
+            if (s.TrimResult)
+            {
+                try
+                {
+                    var cut = new List<Curve>();
+                    var pts = new List<Point3d>(loop.P);
+                    if (pts.Count > 2)
+                    {
+                        pts.Add(pts[0]);
+                        var pl = new PolylineCurve(pts);
+                        if (pl.IsClosed) cut.Add(pl);
+                    }
+                    if (cut.Count > 0)
+                    {
+                        Brep[] pieces = brep.Split(cut, 1e-6);
+                        Brep bestPiece = null; double bestArea = -1;
+                        if (pieces != null)
+                        {
+                            foreach (Brep pc in pieces)
+                            {
+                                if (pc == null || pc.Faces.Count == 0) continue;
+                                double a = 0;
+                                try { var ap = Rhino.Geometry.AreaMassProperties.Compute(pc); if (ap != null) a = ap.Area; } catch { }
+                                if (a > bestArea) { bestArea = a; bestPiece = pc; }
+                            }
+                        }
+                        if (bestPiece != null) { res.Result = bestPiece; res.Note = (res.Note ?? "") + " 已按边界修剪（修剪生成的曲面 = 开）。"; }
+                        else res.Note = (res.Note ?? "") + " 修剪生成的曲面 = 开：Split 未产出有效面，已回退未修剪结果。";
+                    }
+                }
+                catch (Exception exT) { res.Note = (res.Note ?? "") + " 修剪失败（" + exT.Message + "），已回退未修剪结果。"; }
+            }
+
             // ---- 位掩码告警
             // 「满足精度要求」（XNURBS 对齐）：开 = 公差按文档绝对公差量级自动派生（现行为）；
             //   关 = 精度告警放宽 10 倍（不强制），报告写明。
@@ -1980,7 +2046,7 @@ namespace PatchFillPattern
                     double u, v;
                     UvOf(side, f, out u, out v);
                     TensorRow(ctx.U, ctx.V, ctx.Nu, ctx.Nv, u, v, idx, coef, out nnz);
-                    ne.AddRow(WBoundary, idx, coef, nnz, SidePoint(ctx.Loop, ctx.P, side, f));
+                    ne.AddRow(ctx.WBnd, idx, coef, nnz, SidePoint(ctx.Loop, ctx.P, side, f));
                 }
                 // 两个端点（4 角）单独再加一行：折线拐角必须被精确插值
                 for (int e = 0; e < 2; e++)
@@ -1990,7 +2056,7 @@ namespace PatchFillPattern
                     double u, v;
                     UvOf(side, f, out u, out v);
                     TensorRow(ctx.U, ctx.V, ctx.Nu, ctx.Nv, u, v, idx, coef, out nnz);
-                    ne.AddRow(WBoundary, idx, coef, nnz, SidePoint(ctx.Loop, ctx.P, side, f));
+                    ne.AddRow(ctx.WBnd, idx, coef, nnz, SidePoint(ctx.Loop, ctx.P, side, f));
                 }
                 // 拐角点也加硬约束行：折线拐角必须被精确插值（多边形边界缝隙 = 0 的关键）
                 List<double> ks = ctx.KinksBySide != null ? ctx.KinksBySide[side] : null;
@@ -2003,7 +2069,7 @@ namespace PatchFillPattern
                         double u, v;
                         UvOf(side, f, out u, out v);
                         TensorRow(ctx.U, ctx.V, ctx.Nu, ctx.Nv, u, v, idx, coef, out nnz);
-                        ne.AddRow(WBoundary, idx, coef, nnz, SidePoint(ctx.Loop, ctx.P, side, f));
+                        ne.AddRow(ctx.WBnd, idx, coef, nnz, SidePoint(ctx.Loop, ctx.P, side, f));
                     }
                 }
             }
@@ -2219,7 +2285,7 @@ namespace PatchFillPattern
             // 权重取 100：比内部数据行（1）与参考采样（10）强 1~2 个量级 → 切线方向被显著拉正，
             // 又不至于把 4 个参数角点压成退化切平面（实测 1e4 会在角点附近折掉）。
             // 盘状模式没有参数角点（前任 1e4 折叠坑只存在于 4 角切分）→ 权重可以更狠（300）。
-            double wG1 = ctx.Disk ? 300.0 : 100.0;
+            double wG1 = BandWeightOf(ctx.S) * (ctx.Disk ? 1.0 : 0.333);   // G1 精确度滑杆驱动（盘状 = 全权重，非盘状 ≈ 1/3，与旧 300/100 同档）
             var Nu = new double[Degree + 1];
             for (int side = 0; side < ctx.Band.Length; side++)
             {

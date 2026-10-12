@@ -228,15 +228,48 @@ namespace PatchFillPattern
     }
 
     /// <summary>
-    /// 面板上「选择边界」/「选择内部约束」按钮调用的隐藏命令（面板是非模态的，GetObject 只能在命令上下文里跑）。
-    /// 用静态 NextMode 区分两次拾取（同一个命令，命令集不变）。
+    /// 面板上「选择曲线和点」/「选择边界」/「选择内部约束」按钮调用的隐藏命令
+    /// （面板是非模态的，GetObject 只能在命令上下文里跑）。
+    /// All = XNURBS 式一次走完：边界段 → 内部约束段（2026-10-12 复刻 XNURBS 操作方式）。
     /// </summary>
     public class PatchFillPickTargetCommand : Command
     {
         public override string EnglishName { get { return "PatchFillPickTarget"; } }
 
-        internal enum PickMode { Boundary, Inner }
+        internal enum PickMode { Boundary, Inner, All }
         internal static PickMode NextMode = PickMode.Boundary;
+
+        /// <summary>从 GetObject 结果收集边界引用（含 BrepTrim → 所属边映射；Boundary/All 两段共用）</summary>
+        internal static List<BoundaryRef> CollectBoundaryRefs(GetObject go)
+        {
+            var picks = new List<BoundaryRef>();
+            for (int i = 0; i < go.ObjectCount; i++)
+            {
+                ObjRef objRef = go.Object(i);
+                if (objRef == null || objRef.ObjectId == Guid.Empty) continue;
+                ComponentIndex ci = ComponentIndex.Unset;
+                try { ci = objRef.GeometryComponentIndex; } catch { ci = ComponentIndex.Unset; }
+                // 修复（2026-10-12 用户实测「选到的不是曲线/曲面边」）：曲面对象上点修剪边时，
+                // Rhino 的拾取可能返回 BrepTrim（不是 BrepEdge）——当场映射到所属边再存。
+                if (ci.ComponentIndexType == ComponentIndexType.BrepTrim)
+                {
+                    int ei = -1;
+                    try
+                    {
+                        Brep hb = objRef.Brep();
+                        if (hb != null && ci.Index >= 0 && ci.Index < hb.Trims.Count)
+                            ei = hb.Trims[ci.Index].Edge.EdgeIndex;
+                    }
+                    catch { ei = -1; }
+                    if (ei >= 0) picks.Add(new BoundaryRef(objRef.ObjectId, ComponentIndexType.BrepEdge, ei));
+                    else picks.Add(new BoundaryRef(objRef.ObjectId, ci.ComponentIndexType, ci.Index));
+                }
+                else if (ci.ComponentIndexType != ComponentIndexType.InvalidType)
+                    picks.Add(new BoundaryRef(objRef.ObjectId, ci.ComponentIndexType, ci.Index));
+                else picks.Add(BoundaryRef.Whole(objRef.ObjectId));
+            }
+            return picks;
+        }
 
         protected override Result RunCommand(RhinoDoc doc, RunMode mode)
         {
@@ -248,6 +281,41 @@ namespace PatchFillPattern
             }
             PickMode pickMode = NextMode;
             NextMode = PickMode.Boundary;
+
+            // ---- All：XNURBS 式「选择曲线和点」——边界段 → 内部约束段，一次按钮走完
+            if (pickMode == PickMode.All)
+            {
+                var goB = new GetObject();
+                goB.SubObjectSelect = true;
+                goB.SetCommandPrompt("选择边界：一圈曲线 / 曲面边（多选后回车结束）");
+                goB.GeometryFilter = ObjectType.Curve | ObjectType.EdgeFilter;
+                goB.GetMultiple(1, 0);
+                Result rb = goB.CommandResult();
+                if (rb == Result.Cancel) { RhinoApp.WriteLine("已取消拾取。"); return Result.Cancel; }
+                if (rb != Result.Success) return rb;
+                List<BoundaryRef> picksA = CollectBoundaryRefs(goB);
+                if (picksA.Count == 0) { RhinoApp.WriteLine("没有选到边界。"); return Result.Failure; }
+
+                var goI = new GetObject();
+                goI.SubObjectSelect = true;
+                goI.SetCommandPrompt("可选：内部约束（曲线 / 点，补面会贴上去）——不需要就直接回车");
+                goI.GeometryFilter = ObjectType.Curve | ObjectType.Point | ObjectType.PointSet;
+                goI.GetMultiple(0, 0);
+                Result ri = goI.CommandResult();
+                var innerIds = new List<Guid>();
+                if (ri == Result.Success)
+                {
+                    for (int i = 0; i < goI.ObjectCount; i++)
+                    {
+                        ObjRef oref = goI.Object(i);
+                        if (oref != null && oref.ObjectId != Guid.Empty) innerIds.Add(oref.ObjectId);
+                    }
+                }
+                session.SetBoundaryAndInner(doc, picksA, innerIds);
+                RhinoApp.WriteLine("约束已更新：" + PatchFillSession.DescribeBoundary(doc, picksA)
+                    + "；内部约束 " + innerIds.Count + " 个。");
+                return Result.Success;
+            }
 
             var go = new GetObject();
             go.SubObjectSelect = true;
@@ -277,31 +345,18 @@ namespace PatchFillPattern
 
             var ids = new List<Guid>();
             var picks = new List<BoundaryRef>();
-            for (int i = 0; i < go.ObjectCount; i++)
+            if (pickMode == PickMode.Boundary)
             {
-                ObjRef objRef = go.Object(i);
-                if (objRef == null || objRef.ObjectId == Guid.Empty) continue;
-                ids.Add(objRef.ObjectId);
-                ComponentIndex ci = ComponentIndex.Unset;
-                try { ci = objRef.GeometryComponentIndex; } catch { ci = ComponentIndex.Unset; }
-                // 修复（2026-10-12 用户实测「选到的不是曲线/曲面边」）：曲面对象上点修剪边时，
-                // Rhino 的拾取可能返回 BrepTrim（不是 BrepEdge）——当场映射到所属边再存。
-                if (ci.ComponentIndexType == ComponentIndexType.BrepTrim)
+                picks = CollectBoundaryRefs(go);   // 与 All 模式共用（含 BrepTrim 映射）
+            }
+            else
+            {
+                for (int i = 0; i < go.ObjectCount; i++)
                 {
-                    int ei = -1;
-                    try
-                    {
-                        Brep hb = objRef.Brep();
-                        if (hb != null && ci.Index >= 0 && ci.Index < hb.Trims.Count)
-                            ei = hb.Trims[ci.Index].Edge.EdgeIndex;
-                    }
-                    catch { ei = -1; }
-                    if (ei >= 0) picks.Add(new BoundaryRef(objRef.ObjectId, ComponentIndexType.BrepEdge, ei));
-                    else picks.Add(new BoundaryRef(objRef.ObjectId, ci.ComponentIndexType, ci.Index));
+                    ObjRef objRef = go.Object(i);
+                    if (objRef == null || objRef.ObjectId == Guid.Empty) continue;
+                    ids.Add(objRef.ObjectId);
                 }
-                else if (ci.ComponentIndexType != ComponentIndexType.InvalidType)
-                    picks.Add(new BoundaryRef(objRef.ObjectId, ci.ComponentIndexType, ci.Index));
-                else picks.Add(BoundaryRef.Whole(objRef.ObjectId));
             }
 
             if (pickMode == PickMode.Boundary)
@@ -1462,6 +1517,8 @@ namespace PatchFillPattern
             _inner = new List<Guid>();
             _panel = new PatchFillPanel(settings, desc);
             _panel.PickRequested += delegate { RunPick(false); };
+            _panel.PickAllRequested += delegate { RunPickAll(); };
+            _panel.ClearRequested += delegate { ClearAllConstraints(); };
             _panel.InnerPickRequested += delegate { RunPick(true); };
         }
 
@@ -1516,12 +1573,76 @@ namespace PatchFillPattern
             catch (Exception ex) { _panel.SetInfo("选择失败：" + ex.Message); }
         }
 
+        /// <summary>XNURBS 式一次拾取：边界段 → 内部约束段（面板「选择曲线和点」按钮）</summary>
+        void RunPickAll()
+        {
+            try
+            {
+                PatchFillPickTargetCommand.NextMode = PatchFillPickTargetCommand.PickMode.All;
+                RhinoApp.RunScript("_-PatchFillPickTarget", false);
+            }
+            catch (Exception ex) { _panel.SetInfo("选择失败：" + ex.Message); }
+        }
+
+        /// <summary>清空全部约束（边界 + 内部）</summary>
+        void ClearAllConstraints()
+        {
+            try
+            {
+                SetBoundaryAndInner(_doc, new List<BoundaryRef>(), new List<Guid>());
+                _panel.SetInfo("约束已清空。点「选择曲线和点」重新拾取。");
+            }
+            catch (Exception ex) { _panel.SetInfo("清空失败：" + ex.Message); }
+        }
+
+        /// <summary>把当前约束（边界 BoundaryRef + 内部 Guid）逐行刷到面板列表（XNURBS 式）</summary>
+        void RefreshConstraintRows()
+        {
+            try
+            {
+                var rows = new List<string>();
+                for (int i = 0; i < _edges.Count; i++)
+                {
+                    RhinoObject o = null;
+                    try { o = _doc.Objects.FindId(_edges[i].Id); } catch { }
+                    string d = o != null ? PatchFillCore.Describe(o) : "（已删除）";
+                    string pos = _edges[i].Index >= 0 ? (" · 边" + (_edges[i].Index + 1)) : "";
+                    rows.Add("边界 · " + d + pos);
+                }
+                for (int i = 0; i < _inner.Count; i++)
+                {
+                    RhinoObject o = null;
+                    try { o = _doc.Objects.FindId(_inner[i]); } catch { }
+                    rows.Add("内部 · " + (o != null ? PatchFillCore.Describe(o) : "（已删除）"));
+                }
+                _panel.SetConstraintRows(rows.ToArray());
+            }
+            catch { }
+        }
+
         public void SetBoundary(RhinoDoc doc, List<BoundaryRef> refs)
         {
             if (_closed) return;
             _edges.Clear();
             if (refs != null) _edges.AddRange(refs);
             _panel.SetTarget(DescribeBoundary(doc, refs));
+            _results = new List<PatchFillResult>();
+            _conduit.Shaded = null;
+            _conduit.SourceBoundary = null;
+            Rebuild();
+            try { _doc.Views.Redraw(); } catch { }
+        }
+
+        /// <summary>XNURBS 式一次拾取（边界 + 内部约束一起换，只 Rebuild 一次）</summary>
+        public void SetBoundaryAndInner(RhinoDoc doc, List<BoundaryRef> refs, List<Guid> innerIds)
+        {
+            if (_closed) return;
+            _edges.Clear();
+            if (refs != null) _edges.AddRange(refs);
+            _inner.Clear();
+            if (innerIds != null) _inner.AddRange(innerIds);
+            _panel.SetTarget(DescribeBoundary(doc, refs));
+            _panel.SetInnerState(_inner.Count > 0);
             _results = new List<PatchFillResult>();
             _conduit.Shaded = null;
             _conduit.SourceBoundary = null;
@@ -1605,6 +1726,8 @@ namespace PatchFillPattern
             if (_closed) return;
             try
             {
+                // XNURBS 式约束列表（边界 + 内部逐行刷新；空列表时也要刷）
+                RefreshConstraintRows();
                 if (_edges.Count == 0)
                 {
                     _results = new List<PatchFillResult>();
@@ -1618,6 +1741,7 @@ namespace PatchFillPattern
                 }
 
                 PatchFillSettings cur = _panel.Settings;
+                _conduit.Zebra = cur.ZebraPreview;   // 斑马纹预览开关（XNURBS 对齐）
                 int valid; string validWhy;
                 List<PatchFillEdge> list = ResolveEdges(out valid, out validWhy);
 

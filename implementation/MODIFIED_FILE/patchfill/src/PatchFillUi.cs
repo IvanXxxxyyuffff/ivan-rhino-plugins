@@ -19,6 +19,7 @@ namespace PatchFillPattern
         public List<Point3d> InnerPoints;          // 内部约束采样点（青点）
         public bool ShowSourceBoundary = true;
         public bool ShowWires = true;
+        public bool Zebra = false;                 // 斑马纹预览（XNURBS 对齐，2026-10-12）
         static readonly Color WireCol = Color.FromArgb(210, 96, 30, 12);
         static readonly Color FaceCol = Color.FromArgb(150, 240, 176, 140);
         static readonly Color SrcCol = Color.FromArgb(225, 205, 64, 64);
@@ -35,7 +36,50 @@ namespace PatchFillPattern
                     {
                         Brep b = bs[i];
                         if (b == null || b.Faces.Count == 0) continue;
-                        e.Display.DrawBrepShaded(b, new DisplayMaterial(FaceCol, 0.35));
+                        if (Zebra)
+                        {
+                            // 斑马纹：结果面网格化 → 顶点按「法向 vs 视向」的反射角映射黑白条纹 →
+                            // 顶点色网格绘制。条纹在曲率突变处会断/扭，用来目检 G1/G2 光顺度。
+                            Mesh zm = null;
+                            try
+                            {
+                                var mp = MeshingParameters.Default;
+                                mp.MinimumTolerance = 0.05;
+                                Mesh[] ms = Mesh.CreateFromBrep(b, mp);
+                                if (ms != null && ms.Length > 0)
+                                {
+                                    zm = new Mesh();
+                                    foreach (Mesh m1 in ms) if (m1 != null) zm.Append(m1);
+                                }
+                            }
+                            catch { zm = null; }
+                            if (zm != null && zm.Vertices.Count > 0)
+                            {
+                                Point3d cam = e.Viewport.CameraLocation;
+                                zm.Normals.ComputeNormals();
+                                zm.VertexColors.Clear();
+                                for (int vi = 0; vi < zm.Vertices.Count; vi++)
+                                {
+                                    Point3d vp = zm.Vertices[vi];
+                                    Vector3d n = zm.Normals[vi];
+                                    Vector3d dir = cam - vp;
+                                    if (dir.Length > 1e-9) dir.Unitize();
+                                    double refl = n.IsValid ? (n * dir) : 0.0;           // 反射角余弦
+                                    byte c = Math.Sin(refl * 26.0) >= 0 ? (byte)245 : (byte)30;
+                                    zm.VertexColors.Add(Color.FromArgb(c, c, c));
+                                }
+                                var mat = new DisplayMaterial(Color.White, 0.0);
+                                e.Display.DrawMeshShaded(zm, mat);
+                            }
+                            else
+                            {
+                                e.Display.DrawBrepShaded(b, new DisplayMaterial(FaceCol, 0.35));
+                            }
+                        }
+                        else
+                        {
+                            e.Display.DrawBrepShaded(b, new DisplayMaterial(FaceCol, 0.35));
+                        }
                         if (ShowWires) e.Display.DrawBrepWires(b, WireCol, 1);
                     }
                 }
@@ -65,13 +109,13 @@ namespace PatchFillPattern
         public bool Committed { get; private set; }
         public bool LivePreview { get { return _live.Checked; } }
         public event EventHandler ValueChanged;
-        public event EventHandler PickRequested;          // 选边界
-        public event EventHandler InnerPickRequested;     // 选内部曲线/点
+        public event EventHandler PickRequested;          // 选边界（旧按钮，保留兼容）
+        public event EventHandler InnerPickRequested;     // 选内部曲线/点（旧按钮，保留兼容）
+        public event EventHandler PickAllRequested;       // XNURBS 式「选择曲线和点」一次拾取（2026-10-12）
+        public event EventHandler ClearRequested;         // 清空全部约束
 
         readonly InfoBar _info = new InfoBar();
         readonly IvanCheck _live = new IvanCheck();
-        readonly Label _target = new Label();
-        readonly Label _targetHint = new Label();
         readonly List<CardPanel> _scrollCards = new List<CardPanel>();
         readonly List<int> _scrollCardTops = new List<int>();
         VScrollBar _scrollBar;
@@ -83,10 +127,14 @@ namespace PatchFillPattern
 
         const int W = 434;
 
-        FlatButton _pick, _pickInner;
+        ListBox _consList;                 // 约束列表（每行一条：边界/内部）
+        Label _consDesc;                   // 约束摘要（XNURBS 式列表下方一行）
+        FlatButton _pickAll;
+        bool _hasBoundary, _hasInner;      // 未选状态（PickState/InnerPickState 语义来源）
         IvanSegmented _seg;
-        List<Control> _gridRows, _strengthRows, _smoothRows, _g1Rows;
-        IvanCheck _srcCheck, _applyAllCheck, _accCheck, _quadCheck;
+        List<Control> _gridRows, _g1Rows;
+        List<Control> _g0AccRows, _g1AccRows, _qualityRows, _flatRows;
+        IvanCheck _srcCheck, _applyAllCheck, _accCheck, _quadCheck, _trimCheck, _zebraCheck, _edgeCheck;
         ComboBox _uvCombo;
         Label _g1Hint;
 
@@ -108,64 +156,80 @@ namespace PatchFillPattern
 
             int y = 0;
 
-            // ---- 边界（第一张卡片永远是「选择」卡片）
+            // ---- 约束（XNURBS 式：约束列表 + 「选择曲线和点」一次拾取）
             {
-                var card = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 122, Title = "边界" };
+                var card = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 152, Title = "约束" };
                 AddScrollCard(card);
 
-                _target.SetBounds(12, 26, W - 48, 18);
-                _target.ForeColor = Theme.Ink;
-                _target.Font = Theme.Body;
-                _target.Text = targetDesc;
-                card.Controls.Add(_target);
+                _consList = new ListBox
+                {
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Font = Theme.Body,
+                    ForeColor = Theme.Ink,
+                    BackColor = Color.White,
+                    IntegralHeight = false
+                };
+                _consList.SetBounds(12, 26, W - 48, 66);
+                card.Controls.Add(_consList);
 
-                _pick = new FlatButton { Text = "选择边界", Style = BtnStyle.Secondary, PickStyle = true, Picked = false, Width = 104, Height = 28, Left = 12, Top = 50 };
-                _pick.Click += (s, e) => { EventHandler h = PickRequested; if (h != null) h(this, EventArgs.Empty); };
-                card.Controls.Add(_pick);
+                _pickAll = new FlatButton { Text = "选择曲线和点", Style = BtnStyle.Primary, Width = 132, Height = 28, Left = 12, Top = 98 };
+                _pickAll.Click += (s, e) => { EventHandler h = PickAllRequested; if (h != null) h(this, EventArgs.Empty); };
+                card.Controls.Add(_pickAll);
 
-                _pickInner = new FlatButton { Text = "选择内部约束", Style = BtnStyle.Secondary, PickStyle = true, Picked = false, Width = 130, Height = 28, Left = 124, Top = 50 };
-                _pickInner.Click += (s, e) => { EventHandler h = InnerPickRequested; if (h != null) h(this, EventArgs.Empty); };
-                card.Controls.Add(_pickInner);
+                var clearBtn = new FlatButton { Text = "清空", Style = BtnStyle.Secondary, Width = 60, Height = 28, Left = 152, Top = 98 };
+                clearBtn.Click += (s, e) => { EventHandler h = ClearRequested; if (h != null) h(this, EventArgs.Empty); };
+                card.Controls.Add(clearBtn);
 
-                _targetHint.SetBounds(262, 54, W - 290, 20);
-                _targetHint.ForeColor = Theme.InkFaint;
-                _targetHint.Font = Theme.Small;
-                _targetHint.Text = "首尾相连";
-                card.Controls.Add(_targetHint);
-
-                var hint2 = new Label();
-                hint2.SetBounds(12, 82, W - 48, 32);
-                hint2.ForeColor = Theme.InkFaint;
-                hint2.Font = Theme.Small;
-                hint2.Text = "边界：一圈曲线 / 曲面边（可子物件选边，N ≥ 2，N≠4 也行）。内部约束可选：曲线 / 点（补面会贴上去）";
-                card.Controls.Add(hint2);
+                _consDesc = new Label();
+                _consDesc.SetBounds(220, 100, W - 240, 24);
+                _consDesc.ForeColor = Theme.InkFaint;
+                _consDesc.Font = Theme.Small;
+                _consDesc.Text = targetDesc;
+                card.Controls.Add(_consDesc);
 
                 y = card.Bottom + 8;
             }
 
-            // ---- 补面参数
+            // ---- 补面参数（XNURBS 四滑杆：G0 精确度 / G1 精确度 / 质量控制 / 平坦控制）
             {
-                var card = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 200, Title = "补面参数" };
+                var card = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 240, Title = "补面参数" };
                 AddScrollCard(card);
                 int cy = 26;
 
+                _g0AccRows = AddRowEx(card, "G0 精确度", "", 0.0, 1.0, 1.0, 0.01, Settings.G0Accuracy, ref cy, v =>
+                {
+                    Settings.G0Accuracy = v;   // → 边界行权重 1e6·10^(5(v-0.5))
+                });
+                _g1AccRows = AddRowEx(card, "G1 精确度", "", 0.0, 1.0, 1.0, 0.01, Settings.G1Accuracy, ref cy, v =>
+                {
+                    Settings.G1Accuracy = v;   // → 连续性带权重 300·10^(3(v-0.5))
+                    if (_seg != null && _seg.SelectedIndex == 0) _seg.SelectedIndex = 1;   // 调它自动切 G1
+                });
+                _qualityRows = AddRowEx(card, "质量控制", "", 0.0, 1.0, 1.0, 0.01, Settings.QualityControl, ref cy, v =>
+                {
+                    Settings.QualityControl = v;
+                    Settings.Smooth = 0.05 + 0.4 * v;   // → 薄板能量 λ（v=0.25 → 0.15，与旧默认一致）
+                });
+                _flatRows = AddRowEx(card, "平坦控制", "", 0.0, 1.0, 1.0, 0.01, Settings.FlatControl, ref cy, v =>
+                {
+                    Settings.FlatControl = v;
+                    Settings.FitStrength = 1.0 - v;     // 高 = 更平（不贴参考），低 = 更贴相邻曲面（v=0 → 1，与旧默认一致）
+                });
+
                 _gridRows = AddRowEx(card, "控制点数", "", 4.0, 24.0, 40.0, 1.0, Settings.ControlCount, ref cy, v => Settings.ControlCount = (int)Math.Round(v));
-                _strengthRows = AddRowEx(card, "贴合强度", "", 0.0, 1.0, 1.0, 0.01, Settings.FitStrength, ref cy, v => Settings.FitStrength = v);
-                _smoothRows = AddRowEx(card, "平滑度", "", 0.0, 1.0, 1.0, 0.01, Settings.Smooth, ref cy, v => Settings.Smooth = v);
                 _g1Rows = AddRowEx(card, "G1 采样距离", "mm", 0.0, 20.0, 100000.0, 0.1, Settings.G1Distance, ref cy, v =>
                 {
                     Settings.G1Distance = v;
-                    // 拖 G1 采样距离 → 自动切到 G1（否则这个参数没作用）
-                    if (_seg != null && _seg.SelectedIndex != 1) _seg.SelectedIndex = 1;
+                    if (_seg != null && _seg.SelectedIndex == 0) _seg.SelectedIndex = 1;
                 });
 
                 var fh = new Label();
-                fh.SetBounds(12, cy, W - 48, 44);
+                fh.SetBounds(12, cy, W - 48, 40);
                 fh.ForeColor = Theme.InkFaint;
                 fh.Font = Theme.Small;
-                fh.Text = "控制点数 = 每向控制点数（含拐角自动插的节点）；贴合强度 = 贴相邻曲面的权重（0 = 只用 Coons 基面）；平滑度 = 薄板能量正则强度";
+                fh.Text = "G0/G1 精确度 = 边界与相切约束的权重强度；质量控制 = 曲面光顺能量；平坦控制 = 面更平（高）还是更贴相邻曲面（低）";
                 card.Controls.Add(fh);
-                cy += 48;
+                cy += 44;
 
                 card.Height = cy + 6;
                 y = card.Bottom + 8;
@@ -199,55 +263,72 @@ namespace PatchFillPattern
                 y = card.Bottom + 8;
             }
 
-            // ---- XNURBS 对齐选项（连续性应用范围 / 精度 / 四边优化 / UV 方向）
+            // ---- 选项（XNURBS 全套复选框 + UV 方向；2026-10-12 合并「XNURBS 对齐」与「输出与预览」）
             {
-                var opt = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 150, Title = "XNURBS 对齐" };
+                var opt = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 258, Title = "选项" };
                 AddScrollCard(opt);
+                int oy = 26;
+
+                _edgeCheck = new IvanCheck { Text = "边缘约束（结果面边界受所选边缘约束）", Checked = Settings.EdgeConstraint };
+                _edgeCheck.SetBounds(12, oy, W - 48, 22);
+                _edgeCheck.CheckedChanged += (s, e) => { Settings.EdgeConstraint = _edgeCheck.Checked; Raise(); };
+                opt.Controls.Add(_edgeCheck);
+                oy += 26;
 
                 _applyAllCheck = new IvanCheck { Text = "将连续性应用于所有边界（关 = 只有外边界，内边界退 G0）", Checked = Settings.ApplyAllBoundaries };
-                _applyAllCheck.SetBounds(12, 26, W - 48, 22);
+                _applyAllCheck.SetBounds(12, oy, W - 48, 22);
                 _applyAllCheck.CheckedChanged += (s, e) => { Settings.ApplyAllBoundaries = _applyAllCheck.Checked; Raise(); };
                 opt.Controls.Add(_applyAllCheck);
-
-                _accCheck = new IvanCheck { Text = "满足精度要求（公差按文档绝对公差自动派生）", Checked = Settings.MeetAccuracy };
-                _accCheck.SetBounds(12, 52, W - 48, 22);
-                _accCheck.CheckedChanged += (s, e) => { Settings.MeetAccuracy = _accCheck.Checked; Raise(); };
-                opt.Controls.Add(_accCheck);
+                oy += 26;
 
                 _quadCheck = new IvanCheck { Text = "优化四边面（强制 4 角切分；不勾 = 自动判盘状）", Checked = Settings.OptimizeQuad };
-                _quadCheck.SetBounds(12, 78, W - 48, 22);
+                _quadCheck.SetBounds(12, oy, W - 48, 22);
                 _quadCheck.CheckedChanged += (s, e) => { Settings.OptimizeQuad = _quadCheck.Checked; Raise(); };
                 opt.Controls.Add(_quadCheck);
+                oy += 26;
+
+                _trimCheck = new IvanCheck { Text = "修剪生成的曲面（按边界环精确修剪结果面）", Checked = Settings.TrimResult };
+                _trimCheck.SetBounds(12, oy, W - 48, 22);
+                _trimCheck.CheckedChanged += (s, e) => { Settings.TrimResult = _trimCheck.Checked; Raise(); };
+                opt.Controls.Add(_trimCheck);
+                oy += 26;
+
+                _accCheck = new IvanCheck { Text = "满足精度要求（公差按文档绝对公差自动派生）", Checked = Settings.MeetAccuracy };
+                _accCheck.SetBounds(12, oy, W - 48, 22);
+                _accCheck.CheckedChanged += (s, e) => { Settings.MeetAccuracy = _accCheck.Checked; Raise(); };
+                opt.Controls.Add(_accCheck);
+                oy += 26;
+
+                _live.Text = "显示预览";
+                _live.Checked = true;
+                _live.SetBounds(12, oy, 150, 22);
+                _live.CheckedChanged += (s, e) => Raise();
+                opt.Controls.Add(_live);
+
+                _zebraCheck = new IvanCheck { Text = "斑马纹预览", Checked = Settings.ZebraPreview };
+                _zebraCheck.SetBounds(168, oy, 150, 22);
+                _zebraCheck.CheckedChanged += (s, e) => { Settings.ZebraPreview = _zebraCheck.Checked; Raise(); };
+                opt.Controls.Add(_zebraCheck);
+                oy += 26;
+
+                _srcCheck = new IvanCheck { Text = "显示原边界（红线）", Checked = Settings.ShowSourceBoundary };
+                _srcCheck.SetBounds(12, oy, W - 48, 22);
+                _srcCheck.CheckedChanged += (s, e) => { Settings.ShowSourceBoundary = _srcCheck.Checked; Raise(); };
+                opt.Controls.Add(_srcCheck);
+                oy += 28;
 
                 var uvLab = new Label { Text = "UV 方向:", ForeColor = Theme.Ink, Font = Theme.Body };
-                uvLab.SetBounds(12, 106, 70, 22);
+                uvLab.SetBounds(12, oy, 70, 22);
                 opt.Controls.Add(uvLab);
                 _uvCombo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, FlatStyle = FlatStyle.Flat };
                 _uvCombo.Items.AddRange(new object[] { "曲线法线", "自动" });
                 _uvCombo.SelectedIndex = Settings.UvDirection;
-                _uvCombo.SetBounds(88, 104, 120, 24);
+                _uvCombo.SetBounds(88, oy - 2, 120, 24);
                 _uvCombo.SelectedIndexChanged += (s, e) => { Settings.UvDirection = _uvCombo.SelectedIndex; Raise(); };
                 opt.Controls.Add(_uvCombo);
+                oy += 28;
 
-                y = opt.Bottom + 8;
-            }
-
-            // ---- 输出与预览
-            {
-                var opt = new CardPanel { Left = 12, Top = y, Width = W - 24, Height = 96, Title = "输出与预览" };
-                AddScrollCard(opt);
-
-                _live.Text = "实时预览";
-                _live.Checked = true;
-                _live.SetBounds(12, 26, 150, 22);
-                _live.CheckedChanged += (s, e) => Raise();
-                opt.Controls.Add(_live);
-
-                _srcCheck = new IvanCheck { Text = "显示原边界（红线）", Checked = Settings.ShowSourceBoundary };
-                _srcCheck.SetBounds(12, 52, W - 48, 22);
-                _srcCheck.CheckedChanged += (s, e) => { Settings.ShowSourceBoundary = _srcCheck.Checked; Raise(); };
-                opt.Controls.Add(_srcCheck);
-
+                opt.Height = oy + 6;
                 y = opt.Bottom + 8;
             }
 
@@ -518,13 +599,22 @@ namespace PatchFillPattern
         public bool ShowSourceBoundaryChecked { get { return _srcCheck != null && _srcCheck.Checked; } }
 
         /// <summary>边界拾取按钮状态（true = 绿/可用，false = 红）</summary>
-        public bool PickState { get { return _pick != null && _pick.Picked; } }
-        public bool InnerPickState { get { return _pickInner != null && _pickInner.Picked; } }
+        public bool PickState { get { return _hasBoundary; } }
+        public bool InnerPickState { get { return _hasInner; } }
 
-        /// <summary>四个参数行当前是否可调（自检用）：0 控制点数 / 1 贴合强度 / 2 平滑度 / 3 G1 采样距离</summary>
+        /// <summary>参数行当前是否可调（自检用）：0 G0精确度 / 1 G1精确度 / 2 质量控制 / 3 平坦控制 / 4 控制点数 / 5 G1采样距离</summary>
         public bool RowEnabled(int which)
         {
-            List<Control> rows = which == 0 ? _gridRows : (which == 1 ? _strengthRows : (which == 2 ? _smoothRows : _g1Rows));
+            List<Control> rows = null;
+            switch (which)
+            {
+                case 0: rows = _g0AccRows; break;
+                case 1: rows = _g1AccRows; break;
+                case 2: rows = _qualityRows; break;
+                case 3: rows = _flatRows; break;
+                case 4: rows = _gridRows; break;
+                case 5: rows = _g1Rows; break;
+            }
             if (rows == null || rows.Count == 0) return false;
             for (int i = 0; i < rows.Count; i++)
                 if (rows[i] != null && !rows[i].Enabled) return false;
@@ -661,7 +751,34 @@ namespace PatchFillPattern
             try
             {
                 if (_header != null) _header.SetSub(desc);
-                if (_target != null) _target.Text = desc;
+                if (_consDesc != null) _consDesc.Text = desc;
+            }
+            catch { }
+        }
+
+        /// <summary>约束列表逐行刷新（XNURBS 式列表；行文本以「边界」/「内部」开头用于未选状态判断）</summary>
+        public void SetConstraintRows(string[] rows)
+        {
+            try
+            {
+                if (IsDisposed) return;
+                if (InvokeRequired) { BeginInvoke((Action)(() => SetConstraintRows(rows))); return; }
+                if (_consList == null) return;
+                _consList.BeginUpdate();
+                _consList.Items.Clear();
+                bool hb = false, hi = false;
+                if (rows != null)
+                {
+                    foreach (string r0 in rows)
+                    {
+                        if (string.IsNullOrEmpty(r0)) continue;
+                        _consList.Items.Add(r0);
+                        if (r0.StartsWith("边界", StringComparison.Ordinal)) hb = true;
+                        else hi = true;
+                    }
+                }
+                _consList.EndUpdate();
+                _hasBoundary = hb; _hasInner = hi;
             }
             catch { }
         }
@@ -671,16 +788,14 @@ namespace PatchFillPattern
         {
             try
             {
-                if (_pick != null) _pick.Picked = ok;
-                _target.ForeColor = ok ? Theme.Ink : Theme.InkFaint;
-                _targetHint.Text = ok ? "已选边界" : "首尾相连";
+                if (_consDesc != null) _consDesc.ForeColor = ok ? Theme.Ink : Theme.InkFaint;
             }
             catch { }
         }
 
         public void SetInnerState(bool ok)
         {
-            try { if (_pickInner != null) _pickInner.Picked = ok; } catch { }
+            try { _hasInner = ok; } catch { }
         }
 
         public void SetInfo(string text)
