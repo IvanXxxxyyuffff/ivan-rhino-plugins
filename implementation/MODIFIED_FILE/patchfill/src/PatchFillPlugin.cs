@@ -180,6 +180,54 @@ namespace PatchFillPattern
     }
 
     /// <summary>
+    /// 现场诊断命令（2026-10-12 用户「选边补不上」排查）：先在视口里选中对象/子物件边，
+    /// 再敲 PatchFillPickDiag —— 逐项打印对象类型、Geometry 实际类型、Brep 边数、
+    /// 子物件选择详情、每条边的 ResolveEdgeFromComponent 解析结果与失败原因。
+    /// 输出在 Rhino 命令行，截图即可定位。
+    /// </summary>
+    public class PatchFillPickDiagCommand : Command
+    {
+        public override string EnglishName { get { return "PatchFillPickDiag"; } }
+        protected override Result RunCommand(RhinoDoc doc, RunMode mode)
+        {
+            RhinoApp.WriteLine("=== PatchFillPickDiag（边界拾取诊断）===");
+            int n = 0;
+            try
+            {
+                foreach (RhinoObject o in doc.Objects.GetSelectedObjects(false, false))
+                {
+                    n++;
+                    RhinoApp.WriteLine("对象 " + n + "：类型=" + PatchFillCore.Describe(o));
+                    try { RhinoApp.WriteLine("  Geometry 实际类型 = " + (o.Geometry == null ? "null" : o.Geometry.GetType().FullName)); } catch (Exception ex) { RhinoApp.WriteLine("  Geometry EXC: " + ex.Message); }
+                    Brep b = null;
+                    try { b = o.Geometry as Brep; } catch { }
+                    if (b == null) { try { b = Brep.TryConvertBrep(o.Geometry); } catch { } }
+                    if (b != null) RhinoApp.WriteLine("  Brep: faces=" + b.Faces.Count + " edges=" + b.Edges.Count + " loops=" + b.Loops.Count);
+                    ComponentIndex[] subs = null;
+                    try { subs = o.GetSelectedSubObjects(); } catch { }
+                    if (subs == null || subs.Length == 0) RhinoApp.WriteLine("  （无子物件选择 = 选中的是整个物件 → 边界解析会拒绝）");
+                    else
+                    {
+                        foreach (ComponentIndex ci in subs)
+                        {
+                            RhinoApp.WriteLine("  子物件：type=" + ci.ComponentIndexType + " index=" + ci.Index);
+                            PatchFillEdge e = null; string why = null;
+                            bool ok = false;
+                            try { ok = PatchFillCore.ResolveEdgeFromComponent(o, ci, out e, out why); } catch (Exception ex) { why = "EXC " + ex.Message; }
+                            string extra = "";
+                            if (ok && e != null && e.Curve != null) { try { extra = " 边长=" + e.Curve.GetLength().ToString("0.###", System.Globalization.CultureInfo.InvariantCulture); } catch { } }
+                            RhinoApp.WriteLine("    解析 → " + (ok ? ("成功" + extra) : ("失败 why=" + why)));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { RhinoApp.WriteLine("诊断异常：" + ex.Message); }
+            if (n == 0) RhinoApp.WriteLine("（没有选中任何对象——请先在视口里选中要补的边/对象，再跑本命令）");
+            return Result.Success;
+        }
+    }
+
+    /// <summary>
     /// 面板上「选择边界」/「选择内部约束」按钮调用的隐藏命令（面板是非模态的，GetObject 只能在命令上下文里跑）。
     /// 用静态 NextMode 区分两次拾取（同一个命令，命令集不变）。
     /// </summary>
@@ -349,6 +397,48 @@ namespace PatchFillPattern
             if (!string.IsNullOrEmpty(xnmeasure))
             {
                 RunXnMeasure(kv, xnmeasure);
+                return;
+            }
+
+            // pickdiag=<label>：子物件边解析诊断（2026-10-12 复现用户「选边补不上」场景）——
+            // 造「矩形平面 + 椭圆洞」单面 brep，逐条边调 ResolveEdgeFromComponent，输出每条边的
+            // 长度/闭合/解析结果与失败原因。这条路径（子物件边 → host.Edges[i]）此前从未被测试覆盖。
+            string pickdiag = Get(kv, "pickdiag");
+            if (!string.IsNullOrEmpty(pickdiag))
+            {
+                var sb2 = new System.Text.StringBuilder("=== pickdiag " + pickdiag + " ===\n");
+                try
+                {
+                    RhinoDoc d2 = RhinoDoc.ActiveDoc;
+                    var rect = new PolylineCurve(new Point3d[] { new Point3d(0, 0, 0), new Point3d(40, 0, 0), new Point3d(40, 30, 0), new Point3d(0, 30, 0), new Point3d(0, 0, 0) });
+                    var ell = new Ellipse(new Plane(new Point3d(20, 15, 0), Vector3d.ZAxis), 10, 6).ToNurbsCurve();   // 洞必须在板内（嵌套才打洞）
+                    try { ell.Reverse(); } catch { }   // 内环反向 → CreatePlanarBreps 才会打成「带洞」单面
+                    Brep[] bb = Brep.CreatePlanarBreps(new Curve[] { rect, ell }, 1e-6);
+                    sb2.AppendLine("planarBreps=" + (bb != null ? bb.Length : -1));
+                    if (bb != null && bb.Length > 0)
+                    {
+                        Brep plate = bb[0];
+                        sb2.AppendLine("faces=" + plate.Faces.Count + " edges=" + plate.Edges.Count + " loops=" + plate.Loops.Count);
+                        Guid pid = d2.Objects.AddBrep(plate, new ObjectAttributes());
+                        RhinoObject po = d2.Objects.FindId(pid);
+                        sb2.AppendLine("objGeometryType=" + (po != null && po.Geometry != null ? po.Geometry.GetType().Name : "null"));
+                        for (int i = 0; i < plate.Edges.Count; i++)
+                        {
+                            var ci2 = new ComponentIndex(ComponentIndexType.BrepEdge, i);
+                            PatchFillEdge pe; string why2;
+                            bool ok2 = PatchFillCore.ResolveEdgeFromComponent(po, ci2, out pe, out why2);
+                            double elen = -1;
+                            try { elen = plate.Edges[i].GetLength(); } catch { }
+                            bool closed2 = false;
+                            try { closed2 = plate.Edges[i].IsClosed; } catch { }
+                            sb2.AppendLine(string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                                "edge[{0}] len={1:0.###} closed={2} → ok={3} {4}", i, elen, closed2, ok2, ok2 ? "" : ("why=" + why2)));
+                        }
+                    }
+                }
+                catch (Exception ex2) { sb2.AppendLine("EXC: " + ex2.GetType().Name + ": " + ex2.Message); }
+                try { File.WriteAllText(DefaultReportPath, sb2.ToString(), new System.Text.UTF8Encoding(false)); } catch { }
+                try { RhinoApp.Exit(); } catch { }
                 return;
             }
 
@@ -1519,6 +1609,9 @@ namespace PatchFillPattern
                 int failed = 0, faces = 0, holes = 0, rounds = 0, warns = 0;
                 double secs = 0, worstDev = 0, worstBoundary = 0, worstAngle = -1;
                 string firstNote = "";
+                // 修复（2026-10-12）：0 条有效边时把解析失败原因显示出来（此前 why 被丢，用户只看到 0 条边）
+                if (list.Count == 0 && !string.IsNullOrEmpty(validWhy))
+                    firstNote = "边界解析失败：" + validWhy;
 
                 if (list.Count > 0)
                 {
