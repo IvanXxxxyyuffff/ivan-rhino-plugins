@@ -13,27 +13,35 @@ $H = @{ Authorization = "Bearer $token"; Accept = 'application/vnd.github+json';
 
 $notes = @'
 ## 简体中文
-新增第 10 个插件 **图案压花（PatternEmboss）**：在曲面 / 多重曲面上生成**六边形（蜂窝）/ 四边形 / 菱形凹凸纹理** —— 单元尺寸、高度（正凸负凹）、槽宽、圆润度、边缘留边、采样密度、**加厚成壳**全部可调；沿面法向偏移建网格，实时预览。命令：`PatternEmboss`。
+PatternEmboss（图案压花）两处改进：
+- 「选择曲面」按钮改成**红/绿状态胶囊**（未选择 = 红，已选择 = 绿），与其它插件拾取按钮口径一致
+- 输出新增「**SubD 平滑输出（细分曲面，一键平滑）**」勾选：生成的凹凸纹理由 Catmull-Clark 转换成 SubD 细分曲面对象（一键平滑）；不勾选仍输出网格
 
-10 插件全量自检 ALL-PASS（Voronoi 150 / Stripe 55 / Halftone 23 / RadialDots 37 / MeshFix 14 / DiamondFacet 86 / WaterRipple 101 / SurfaceUnify 130+9* / PatternEmboss 26 / VapeVolume 3；* 其中一项为「用户实测文件」用例，文件缺失时按设计跳过）。
+10 插件全量自检 ALL-PASS（PatternEmboss 32/0）。
 
 ## English
-New 10th plugin **PatternEmboss**: emboss **hexagon (honeycomb) / square / diamond patterns** on surfaces and polysurfaces. Cell size, height (positive = raised, negative = sunken), groove width, roundness, edge margin, sampling density and shell thickness are all adjustable; the mesh is offset along surface normals with live preview. Command: `PatternEmboss`.
+Two improvements to PatternEmboss:
+- The "Select surface" button now uses the **red/green state pill** (red = nothing selected, green = selected), consistent with the pick buttons in the other plugins.
+- New output option "**SubD smooth output (subdivision surface, one-click smoothing)**": the generated embossed mesh is converted to a Catmull-Clark SubD object; leave unchecked to output a mesh.
 
-Full self-test suite ALL-PASS for all 10 plugins.
+Full self-test suite ALL-PASS for all 10 plugins (PatternEmboss 32/0).
 
 ## 日本語
-新規 10 番目のプラグイン **PatternEmboss**：サーフェス/ポリサーフェスに**六角形（ハニカム）/ 四角形 / 菱形の凹凸テクスチャ**を生成。セルサイズ、高さ（正=凸・負=凹）、溝幅、丸み、エッジ余白、サンプリング密度、シェル厚さを調整可能。コマンド：`PatternEmboss`。
+PatternEmboss の 2 点を改善：
+- 「サーフェスを選択」ボタンを**赤/緑の状態ピル**に（未選択=赤、選択済み=緑、他プラグインと同口径）
+- 出力に「**SubD スムース出力（サブディビジョン、ワンクリック平滑）**」を追加（Catmull-Clark で SubD に変換）
 
-10 プラグイン全自検 ALL-PASS。
+全文プラグイン全自検 ALL-PASS。
 
 ## 繁體中文
-新增第 10 個外掛 **圖案壓花（PatternEmboss）**：在曲面 / 多重曲面上生成**六邊形（蜂窩）/ 四邊形 / 菱形凹凸紋理** —— 單元尺寸、高度（正凸負凹）、槽寬、圓潤度、邊緣留邊、採樣密度、**加厚成殼**全部可調；沿面法向偏移建網格，即時預覽。指令：`PatternEmboss`。
+PatternEmboss（圖案壓花）兩處改進：
+- 「選擇曲面」按鈕改為**紅/綠狀態膠囊**（未選 = 紅、已選 = 綠），與其它外掛拾取按鈕同口徑
+- 輸出新增「**SubD 平滑輸出（細分曲面，一鍵平滑）**」勾選：凹凸網格轉 Catmull-Clark SubD 物件；不勾選仍輸出網格
 
-10 外掛全量自檢 ALL-PASS。
+10 外掛全量自檢 ALL-PASS（PatternEmboss 32/0）。
 '@
 
-$body = @{ tag_name = 'v1.4.0'; target_commitish = 'main'; name = 'v1.4.0 — 第 10 插件「图案压花 PatternEmboss」（曲面六边形/四边形/菱形凹凸纹理）'; body = $notes; draft = $false; prerelease = $false } | ConvertTo-Json -Depth 5
+$body = @{ tag_name = 'v1.4.1'; target_commitish = 'main'; name = 'v1.4.1 — PatternEmboss：拾取按钮红/绿双态 + SubD 平滑输出（一键平滑）'; body = $notes; draft = $false; prerelease = $false } | ConvertTo-Json -Depth 5
 $rel = Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$repo/releases" -Headers $H -Proxy $proxy -TimeoutSec 60 -Body ([Text.Encoding]::UTF8.GetBytes($body)) -ContentType 'application/json'
 Write-Output ("release id={0} tag={1}" -f $rel.id, $rel.tag_name)
 if (-not $rel.id) { throw 'create failed' }

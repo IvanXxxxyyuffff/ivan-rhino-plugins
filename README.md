@@ -12,11 +12,11 @@
 
 | 版本 | 下载 | 说明 |
 |---|---|---|
-| | **v1.4.0** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.0/IVAN-CENTER.exe) | Windows x64 安装器（3.7 MB，md5 `dd0acf55d7fcfcc16d8581c7bb426139`）
+| | **v1.4.1** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.1/IVAN-CENTER.exe) | Windows x64 安装器（3.6 MB，md5 `432eeb40abed6fb4a6c0fa04ea54e5c5`）
 | v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 上一版（8 插件，2.9 MB，md5 `4a7932421e68dfc91d64618c63f9f648`） | |
 
 1. **先关闭 Rhino**，双击运行安装器 → 自动装到 `%LOCALAPPDATA%\IVAN\plugins`（注册 10 个插件 + 写入工具条）
-2. 打开 Rhino：工具条上出现 9 个按钮，点按钮开面板即可用
+2. 打开 Rhino：工具条上出现 10 个按钮，点按钮开面板即可用
 3. 也可以从源码自行构建（见下）
 
 > 安装包不含 Rhino 本体，需要已安装 Rhino 7 或 Rhino 8。插件界面目前为**简体中文**。

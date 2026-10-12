@@ -208,7 +208,7 @@ namespace PatternEmboss
             if (_closed) return;
             _targets.Clear();
             if (breps != null) _targets.AddRange(breps);
-            _panel.SetTarget("曲面目标：" + (_targets.Count > 0 ? _targets.Count + " 个" : "未选"));
+            _panel.SetTarget("曲面目标：" + (_targets.Count > 0 ? _targets.Count + " 个" : "未选"), _targets.Count > 0);
             _conduit.Mesh = null;
             Rebuild();
             try { _doc.Views.Redraw(); } catch { }
@@ -329,9 +329,23 @@ namespace PatternEmboss
                     uint undo = _doc.BeginUndoRecord("生成图案压花");
                     try
                     {
-                        if (_doc.Objects.AddMesh(_result.Mesh, attrs) != Guid.Empty)
-                            RhinoApp.WriteLine("已生成图案压花网格（{0} 顶点 / {1} 面；图层：图案压花）。", _result.Vertices, _result.Faces);
-                        else RhinoApp.WriteLine("写入失败（AddMesh 返回空）。");
+                        bool wrote = false;
+                        if (_panel.Settings.SubDOutput)
+                        {
+                            SubD subd = PatternEmbossCore.ToSubD(_result.Mesh);
+                            if (subd != null && _doc.Objects.AddSubD(subd, attrs) != Guid.Empty)
+                            {
+                                RhinoApp.WriteLine("已生成图案压花 SubD 平滑细分曲面（{0} 顶点 / {1} 面转换；图层：图案压花）。", _result.Vertices, _result.Faces);
+                                wrote = true;
+                            }
+                            else RhinoApp.WriteLine("SubD 转换失败，回退网格输出。");
+                        }
+                        if (!wrote)
+                        {
+                            if (_doc.Objects.AddMesh(_result.Mesh, attrs) != Guid.Empty)
+                                RhinoApp.WriteLine("已生成图案压花网格（{0} 顶点 / {1} 面；图层：图案压花）。", _result.Vertices, _result.Faces);
+                            else RhinoApp.WriteLine("写入失败（AddMesh 返回空）。");
+                        }
                     }
                     finally { _doc.EndUndoRecord(undo); }
                     _doc.Views.Redraw();

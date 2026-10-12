@@ -52,6 +52,7 @@ namespace PatternEmboss
                 Case5_Deterministic(sb, ref pass, ref fail);
                 Case6_PanelSmoke(sb, ref pass, ref fail);
                 Case7_Thickness(sb, ref pass, ref fail);
+                Case8_SubD(sb, ref pass, ref fail);
             }
             catch (Exception ex)
             {
@@ -272,6 +273,9 @@ namespace PatternEmboss
                 Check(sb, ref pass, ref fail, true, "面板：构造成功（无异常）");
                 panel.SetTarget("曲面目标：2 个");
                 Check(sb, ref pass, ref fail, true, "面板：SetTarget 可调用");
+                panel.SetTarget("曲面目标：未选", false);
+                panel.SetTarget("曲面目标：2 个", true);
+                Check(sb, ref pass, ref fail, true, "面板：SetTarget 红/绿双态（picked 参数）可调用");
                 panel.SetInfo("测试");
                 Check(sb, ref pass, ref fail, panel.Settings != null && panel.Settings.CellSize > 0, "面板：Settings 可读");
             }
@@ -284,6 +288,30 @@ namespace PatternEmboss
                 try { if (panel != null) panel.Close(); } catch { }
                 try { if (panel != null) panel.Dispose(); } catch { }
             }
+        }
+
+        // ---------------------------------------------------------------- 用例8：SubD 平滑输出
+        static void Case8_SubD(StringBuilder sb, ref int pass, ref int fail)
+        {
+            sb.AppendLine("--- 用例8：SubD 平滑输出（一键平滑） ---");
+            Brep plate = MakePlate();
+            Check(sb, ref pass, ref fail, plate != null, "构造：60×40 平板");
+            if (plate == null) return;
+
+            var s = Base();
+            string rep;
+            PatternEmbossResult r = PatternEmbossCore.Generate(plate, s, out rep);
+            Check(sb, ref pass, ref fail, r.Mesh != null && r.Faces > 0, "网格生成成功");
+            if (r.Mesh == null || r.Faces == 0) return;
+
+            SubD subd = PatternEmbossCore.ToSubD(r.Mesh);
+            Check(sb, ref pass, ref fail, subd != null, "ToSubD：SubD.CreateFromMesh 成功");
+            if (subd == null) return;
+            Check(sb, ref pass, ref fail, subd.IsValid, "SubD IsValid = 真");
+            int fcount = 0;
+            try { fcount = subd.Faces.Count; } catch { }
+            Check(sb, ref pass, ref fail, fcount > 0,
+                string.Format(CultureInfo.InvariantCulture, "SubD 面数 > 0（实测 {0}）", fcount));
         }
 
         // ---------------------------------------------------------------- 用例7：加厚

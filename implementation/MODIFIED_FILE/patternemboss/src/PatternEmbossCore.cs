@@ -15,6 +15,7 @@ namespace PatternEmboss
         public double Margin = 1.0;      // 边缘留边 mm（边界平滑带宽度；0 = 纹理贴到边）
         public int Density = 10;         // 每单元采样数（6..24）
         public double Thickness = 0.0;   // 加厚 mm（0 = 仅面片网格；>0 = 壳/实体）
+        public bool SubDOutput = false;  // 输出 = SubD 细分平滑曲面（一键平滑；代替纯网格）
         public double MmToModel = 1.0;   // 面板 mm → 模型单位
 
         public PatternEmbossSettings Clone() { return (PatternEmbossSettings)MemberwiseClone(); }
@@ -108,6 +109,19 @@ namespace PatternEmboss
                 why.Length > 0 ? "；" + why : "");
             report = res.Note;
             return res;
+        }
+
+        /// <summary>一键平滑：网格 → SubD 细分曲面（Catmull-Clark）；失败返回 null</summary>
+        public static SubD ToSubD(Mesh m)
+        {
+            if (m == null || m.Faces.Count == 0) return null;
+            try
+            {
+                SubD s = SubD.CreateFromMesh(m);
+                if (s == null || !s.IsValid) return null;
+                return s;
+            }
+            catch { return null; }
         }
 
         // ============================================================ 单面生成

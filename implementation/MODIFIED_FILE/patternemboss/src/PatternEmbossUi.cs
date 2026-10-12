@@ -84,7 +84,7 @@ namespace PatternEmboss
                 _targetInfo.Text = "未选曲面";
                 card.Controls.Add(_targetInfo);
 
-                _pickBtn = new FlatButton { Text = "选择曲面", Style = BtnStyle.Secondary, Width = 100, Height = 28, Left = 12, Top = 50 };
+                _pickBtn = new FlatButton { Text = "选择曲面", Style = BtnStyle.Secondary, PickStyle = true, Picked = false, Width = 100, Height = 28, Left = 12, Top = 50 };
                 _pickBtn.Click += (s2, e2) => { EventHandler h = PickRequested; if (h != null) h(this, EventArgs.Empty); };
                 card.Controls.Add(_pickBtn);
 
@@ -136,6 +136,12 @@ namespace PatternEmboss
                 _live.SetBounds(12, 26, 150, 22);
                 _live.CheckedChanged += (s2, e2) => Raise();
                 opt.Controls.Add(_live);
+
+                var subd = new IvanCheck { Text = "SubD 平滑输出（细分曲面，一键平滑）", Checked = Settings.SubDOutput };
+                subd.SetBounds(12, 52, W - 48, 22);
+                subd.CheckedChanged += (s2, e2) => { Settings.SubDOutput = subd.Checked; Raise(); };
+                opt.Controls.Add(subd);
+                opt.Height = 88;
                 y = opt.Bottom + 8;
             }
 
@@ -450,13 +456,17 @@ namespace PatternEmboss
             try { if (_header != null) _header.SetSub(desc); } catch { }
         }
 
-        public void SetTarget(string desc)
+        public void SetTarget(string desc) { SetTarget(desc, true); }
+
+        /// <summary>目标状态：picked=false → 拾取按钮红（未选）、true → 绿（已选）——四插件统一口径</summary>
+        public void SetTarget(string desc, bool picked)
         {
             try
             {
                 if (IsDisposed) return;
-                if (InvokeRequired) { BeginInvoke((Action)(() => { if (!IsDisposed) _targetInfo.Text = desc; })); return; }
+                if (InvokeRequired) { BeginInvoke((Action)(() => SetTarget(desc, picked))); return; }
                 _targetInfo.Text = desc;
+                if (_pickBtn != null) _pickBtn.Picked = picked;
             }
             catch { }
         }
