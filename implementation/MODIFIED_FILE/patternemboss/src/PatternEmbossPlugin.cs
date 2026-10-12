@@ -39,18 +39,23 @@ namespace PatternEmboss
         }
 
         /// <summary>
-        /// 无人值守自检：%LOCALAPPDATA%\IVAN\logs\ 放 run-emboss-selftest.flag → 自动跑几何自检并写报告。
+        /// 无人值守自检：%LOCALAPPDATA%\IVAN\logs\ 放 run-emboss-selftest.flag →
+        /// 以 /nosplash 启动的无人值守实例自动跑几何自检并写报告（普通实例不消费旗标，不会被劫持退出）。
         /// </summary>
         static void MaybeRunSelfTest()
         {
             try
             {
+                if (!IsUnattended()) return;
                 string dir = Path.Combine(
                     System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData),
                     @"IVAN\logs");
                 string flag = Path.Combine(dir, "run-emboss-selftest.flag");
                 if (!File.Exists(flag)) return;
-                File.Delete(flag);
+                string claimed = flag + ".claimed";
+                try { File.Delete(claimed); } catch { }
+                try { File.Move(flag, claimed); } catch { return; }   // 原子领取；抢不到说明别的实例在处理
+                try { File.Delete(claimed); } catch { }               // 领取后即删：即使没跑完也不会劫持下一次启动
                 RhinoApp.Idle += SelfTestOnIdle;
             }
             catch { }
@@ -70,8 +75,8 @@ namespace PatternEmboss
         }
 
         /// <summary>无人值守探针：%LOCALAPPDATA%\IVAN\logs\run-emboss-probe.flag（key=value 多行）
-        ///   bench=&lt;保存路径&gt;：造测试曲面（平板 + 球）另存 3dm；save= 另存当前文档；report= 报告路径</summary>
-        static string lastFlagContent = null;
+        ///   bench=&lt;保存路径&gt;：造测试曲面（平板 + 球）另存 3dm；save= 另存当前文档；report= 报告路径；qr= 诊断矩阵
+        ///   仅 /nosplash 启动的无人值守实例消费旗标；消费即删（普通实例不受影响、也不会被劫持退出）</summary>
         static void MaybeRunProbe()
         {
             RhinoApp.Idle += PatternEmbossProbeOnIdle;
@@ -81,19 +86,43 @@ namespace PatternEmboss
         {
             try
             {
+                if (!IsUnattended()) return;
                 string dir = Path.Combine(
                     System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData),
                     @"IVAN\logs");
                 string flagPath = Path.Combine(dir, "run-emboss-probe.flag");
                 if (!File.Exists(flagPath)) return;
-                string content = File.ReadAllText(flagPath);
-                if (string.IsNullOrEmpty(content) || content == lastFlagContent) return;
+                string claimed = flagPath + ".claimed";
+                try { File.Delete(claimed); } catch { }
+                try { File.Move(flagPath, claimed); } catch { return; }   // 原子领取
+                string content = File.ReadAllText(claimed);
+                if (string.IsNullOrEmpty(content)) { try { File.Delete(claimed); } catch { } return; }
                 RhinoDoc d = RhinoDoc.ActiveDoc;
-                if (d == null || d.Objects.Count == 0) { if (content.Contains("bench=")) return; }
-                lastFlagContent = content;
+                if ((d == null || d.Objects.Count == 0) && content.Contains("bench="))
+                {
+                    try { File.Move(claimed, flagPath); } catch { }      // 条件不满足 → 退回旗标，留给之后的实例
+                    return;
+                }
+                try { File.Delete(claimed); } catch { }                   // 消费即删：不会劫持下一次启动
                 PatternEmbossProbeCommand.RunFromFlag(content, d);
             }
             catch { }
+        }
+
+        /// <summary>无人值守实例判定：命令行含 /nosplash（工具链启动的隐藏实例）。普通启动的实例不消费任何旗标。</summary>
+        static int _unattended = -1;   // -1 未判定 / 0 否 / 1 是（进程启动参数不变，判一次即可）
+        static bool IsUnattended()
+        {
+            if (_unattended >= 0) return _unattended == 1;
+            bool ok = false;
+            try
+            {
+                foreach (string a in System.Environment.GetCommandLineArgs())
+                    if (a != null && a.IndexOf("nosplash", StringComparison.OrdinalIgnoreCase) >= 0) { ok = true; break; }
+            }
+            catch { }
+            _unattended = ok ? 1 : 0;
+            return ok;
         }
     }
 

@@ -13,7 +13,7 @@ Every plugin is "one command + one parameter panel + live preview + headless sel
 
 | Version | Download | Notes |
 |---|---|---|
-| | **v1.4.2** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.2/IVAN-CENTER.exe) | Windows x64 installer (3.7 MB, md5 `98124f64eb2204dae1748c3b8819a23e`)
+| | **v1.4.3** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.3/IVAN-CENTER.exe) | Windows x64 installer (3.7 MB, md5 `c5aa76116efaf3ffe6f363315a34d259`)
 | v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | Previous release (8 plugins, 2.9 MB, md5 `4a7932421e68dfc91d64618c63f9f648`) | |
 
 1. **Close Rhino first**, then run the installer → installs to `%LOCALAPPDATA%\IVAN\plugins` (registers 10 plugins + writes the toolbar)

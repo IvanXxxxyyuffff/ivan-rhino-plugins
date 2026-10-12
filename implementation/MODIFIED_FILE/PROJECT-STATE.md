@@ -809,6 +809,14 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - 自检 32→**42/0 PASS**（用例9：重构 500→486 面 / 5000→4421 面 / 对称轴 / 自适应 / 重构后转 SubD）；runner=42
 - 安装器 **3840512 bytes / md5 `98124f64eb2204dae1748c3b8819a23e`** → **Release v1.4.2**（id=410481809，回下载 md5 一致）；README×4 更新；桌面已同步；commit `aa43d72` 已推送；探针新增 `qr=diag` 诊断矩阵
 
+### 20.3（2026-10-12 深夜）「一启动就被关」修复 + v1.4.3
+- **根因**：探针旗标残留（qr=diag 未删）+ 探针结尾 `RhinoApp.Exit()` → 新启动的 Rhino 加载插件后重跑探针并自行退出（`qr-diag.txt` 18:27:38 被用户启动重新生成，实锤）
+- **修复**：旗标「原子领取（rename→.claimed）+ 消费即删」；仅 `/nosplash` 无人值守实例消费旗标（IsUnattended 缓存）——普通实例完全免疫
+- **验证**：正向 42/0 PASS；反向（无 nosplash 实例 + 残留旗标）50s 零动作：旗标保留、无报告、不退出
+- **发布**：安装器 **3841536 bytes / md5 `c5aa76116efaf3ffe6f363315a34d259`** → **Release v1.4.3**（id=410490379，回下载一致）；README×4 更新；桌面同步
+- **全机同步**（Rhino 关闭窗口期）：全量安装器 exit=0；payload↔已装 **10/10 逐字节一致**；注册表 8.0 **10/10**（7.0 键本机无 Rhino 7 属预期）；verify-emboss.ps1 GUID 清单修正为安装器真值 + 增 7.0 信息行
+- **遗留**：其余 9 插件同款旗标机制建议做同类加固（暴露面小：其旗标仅由受 guard 约束的全量脚本写入）
+
 ## 19. 第 10 个插件「多边补面 PatchFill」（2026-10-10 第三轮）——**已于 2026-10-12 按用户指令移除**
 
 > **⚠ 移除记录（2026-10-12）**：用户实测「不好用」，指令「砍掉第 10 个插件，然后更新 GH」。执行内容：删 `MODIFIED_FILE/patchfill/`（源码/构建产物）、`implementation/patchfill-*.ps1`、`patchfill-bench/`、`PATCHFILL-BENCH.md`、`XNURBS-ANALYSIS.md`、`xnurbs-re/`、`BASELINE/MODIFIED-PatchFill*`、桌面配套 3dm 与对照基准；从 runner/install-and-verify/refresh-payload-and-center/iconmake/PanelTheme×9/center 项目 全部摘除；卸载本机安装（注册表键已删，安装目录改名 `PatchFill.removed-20261012` 待 Rhino 关闭后删）。**项目回到 9 插件**（= AGENTS.md 记载的九个插件）。安装器重建：IVAN-CENTER.exe 3527168 bytes / md5 `fd568a3e616b9d6d7bd16180cecf9404`（v1.3.2）。以下为历史记录（仅供追溯，勿再引用为现状）。

@@ -13,7 +13,7 @@
 
 | バージョン | ダウンロード | 備考 |
 |---|---|---|
-| | **v1.4.2** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.2/IVAN-CENTER.exe) | Windows x64 インストーラー（3.7 MB、md5 `98124f64eb2204dae1748c3b8819a23e`）
+| | **v1.4.3** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.3/IVAN-CENTER.exe) | Windows x64 インストーラー（3.7 MB、md5 `c5aa76116efaf3ffe6f363315a34d259`）
 | v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 前バージョン（8 プラグイン、2.9 MB、md5 `4a7932421e68dfc91d64618c63f9f648`） | |
 
 1. **Rhino を終了してから**インストーラーを実行 → `%LOCALAPPDATA%\IVAN\plugins` にインストール（10 プラグインを登録し、ツールバーにボタンを追加）

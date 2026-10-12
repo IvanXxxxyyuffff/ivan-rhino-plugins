@@ -13,7 +13,8 @@ namespace PatternEmboss
 {
     /// <summary>
     /// 无人值守自检。用法：命令 PatternEmbossSelfTest；或在 %LOCALAPPDATA%\IVAN\logs\ 放
-    /// run-emboss-selftest.flag 后重启 Rhino（跑完自动写报告并退出）。
+    /// run-emboss-selftest.flag 后以 /nosplash 启动 Rhino（无人值守实例跑完写报告并退出；
+    /// 普通启动的实例不消费旗标，不会被劫持退出）。
     /// </summary>
     public class PatternEmbossSelfTestCommand : Command
     {
