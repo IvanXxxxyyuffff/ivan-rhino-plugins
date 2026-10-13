@@ -475,6 +475,7 @@ namespace IvanCenter
                 }
 
             var form = new CenterForm();
+            if (silent || uitest) CenterForm.SkipUpdateCheck = true;
             if (silent) Environment.Exit(form.RunSilent(uninstall));
             if (uitest) Environment.Exit(form.RunUiTest());
             Application.Run(form);

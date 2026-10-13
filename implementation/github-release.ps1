@@ -2,6 +2,7 @@ $ErrorActionPreference = 'Stop'
 $repo = 'IvanXxxxyyuffff/ivan-rhino-plugins'
 $proxy = 'http://127.0.0.1:7897'
 $exe = 'E:\IVAN-LiquidGlass-preview\implementation\MODIFIED_FILE\stripe\out\center\IVAN-CENTER.exe'
+$tag = (Get-Content -LiteralPath 'E:\IVAN-LiquidGlass-preview\implementation\CURRENT-VERSION.txt' -Raw).Trim()
 $helper = '!"C:/Program Files/Git/mingw64/bin/git-credential-manager.exe"'
 $tmp = Join-Path $env:TEMP 'ivan-rel2'
 New-Item -ItemType Directory -Force -Path $tmp | Out-Null
@@ -13,35 +14,35 @@ $H = @{ Authorization = "Bearer $token"; Accept = 'application/vnd.github+json';
 
 $notes = @'
 ## 简体中文
-v1.4.5 — 两个实测问题修复：**Rhino 7 兼容** + **图案化拓扑重写**
-- **Rhino 7 无法加载修复**：上一版把 Rhino7 版构建的 RhinoCommon 引用误升到 7.38，较旧的 Rhino 7 报「该插件与这个版本的 Rhino 不兼容」；现已回退到与其余 9 个插件一致的最老基线 SDK（7.0.20314），TargetEdgeLength 改由反射按需设置——**任何 Rhino 7.x 都可正常加载**
-- **图案化拓扑重写（一键平滑更干净）**：网格改为「每个纹理单元 = 同心环四边面片、槽缝 = 共享边环」——拓扑沿图案、无锯齿；勾「一键平滑」**直接输出细分曲面（SubD）**（不再经 QuadRemesh 重拓扑；QuadRemesh 会打乱拓扑且对本插件图案网格存在长时间不返回风险，已从产品路径移除，仅保留内部诊断）
-- 修复：图幅边界外的图案曾被误收进网格（表面积虚增）；边缘渐隐分辨率加倍；自检每用例刷盘（中途可见进度）
-- 自检 47/0 PASS；10 插件全量回归 ALL-PASS
+v1.4.6 — **安装器内置更新检查**：检测到 GitHub 新版本自动弹出更新提醒
+- 打开插件中心即后台检查 GitHub 最新 Release（约 6 秒超时；无网络/不可达时静默跳过，不打扰安装）
+- 发现新版本：主界面右上角出现「**发现新版本 vX.Y.Z**」横幅（一键「前往下载」）+ 弹出提醒对话框
+- 版本对比：当前版本随构建注入（`CURRENT-VERSION.txt` 为唯一版本源），语义化 vX.Y.Z 比较
+- 静默安装（/silent）与 UI 冒烟（/uitest）模式不执行检查
 
 ## English
-v1.4.5 — two field fixes: **Rhino 7 compatibility** + **pattern-aligned topology rewrite**
-- **Rhino 7 load failure fixed**: the previous build accidentally bumped the Rhino7 assembly's RhinoCommon reference to 7.38, so older Rhino 7 installs refused it as incompatible. Now back on the oldest baseline SDK (7.0.20314, same as the other 9 plugins) with TargetEdgeLength set via reflection — **loads on any Rhino 7.x**.
-- **Pattern-aligned topology**: each embossed cell is now built as concentric quad rings with grooves shared as edge loops — the topology follows the pattern with no stair-stepping. "One-click smooth" outputs a **SubD directly** (no QuadRemesh pass; QuadRemesh reorders topology and can run indefinitely on this plugin's pattern meshes, so it was removed from the product path and kept only as an internal diagnostic).
-- Also fixed: cells outside the surface boundary were wrongly included (inflated area); edge-fade grid resolution doubled; self-test now flushes per case.
-- Self-test 47/0 PASS; full 10-plugin regression ALL-PASS.
+v1.4.6 — **built-in update check in the Plugin Center**: detects new GitHub releases and pops an update reminder
+- On launch the center checks the latest GitHub release in the background (6 s timeout; silently skipped when offline or unreachable).
+- When a new version exists: a "**vX.Y.Z available**" banner appears at the top-right (one-click "Download") plus a reminder dialog.
+- Version comparison uses the build-injected current version (`CURRENT-VERSION.txt` is the single source of truth), semver vX.Y.Z.
+- Skipped in /silent installs and /uitest smoke runs.
 
 ## 日本語
-v1.4.5 — 実測フィードバック 2 件の修正：**Rhino 7 互換** + **パターン整列トポロジーへの書き換え**
-- **Rhino 7 読み込み不可の修正**：前版で Rhino7 版の RhinoCommon 参照が 7.38 に上がっており、古い Rhino 7 で「互換性がない」と拒否されていました。最古ベースライン SDK（7.0.20314、他 9 プラグインと同一）に戻し、TargetEdgeLength はリフレクションで設定 — **どの Rhino 7.x でも読み込めます**。
-- **パターン整列トポロジー**：各セルを同心四角形リングで生成し、溝は共有エッジループに — トポロジーがパターンに沿い、ジャギーなし。「ワンクリックスムーズ」は **SubD を直接出力**（QuadRemesh はトポロジーを崩し、本プラグインのパターンメッシュでは長時間応答しないことがあるため製品経路から削除、内部診断のみ）。
-- その他：パターンがサーフェス境界外に誤って含まれる問題（面積の水増し）を修正、減衰グリッドの解像度を倍化。
-- 自検 47/0 PASS；全 10 プラグイン回帰 ALL-PASS。
+v1.4.6 — **プラグインセンターに更新チェックを内蔵**：GitHub の新バージョンを検出して更新通知を表示
+- 起動時にバックグラウンドで最新 Release を確認（タイムアウト約 6 秒、オフライン時は静かにスキップ）
+- 新バージョン検出時：右上に「**vX.Y.Z が見つかりました**」バナー（ワンクリックでダウンロード）+ 通知ダイアログ
+- バージョン比較はビルド時に注入された現在バージョン（`CURRENT-VERSION.txt` が唯一のソース）
+- /silent インストールと /uitest では実行しません
 
 ## 繁體中文
-v1.4.5 — 兩項實測問題修復：**Rhino 7 相容** + **圖案化拓撲重寫**
-- **Rhino 7 無法載入修復**：上一版把 Rhino7 版建置的 RhinoCommon 引用誤升至 7.38，較舊的 Rhino 7 報「與這個版本的 Rhino 不相容」；現已回退到與其餘 9 個外掛一致的最老基線 SDK（7.0.20314），TargetEdgeLength 改以反射按需設定——**任何 Rhino 7.x 均可正常載入**
-- **圖案化拓撲重寫**：每個紋理單元改為「同心環四邊面片、槽縫 = 共享邊環」——拓撲沿圖案、無鋸齒；勾「一鍵平滑」**直接輸出細分曲面（SubD）**（不再經 QuadRemesh 重構；其會打亂拓撲且對本外掛的圖案網格有長時間不返回風險，已從產品路徑移除，僅保留內部診斷）
-- 另修：圖幅邊界外的圖案曾被誤收進網格（表面積虛增）；邊緣漸隱解析度加倍；自檢每用例刷盤
-- 自檢 47/0 PASS；10 外掛全量回歸 ALL-PASS
+v1.4.6 — **安裝器內建更新檢查**：偵測到 GitHub 新版本自動彈出更新提醒
+- 開啟外掛中心即在背景檢查 GitHub 最新 Release（約 6 秒逾時；無網路／不可達時靜默跳過）
+- 發現新版本：主介面右上角出現「**發現新版本 vX.Y.Z**」橫幅（一鍵「前往下載」）+ 彈出提醒對話框
+- 版本比對：目前版本隨建置注入（`CURRENT-VERSION.txt` 為唯一版本源），語意化 vX.Y.Z 比對
+- 靜默安裝（/silent）與 UI 冒煙（/uitest）模式不執行檢查
 '@
 
-$body = @{ tag_name = 'v1.4.5'; target_commitish = 'main'; name = 'v1.4.5 — Rhino 7 兼容修复（回退基线 SDK）+ 图案化拓扑重写（一键平滑直出 SubD）'; body = $notes; draft = $false; prerelease = $false } | ConvertTo-Json -Depth 5
+$body = @{ tag_name = $tag; target_commitish = 'main'; name = 'v1.4.6 — 安装器内置更新检查：GitHub 新版检测 + 弹出更新提醒'; body = $notes; draft = $false; prerelease = $false } | ConvertTo-Json -Depth 5
 $rel = Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$repo/releases" -Headers $H -Proxy $proxy -TimeoutSec 60 -Body ([Text.Encoding]::UTF8.GetBytes($body)) -ContentType 'application/json'
 Write-Output ("release id={0} tag={1}" -f $rel.id, $rel.tag_name)
 if (-not $rel.id) { throw 'create failed' }

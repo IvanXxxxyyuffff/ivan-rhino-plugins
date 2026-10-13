@@ -13,14 +13,14 @@
 
 | バージョン | ダウンロード | 備考 |
 |---|---|---|
-| **v1.4.5** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.5/IVAN-CENTER.exe) | Windows x64 インストーラー（3.7 MB、md5 `0345e09a3828b6c2f2500c13f09743a7`） |
+| **v1.4.6** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.6/IVAN-CENTER.exe) | Windows x64 インストーラー（3.7 MB、md5 `9a526231476eff056c1da2285c748ace`） |
 | v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | 前バージョン（8 プラグイン、2.9 MB、md5 `4a7932421e68dfc91d64618c63f9f648`） |
 
 1. **Rhino を終了してから**インストーラーを実行 → `%LOCALAPPDATA%\IVAN\plugins` にインストール（10 プラグインを登録し、ツールバーにボタンを追加）
 2. Rhino を起動：ツールバーに 10 個のボタンが表示され、クリックでパネルが開きます
 3. ソースからビルドすることもできます（下記）
 
-> Rhino 本体は含まれません（Rhino 7 または 8 が必要）。**プラグインの UI は現在 簡体字中国語のみ**です。
+> Rhino 本体は含まれません（Rhino 7 または 8 が必要）。**プラグインの UI は現在 簡体字中国語のみ**です。インストーラーは起動時に GitHub の新バージョンを自動チェックし、更新を通知します。
 
 ## プラグイン一覧
 

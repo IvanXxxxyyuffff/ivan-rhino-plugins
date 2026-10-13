@@ -30,6 +30,21 @@ foreach ($sfx in @('.dll', '.deps.json', '.runtimeconfig.json')) {
   if (Test-Path -LiteralPath $src) { Copy-Item -LiteralPath $src -Destination (Join-Path $P "VapeVolume$sfx") -Force }
 }
 Write-Output ("payload refreshed (VoronoiTexture rh8={0})" -f (Get-Item (Join-Path $P 'VoronoiTexture-rh8.rhp')).Length)
+# 注入版本号：CURRENT-VERSION.txt 是唯一版本源（更新检查与 Release 共用）
+$ver = (Get-Content -LiteralPath 'E:\IVAN-LiquidGlass-preview\implementation\CURRENT-VERSION.txt' -Raw).Trim()
+$bvCode = @"
+// 自动生成（refresh-payload-and-center.ps1）——版本源：implementation/CURRENT-VERSION.txt，勿手改
+namespace IvanCenter
+{
+    internal static class BuildVersion
+    {
+        public const string Current = "$ver";
+    }
+}
+"@
+[IO.File]::WriteAllText((Join-Path $C 'stripe\center\BuildVersion.cs'), $bvCode, (New-Object Text.UTF8Encoding($false)))
+Write-Output ("version = $ver")
+
 $out = & $D build (Join-Path $C 'stripe\center\Center.csproj') -c Release -v minimal --nologo 2>&1
 $out | Select-String -Pattern 'error|已成功|错误' | ForEach-Object { $_.Line }
 $exe = Join-Path $C 'stripe\out\center\IVAN-CENTER.exe'

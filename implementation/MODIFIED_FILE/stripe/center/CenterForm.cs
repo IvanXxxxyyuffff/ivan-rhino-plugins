@@ -23,6 +23,9 @@ namespace IvanCenter
         readonly FlatButton _rmAll = new FlatButton();
         readonly Label _pageTitle = new Label();
         readonly Label _pageSub = new Label();
+        UpdateBanner _updateBanner;
+        string _updateUrl;
+        public static bool SkipUpdateCheck;
 
         const int W = 1000;
         const int SidebarWidth = 204;
@@ -60,11 +63,20 @@ namespace IvanCenter
             _pageTitle.Font = Theme.Title;
             _pageTitle.ForeColor = Theme.Ink;
             Controls.Add(_pageTitle);
-            _pageSub.Text = "安装、更新与管理你的曲面创作工具。";
+            _pageSub.Text = "安装、更新与管理你的曲面创作工具。 · 当前 " + BuildVersion.Current;
             _pageSub.SetBounds(mainLeft, 43, mainWidth, 18);
             _pageSub.Font = Theme.Small;
             _pageSub.ForeColor = Theme.InkSoft;
             Controls.Add(_pageSub);
+
+            // 更新提醒横幅：叠放在标题右侧空白区（避免改动主体布局），检测到 GitHub 新版本才显示
+            _updateBanner = new UpdateBanner(430);
+            _updateBanner.SetBounds(mainLeft + mainWidth - 430, 10, 430, 44);
+            _updateBanner.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            _updateBanner.Visible = false;
+            _updateBanner.Go.Click += (s, e) => OpenUpdatePage();
+            _updateBanner.Dismiss.Click += (s, e) => { _updateBanner.Visible = false; };
+            Controls.Add(_updateBanner);
 
             // 行高按插件个数算（新增插件不用手改数字）：6 行时 800 高的客户区仍留得下日志卡片
             int rowCount = Math.Max(1, Repo.Plugins.Count);
@@ -139,7 +151,77 @@ namespace IvanCenter
                 BuildRows();
                 RefreshStatus();
                 AppendLog("IVAN CENTER 就绪。点「全部安装 / 更新」把插件装进本机所有 Rhino。");
+                StartUpdateCheck();
             };
+        }
+
+        // ---------------------------------------------------------------- 更新检查（后台线程，失败静默）
+        void StartUpdateCheck()
+        {
+            if (SkipUpdateCheck) return;
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                string tag, url;
+                if (!UpdateChecker.FindNewer(out tag, out url)) return;
+                try { BeginInvoke((Action)(() => ShowUpdateAvailable(tag, url))); } catch { }
+            });
+        }
+
+        void ShowUpdateAvailable(string tag, string url)
+        {
+            if (IsDisposed) return;
+            _updateUrl = url;
+            _updateBanner.SetText("发现新版本 " + tag + "（当前 " + BuildVersion.Current + "）");
+            _updateBanner.Visible = true;
+            _updateBanner.BringToFront();
+            AppendLog("★ 检测到 GitHub 有新版本 " + tag + "（当前 " + BuildVersion.Current + "）。点右上角「前往下载」更新。");
+            DialogResult r = MessageBox.Show(this,
+                "检测到新版本 " + tag + "（当前 " + BuildVersion.Current + "）。\n\n是否打开下载页面？",
+                "IVAN CENTER 有新版本", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (r == DialogResult.Yes) OpenUpdatePage();
+        }
+
+        void OpenUpdatePage()
+        {
+            try { Process.Start(_updateUrl ?? UpdateChecker.ReleasesPage); } catch { }
+        }
+
+        /// <summary>更新提醒横幅（自绘玻璃卡片 + 两个按钮）</summary>
+        internal class UpdateBanner : Control
+        {
+            public readonly FlatButton Go = new FlatButton { Text = "前往下载", Style = BtnStyle.Primary, Width = 86, Height = 28 };
+            public readonly FlatButton Dismiss = new FlatButton { Text = "忽略", Style = BtnStyle.Ghost, Width = 54, Height = 28 };
+            string _text = "";
+            public UpdateBanner(int width)
+            {
+                SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint |
+                         ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+                BackColor = Theme.Canvas;
+                Width = width; Height = 44;
+                Dismiss.SetBounds(width - 54 - 8, 8, 54, 28);
+                Go.SetBounds(width - 54 - 8 - 86 - 8, 8, 86, 28);
+                Controls.Add(Go);
+                Controls.Add(Dismiss);
+            }
+            public void SetText(string t) { _text = t ?? ""; Invalidate(); }
+            protected override void OnPaint(PaintEventArgs e)
+            {
+                Graphics g = e.Graphics;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                var r = new Rectangle(0, 0, Width - 1, Height - 1);
+                using (var path = Theme.Rounded(r, 12))
+                using (var b = new SolidBrush(Color.FromArgb(235, 255, 251, 235)))
+                using (var p = new Pen(Color.FromArgb(220, Theme.Accent), 1f))
+                {
+                    g.FillPath(b, path);
+                    g.DrawPath(p, path);
+                }
+                using (var dot = new SolidBrush(Theme.Accent)) g.FillEllipse(dot, 12, 18, 8, 8);
+                using (var f = Theme.BodyBold)
+                using (var b = new SolidBrush(Theme.Ink))
+                using (var sf = new StringFormat { Trimming = StringTrimming.EllipsisCharacter, FormatFlags = StringFormatFlags.NoWrap, LineAlignment = StringAlignment.Center })
+                    g.DrawString(_text, f, b, new RectangleF(28, 0, Width - 28 - 86 - 54 - 24, Height), sf);
+            }
         }
 
         class HeaderBand : Control

@@ -834,6 +834,13 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - **验证**：自检 **47/0 PASS**；全量套件 **ALL-PASS**（150·55·23·37+1·14·86·101·130+9·47·3，219.8s）；最终证据渲染（raw / SubD / 壳 三阶段全部干净蜂窝，见 workspace `emboss-final-v2.png`）
 - **发布**：安装器 **3869696 bytes / md5 `0345e09a3828b6c2f2500c13f09743a7`** → **Release v1.4.5**（id=411205010，回下载一致）；README×4 更新（入口 + 第 10 行描述改为"拓扑沿图案/直出 SubD"）；全量安装 exit=0（payload↔已装 10/10）；桌面同步
 
+### 20.6（2026-10-13）安装器内置更新检查 → v1.4.6
+- 需求（用户）：「安装器内置推送更新，监测到 GitHub 上有新版就弹出更新提醒」
+- 实现：`UpdateChecker.cs`（GitHub `/releases/latest`、TLS1.2、6s 超时、系统默认代理、**任何失败静默**）+ 主界面右上角 `UpdateBanner`（"发现新版本 vX.Y.Z（当前 vA.B.C）" + 前往下载/忽略）+ 命中时 MessageBox 询问；日志同步记录；静默（/silent）与 /uitest 模式不检查
+- **版本单一事实源**：`implementation/CURRENT-VERSION.txt`；`refresh-payload-and-center.ps1` 构建前自动生成 `center/BuildVersion.cs`；`github-release.ps1` 的 tag_name 同源读取
+- 演示验证：临时构建 v1.4.4 → 实机启动弹窗「发现新版本 v1.4.5（当前 v1.4.4）」+ 横幅 ✓（截图 workspace `center-update-demo.jpg`）
+- 发布：安装器 **3873792 bytes / md5 `9a526231476eff056c1da2285c748ace`** → **Release v1.4.6**（id=411208873，回下载一致）；README×4（入口 + "安装器启动时自动检查新版本"说明）；全量安装 10/10；桌面同步
+
 ## 19. 第 10 个插件「多边补面 PatchFill」（2026-10-10 第三轮）——**已于 2026-10-12 按用户指令移除**
 
 > **⚠ 移除记录（2026-10-12）**：用户实测「不好用」，指令「砍掉第 10 个插件，然后更新 GH」。执行内容：删 `MODIFIED_FILE/patchfill/`（源码/构建产物）、`implementation/patchfill-*.ps1`、`patchfill-bench/`、`PATCHFILL-BENCH.md`、`XNURBS-ANALYSIS.md`、`xnurbs-re/`、`BASELINE/MODIFIED-PatchFill*`、桌面配套 3dm 与对照基准；从 runner/install-and-verify/refresh-payload-and-center/iconmake/PanelTheme×9/center 项目 全部摘除；卸载本机安装（注册表键已删，安装目录改名 `PatchFill.removed-20261012` 待 Rhino 关闭后删）。**项目回到 9 插件**（= AGENTS.md 记载的九个插件）。安装器重建：IVAN-CENTER.exe 3527168 bytes / md5 `fd568a3e616b9d6d7bd16180cecf9404`（v1.3.2）。以下为历史记录（仅供追溯，勿再引用为现状）。
