@@ -11,5 +11,5 @@ foreach ($tfm in @('Rhino8', 'Rhino7')) {
 # 装到安装目录（dev 链路）
 $inst = Join-Path $env:LOCALAPPDATA 'IVAN\plugins\PatternEmboss'
 Copy-Item (Join-Path $C 'out\rhino8\PatternEmboss.rhp') (Join-Path $inst 'rh8\PatternEmboss.rhp') -Force
-Copy-Item (Join-Path $C 'out\rhino7\PatternEmboss.rhp') (Join-Path $inst 'rh7\PatternEmboss.rhp') -Force
+Copy-Item (Join-Path $C 'out\rhino7\PatternEmboss.rhp') (Join-Path $inst 'rh7\PatternEmboss-rh7.rhp') -Force
 Write-Output 'INSTALLED'

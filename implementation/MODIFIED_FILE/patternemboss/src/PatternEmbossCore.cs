@@ -19,9 +19,9 @@ namespace PatternEmboss
         public double MmToModel = 1.0;   // 面板 mm → 模型单位
 
         // ---- 一键平滑的 QuadRemesh 重构参数（勾选 SubDOutput 后生效）
-        public int QrTargetQuadCount = 8000; // 目标四边形数
+        public int QrTargetQuadCount = 0;    // 目标四边形数（0 = 自动：按单元数 ×200 换算，保住图案细节）
         public bool QrAdaptiveCount = false; // 自适应四边形数（勾选后忽略目标四边形数）
-        public double QrTargetEdgeLength = 0; // 目标边长 mm（0 = 自动）
+        public double QrTargetEdgeLength = 0; // 目标边长 mm（0 = 自动；仅较新 RhinoCommon 支持，老版本自动跳过）
         public double QrAdaptiveSize = 0;    // 自适应尺寸 0..1（越大越随曲率自适应）
         public int QrSymmetryAxis = 0;       // 对称轴 0=无 1=X 2=Y 3=Z
         public bool QrDetectHardEdges = true;// 检测硬边（沿硬边布四边形）
@@ -80,7 +80,6 @@ namespace PatternEmboss
                 return res;
             }
 
-            merged.Faces.ConvertQuadsToTriangles();
             try { merged.Vertices.CombineIdentical(true, true); } catch { }
             try { merged.Vertices.CullUnused(); } catch { }
             try { merged.FaceNormals.ComputeFaceNormals(); } catch { }
@@ -120,16 +119,52 @@ namespace PatternEmboss
         }
 
         /// <summary>一键平滑：网格 → SubD 细分曲面（Catmull-Clark）；失败返回 null</summary>
+        public static string LastSubDError = "";
         public static SubD ToSubD(Mesh m)
         {
+            LastSubDError = "";
             if (m == null || m.Faces.Count == 0) return null;
             try
             {
                 SubD s = SubD.CreateFromMesh(m);
-                if (s == null || !s.IsValid) return null;
+                if (s == null) { LastSubDError = "CreateFromMesh 返回 null"; return null; }
+                if (!s.IsValid) { LastSubDError = "结果 IsValid=false"; return null; }
                 return s;
             }
-            catch { return null; }
+            catch (Exception ex) { LastSubDError = ex.GetType().Name + ": " + ex.Message; return null; }
+        }
+
+        /// <summary>单元数估算（面积 ÷ 单元面积；六边形约 0.866·cell²，统一按 0.8 近似）</summary>
+        public static double EstCellCount(Mesh m, PatternEmbossSettings s)
+        {
+            try
+            {
+                double area = 0;
+                var amp = AreaMassProperties.Compute(m);
+                if (amp != null) area = amp.Area;
+                double cell = Math.Max(1e-9, s.CellSize * s.MmToModel);
+                return area / (cell * cell * 0.8);
+            }
+            catch { return 0; }
+        }
+
+        /// <summary>自动目标四边形数：单元数 × 200（每单元约 200 个四边形才够还原细槽），夹在 [4000, 200000]</summary>
+        public static int AutoQuadTarget(Mesh m, PatternEmbossSettings s)
+        {
+            double cells = EstCellCount(m, s);
+            if (cells <= 0) return 30000;
+            return Math.Max(4000, Math.Min(200000, (int)Math.Round(cells * 200.0)));
+        }
+
+        /// <summary>TargetEdgeLength 是较新 RhinoCommon 才有的属性：反射按需设置，老 Rhino 7 自动跳过</summary>
+        public static void SetTargetEdgeLength(object prm, double el)
+        {
+            try
+            {
+                var pi = prm.GetType().GetProperty("TargetEdgeLength");
+                if (pi != null && pi.CanWrite) pi.SetValue(prm, el, null);
+            }
+            catch { }
         }
 
         /// <summary>一键平滑第一步：QuadRemesh 重拓扑（四边形重构，参数来自设置；失败返回 null）</summary>
@@ -147,18 +182,21 @@ namespace PatternEmboss
                 prm.AdaptiveSize = Math.Max(0.0, Math.Min(1.0, s.QrAdaptiveSize));
                 prm.DetectHardEdges = s.QrDetectHardEdges;
                 prm.SymmetryAxis = (QuadRemeshSymmetryAxis)Math.Max(0, Math.Min(3, s.QrSymmetryAxis));
-                if (s.QrTargetQuadCount > 0) prm.TargetQuadCount = s.QrTargetQuadCount;
+                prm.TargetQuadCount = s.QrTargetQuadCount > 0 ? s.QrTargetQuadCount : AutoQuadTarget(m, s);
                 double el = s.QrTargetEdgeLength * s.MmToModel;
-                if (el > 1e-9) prm.TargetEdgeLength = el;
+                if (el > 1e-9) SetTargetEdgeLength(prm, el);
                 Mesh q = m.QuadRemesh(prm);
                 if (q == null) { LastQuadRemeshError = "QuadRemesh 返回 null"; return null; }
+                try { q.Vertices.CombineIdentical(true, true); } catch { }
+                try { q.Vertices.CullUnused(); } catch { }
+                try { q.UnifyNormals(); } catch { }
                 if (!q.IsValid || q.Faces.Count == 0) { LastQuadRemeshError = "结果无效（IsValid=" + q.IsValid + " faces=" + q.Faces.Count + "）"; return null; }
                 return q;
             }
             catch (Exception ex) { LastQuadRemeshError = ex.GetType().Name + ": " + ex.Message; return null; }
         }
 
-        // ============================================================ 单面生成
+        // ============================================================ 单面生成（图案化拓扑：每单元同心环四边面片，槽缝 = 共享边环）
 
         static Mesh GenFace(BrepFace face, PatternEmbossSettings s, ref double minH, ref double maxH)
         {
@@ -168,141 +206,275 @@ namespace PatternEmboss
             // ---- 物理尺度（uv 每单位对应模型长度）；平面走 Frame 直投保证无扭曲
             double su = 1, sv = 1;
             Plane frame = Plane.Unset;
-            Point3d center = Point3d.Unset;
             bool planar = false;
             try { planar = face.TryGetPlane(out frame, 1e-3) && frame.IsValid; } catch { planar = false; }
-            if (planar)
-            {
-                try { center = face.PointAt(du.Mid, dv.Mid); } catch { center = Point3d.Unset; }
-            }
-            else
-            {
-                ComputeScales(face, du, dv, out su, out sv);
-            }
+            ComputeScales(face, du, dv, out su, out sv);   // 平面也取（边界渐隐网格用）
 
             double cellMm = s.CellSize * s.MmToModel;
             double grooveMm = Math.Max(0, s.Groove * s.MmToModel);
             double heightModel = s.Height * s.MmToModel;
             double marginModel = Math.Max(0, s.Margin * s.MmToModel);
             int dens = Math.Max(6, Math.Min(24, s.Density));
-            double stepMm = cellMm / dens;                     // 采样步长（物理）
+            double stepMm = cellMm / dens;
 
-            // ---- 区域范围（平面用包围盒；曲面用 uv 域 + 尺度换算）
-            double umin = du.Min, umax = du.Max, vmin = dv.Min, vmax = dv.Max;
-            double spanMu = (umax - umin) * su, spanMv = (vmax - vmin) * sv;
-
-            int nu = (int)Math.Floor(spanMu / stepMm) + 1;
-            int nv = (int)Math.Floor(spanMv / stepMm) + 1;
-            if ((long)nu * nv > GridCap)
+            // ---- 单元几何（与 HeightField 的格子约定严格一致）
+            int NC; double[] cdx, cdy; double dyRow, QC;
+            switch (s.Pattern)
             {
-                // 降密度保护：保持至少 4 采样/单元
-                double k = Math.Sqrt((long)nu * nv / (double)GridCap);
-                dens = Math.Max(4, (int)(dens / k));
-                stepMm = cellMm / dens;
-                nu = (int)Math.Floor(spanMu / stepMm) + 1;
-                nv = (int)Math.Floor(spanMv / stepMm) + 1;
-                if ((long)nu * nv > GridCap) return null;   // 仍超 → 放弃该面
-            }
-            if (nu < 2 || nv < 2) return null;
-
-            // ---- 格点采样
-            var pts = new Point3d[nu * nv];
-            var nrm = new Vector3d[nu * nv];
-            var inside = new bool[nu * nv];
-            var hgt = new double[nu * nv];
-            for (int i = 0; i < nu; i++)
-            {
-                double u = umin + (umax - umin) * i / (double)(nu - 1);
-                for (int j = 0; j < nv; j++)
+                case 1: // 方阵：角在 45°+90°k
                 {
-                    double v = vmin + (vmax - vmin) * j / (double)(nv - 1);
-                    int k = i * nv + j;
-                    Point3d p; Vector3d n;
-                    bool ok = false;
+                    NC = 4; cdx = new double[4]; cdy = new double[4];
+                    double q = cellMm * 0.5 * Math.Sqrt(2.0);
+                    for (int k2 = 0; k2 < 4; k2++) { double a = Math.PI / 4.0 + Math.PI / 2.0 * k2; cdx[k2] = q * Math.Cos(a); cdy[k2] = q * Math.Sin(a); }
+                    dyRow = cellMm; QC = cellMm * 0.7072;
+                    break;
+                }
+                case 2: // 菱形：四角 (±rx,0)(0,±ry)
+                {
+                    NC = 4; cdx = new double[4]; cdy = new double[4];
+                    cdx[0] = cellMm * 0.5; cdy[0] = 0;
+                    cdx[1] = 0; cdy[1] = cellMm * 0.5;
+                    cdx[2] = -cellMm * 0.5; cdy[2] = 0;
+                    cdx[3] = 0; cdy[3] = -cellMm * 0.5;
+                    dyRow = cellMm * 0.5; QC = cellMm * 0.5;
+                    break;
+                }
+                default: // 蜂窝（pointy-top）：角在 30°+60°k
+                {
+                    NC = 6; cdx = new double[6]; cdy = new double[6];
+                    double Rc = cellMm / Math.Sqrt(3.0);
+                    for (int k2 = 0; k2 < 6; k2++) { double a = Math.PI / 6.0 + Math.PI / 3.0 * k2; cdx[k2] = Rc * Math.Cos(a); cdy[k2] = Rc * Math.Sin(a); }
+                    dyRow = 1.5 * (cellMm / Math.Sqrt(3.0)); QC = cellMm / Math.Sqrt(3.0);
+                    break;
+                }
+            }
+            bool rowOffset = (s.Pattern != 1);
+
+            // ---- 每边采样数 K、同心环数 M（面数保护）
+            double perim = 0;
+            for (int k2 = 0; k2 < NC; k2++) { int n2 = (k2 + 1) % NC; perim += Math.Sqrt((cdx[n2] - cdx[k2]) * (cdx[n2] - cdx[k2]) + (cdy[n2] - cdy[k2]) * (cdy[n2] - cdy[k2])); }
+            int K = Math.Max(3, (int)Math.Round((perim / NC) / stepMm));
+            int M = Math.Max(3, dens / 2);
+            int per = NC * K;
+
+            // ---- 区域范围（图案坐标 x,y）
+            double xmin, xmax, ymin, ymax;
+            if (planar)
+            {
+                bool any = false; xmin = xmax = ymin = ymax = 0;
+                for (int i = 0; i <= 4; i++)
+                    for (int j = 0; j <= 4; j++)
+                    {
+                        Point3d P;
+                        try { P = face.PointAt(du.ParameterAt(i / 4.0), dv.ParameterAt(j / 4.0)); } catch { continue; }
+                        if (!P.IsValid) continue;
+                        Vector3d d = P - frame.Origin;
+                        double x = d * frame.XAxis, y = d * frame.YAxis;
+                        if (!any) { xmin = xmax = x; ymin = ymax = y; any = true; }
+                        else { if (x < xmin) xmin = x; if (x > xmax) xmax = x; if (y < ymin) ymin = y; if (y > ymax) ymax = y; }
+                    }
+                if (!any) { xmin = 0; xmax = du.Max - du.Min; ymin = 0; ymax = dv.Max - dv.Min; }
+            }
+            else
+            {
+                xmin = 0; xmax = (du.Max - du.Min) * su;
+                ymin = 0; ymax = (dv.Max - dv.Min) * sv;
+            }
+
+            // ---- 面数保护（预估超限时降一档；仍超则放弃该面）
+            {
+                double cellsEst = Math.Max(1.0, (xmax - xmin + cellMm) * (ymax - ymin + cellMm) / (0.75 * cellMm * cellMm));
+                if (cellsEst * per * M > 900000.0)
+                {
+                    K = Math.Max(3, K / 2);
+                    M = Math.Max(3, M / 2);
+                    per = NC * K;
+                    if (cellsEst * per * M > 900000.0) return null;
+                }
+            }
+
+            // ---- 边缘渐隐：粗网格 BFS 距离场（uv 空间，按物理步长）+ 双线性查表
+            int gnu = 0, gnv = 0; double gu0 = 0, gv0 = 0, guStep = 1, gvStep = 1;
+            int[] gdist = null;
+            if (marginModel > 1e-12)
+            {
+                double buStep = 0.5 * stepMm / Math.Max(su, 1e-9);
+                double bvStep = 0.5 * stepMm / Math.Max(sv, 1e-9);
+                gnu = (int)Math.Floor((du.Max - du.Min) / buStep) + 3;
+                gnv = (int)Math.Floor((dv.Max - dv.Min) / bvStep) + 3;
+                guStep = (du.Max - du.Min) / Math.Max(1, gnu - 3);
+                gvStep = (dv.Max - dv.Min) / Math.Max(1, gnv - 3);
+                while ((long)gnu * gnv > GridCap && gnu > 3 && gnv > 3)
+                {
+                    guStep *= 2; gvStep *= 2;
+                    gnu = (int)Math.Floor((du.Max - du.Min) / guStep) + 3;
+                    gnv = (int)Math.Floor((dv.Max - dv.Min) / gvStep) + 3;
+                }
+                gu0 = du.Min - guStep; gv0 = dv.Min - gvStep;
+                gdist = new int[gnu * gnv];
+                var q = new Queue<int>();
+                for (int i = 0; i < gnu; i++)
+                    for (int j = 0; j < gnv; j++)
+                    {
+                        double u = gu0 + i * guStep, v = gv0 + j * gvStep;
+                        bool ins = false;
+                        try { ins = face.IsPointOnFace(u, v) != PointFaceRelation.Exterior; } catch { ins = false; }
+                        int kk = i * gnv + j;
+                        if (ins) gdist[kk] = int.MaxValue; else { gdist[kk] = 0; q.Enqueue(kk); }
+                    }
+                for (int i = 0; i < gnu; i++) { TrySeed(q, gdist, i * gnv); TrySeed(q, gdist, i * gnv + gnv - 1); }
+                for (int j = 0; j < gnv; j++) { TrySeed(q, gdist, j); TrySeed(q, gdist, (gnu - 1) * gnv + j); }
+                while (q.Count > 0)
+                {
+                    int kk = q.Dequeue();
+                    int i = kk / gnv, j = kk % gnv;
+                    int dd = gdist[kk] + 1;
+                    if (i > 0) Push(q, gdist, kk - gnv, dd);
+                    if (i < gnu - 1) Push(q, gdist, kk + gnv, dd);
+                    if (j > 0) Push(q, gdist, kk - 1, dd);
+                    if (j < gnv - 1) Push(q, gdist, kk + 1, dd);
+                }
+            }
+
+            Func<double, double, double> MarginAt = (u, v) =>
+            {
+                if (gdist == null) return 1.0;
+                double fi = (u - gu0) / guStep, fj = (v - gv0) / gvStep;
+                if (fi < 0 || fj < 0 || fi > gnu - 1 || fj > gnv - 1) return 0.0;
+                int i0 = Math.Min(gnu - 2, (int)fi), j0 = Math.Min(gnv - 2, (int)fj);
+                double tx = fi - i0, ty = fj - j0;
+                double d00 = gdist[i0 * gnv + j0] == int.MaxValue ? 1e9 : gdist[i0 * gnv + j0];
+                double d10 = gdist[(i0 + 1) * gnv + j0] == int.MaxValue ? 1e9 : gdist[(i0 + 1) * gnv + j0];
+                double d01 = gdist[i0 * gnv + j0 + 1] == int.MaxValue ? 1e9 : gdist[i0 * gnv + j0 + 1];
+                double d11 = gdist[(i0 + 1) * gnv + j0 + 1] == int.MaxValue ? 1e9 : gdist[(i0 + 1) * gnv + j0 + 1];
+                double dm = ((d00 * (1 - tx) + d10 * tx) * (1 - ty) + (d01 * (1 - tx) + d11 * tx) * ty) * ((guStep + gvStep) * 0.5);
+                double f = dm / marginModel;
+                return f >= 1.0 ? 1.0 : (f <= 0.0 ? 0.0 : f);
+            };
+
+            // ---- 顶点焊接（图案坐标 0.1µm 量化）
+            var vmap = new Dictionary<long, int>(1 << 16);
+            var mesh = new Mesh();
+            double usedMin = double.MaxValue, usedMax = double.MinValue;
+            Func<double, double, int> GetV = (x, y) =>
+            {
+                long rx = (long)Math.Round(x * 1e4);
+                long ry = (long)Math.Round(y * 1e4);
+                long key = rx * 2000000011L + ry;
+                int idx;
+                if (vmap.TryGetValue(key, out idx)) return idx;
+
+                double u, v; Point3d p; Vector3d n; bool ok;
+                if (planar)
+                {
+                    p = frame.Origin + x * frame.XAxis + y * frame.YAxis;
+                    n = frame.ZAxis;
+                    double uu, vv;
+                    ok = false; u = v = 0;
+                    try
+                    {
+                        // 界外点会被 ClosestPoint 吸到边界上（IsPointOnFace 返回 Boundary 而非 Exterior）→ 用距离复核
+                        ok = face.ClosestPoint(p, out uu, out vv)
+                            && face.PointAt(uu, vv).DistanceTo(p) < 1e-4
+                            && face.IsPointOnFace(uu, vv) != PointFaceRelation.Exterior;
+                        u = uu; v = vv;
+                    }
+                    catch { ok = false; }
+                }
+                else
+                {
+                    u = du.Min + x / su; v = dv.Min + y / sv;
                     try
                     {
                         p = face.PointAt(u, v);
                         n = face.NormalAt(u, v);
-                        ok = p.IsValid && n.IsValid && n.Unitize() && face.IsPointOnFace(u, v) != PointFaceRelation.Exterior;
+                        ok = u >= du.Min && u <= du.Max && v >= dv.Min && v <= dv.Max
+                            && p.IsValid && n.IsValid && n.Unitize() && face.IsPointOnFace(u, v) != PointFaceRelation.Exterior;
                     }
-                    catch { p = Point3d.Unset; n = Vector3d.Unset; }
-                    if (!ok) { inside[k] = false; continue; }
-                    inside[k] = true;
-                    pts[k] = p; nrm[k] = n;
+                    catch { p = Point3d.Unset; n = Vector3d.Unset; ok = false; }
+                }
+                if (!ok) { vmap[key] = -1; return -1; }
 
-                    // 物理图案坐标
-                    double x, y;
-                    if (planar && center.IsValid)
+                double h = HeightField(x, y, cellMm, grooveMm, heightModel, s.Roundness, s.Pattern);
+                if (gdist != null) h *= MarginAt(u, v);
+                if (h < usedMin) usedMin = h;
+                if (h > usedMax) usedMax = h;
+                idx = mesh.Vertices.Add(p + n * h);
+                vmap[key] = idx;
+                return idx;
+            };
+
+            // ---- 单元遍历（格子约定与 HeightField 一致）
+            long rowMinL = (long)Math.Floor((ymin - QC - dyRow) / dyRow) - 1;
+            long rowMaxL = (long)Math.Ceiling((ymax + QC + dyRow) / dyRow) + 1;
+            var bxr = new double[per];
+            var byr = new double[per];
+            for (long row = rowMinL; row <= rowMaxL; row++)
+            {
+                double off = (rowOffset && (((row % 2) + 2) % 2 == 1)) ? cellMm * 0.5 : 0;
+                long colMinL = (long)Math.Floor((xmin - QC - cellMm - off) / cellMm) - 1;
+                long colMaxL = (long)Math.Ceiling((xmax + QC + cellMm - off) / cellMm) + 1;
+                for (long col = colMinL; col <= colMaxL; col++)
+                {
+                    double cx = col * cellMm + off, cy = row * dyRow;
+                    if (cx + QC < xmin || cx - QC > xmax || cy + QC < ymin || cy - QC > ymax) continue;
+
+                    // 边界环（逐边均匀采样，环绕 CCW）
+                    for (int e = 0; e < NC; e++)
                     {
-                        Vector3d d = p - frame.Origin;
-                        x = d * frame.XAxis; y = d * frame.YAxis;
+                        int e2 = (e + 1) % NC;
+                        double x0 = cx + cdx[e], y0 = cy + cdy[e];
+                        double x1 = cx + cdx[e2], y1 = cy + cdy[e2];
+                        for (int i = 0; i < K; i++)
+                        {
+                            double t = (double)i / K;
+                            bxr[e * K + i] = x0 + (x1 - x0) * t;
+                            byr[e * K + i] = y0 + (y1 - y0) * t;
+                        }
                     }
-                    else
+                    // 同心环
+                    var rings = new int[M][];
+                    bool anyValid = false;
+                    for (int r = 0; r < M; r++)
                     {
-                        x = (u - umin) * su; y = (v - vmin) * sv;
+                        double t = 1.0 - (double)r / M;
+                        var rr = new int[per];
+                        for (int i = 0; i < per; i++)
+                        {
+                            rr[i] = GetV(cx + (bxr[i] - cx) * t, cy + (byr[i] - cy) * t);
+                            if (rr[i] >= 0) anyValid = true;
+                        }
+                        rings[r] = rr;
                     }
-                    hgt[k] = HeightField(x, y, cellMm, grooveMm, heightModel, s.Roundness, s.Pattern);
+                    if (!anyValid) continue;
+                    // 外环带（同心环之间的四边面）
+                    for (int r = 0; r < M - 1; r++)
+                    {
+                        int[] A = rings[r], B2 = rings[r + 1];
+                        for (int i = 0; i < per; i++)
+                        {
+                            int j2 = (i + 1) % per;
+                            int a = A[i], b = A[j2], c = B2[j2], d = B2[i];
+                            if (a < 0 || b < 0 || c < 0 || d < 0) continue;
+                            if (a == b || b == c || c == d || d == a || a == c || b == d) continue;
+                            mesh.Faces.AddFace(a, b, c, d);
+                        }
+                    }
+                    // 中心封盖：每两段环边一个四边面（per 为偶数恒成立），中心为极点；环边被恰好两个面共用（无洞）
+                    int cIdx = GetV(cx, cy);
+                    {
+                        int[] A = rings[M - 1];
+                        for (int i = 0; i < per; i += 2)
+                        {
+                            int a = cIdx, b = A[i], c = A[(i + 1) % per], d = A[(i + 2) % per];
+                            if (a < 0 || b < 0 || c < 0 || d < 0) continue;
+                            if (a == b || b == c || c == d || d == a || a == c || b == d) continue;
+                            mesh.Faces.AddFace(a, b, c, d);
+                        }
+                    }
                 }
             }
 
-            // ---- 留边渐隐（多源 BFS：到最近界外格点的步数 × 步长）
-            if (marginModel > 1e-12)
-            {
-                var dist = new int[nu * nv];
-                var q = new Queue<int>();
-                for (int k = 0; k < dist.Length; k++)
-                {
-                    if (inside[k]) dist[k] = int.MaxValue;
-                    else { dist[k] = 0; q.Enqueue(k); }
-                }
-                // 域边缘也算界外（贴边渐隐）
-                for (int i = 0; i < nu; i++) { TrySeed(q, dist, i * nv + 0); TrySeed(q, dist, i * nv + (nv - 1)); }
-                for (int j = 0; j < nv; j++) { TrySeed(q, dist, 0 * nv + j); TrySeed(q, dist, (nu - 1) * nv + j); }
-                while (q.Count > 0)
-                {
-                    int k = q.Dequeue();
-                    int i = k / nv, j = k % nv;
-                    int d = dist[k] + 1;
-                    if (i > 0) Push(q, dist, k - nv, d);
-                    if (i < nu - 1) Push(q, dist, k + nv, d);
-                    if (j > 0) Push(q, dist, k - 1, d);
-                    if (j < nv - 1) Push(q, dist, k + 1, d);
-                }
-                for (int k = 0; k < dist.Length; k++)
-                {
-                    if (!inside[k]) continue;
-                    double dm = dist[k] * stepMm;
-                    if (dm < marginModel) hgt[k] *= Math.Max(0.0, dm / marginModel);
-                }
-            }
-
-            // ---- 建网格（四角都在界内的格子）
-            var mesh = new Mesh();
-            var idx = new int[nu * nv];
-            for (int k = 0; k < idx.Length; k++) idx[k] = -1;
-            double usedMin = double.MaxValue, usedMax = double.MinValue;
-            for (int i = 0; i < nu; i++)
-            {
-                for (int j = 0; j < nv; j++)
-                {
-                    int k = i * nv + j;
-                    if (!inside[k]) continue;
-                    double h = hgt[k];
-                    if (h < usedMin) usedMin = h;
-                    if (h > usedMax) usedMax = h;
-                    Point3d q0 = pts[k] + nrm[k] * h;
-                    idx[k] = mesh.Vertices.Add(q0);
-                }
-            }
-            for (int i = 0; i < nu - 1; i++)
-            {
-                for (int j = 0; j < nv - 1; j++)
-                {
-                    int a = idx[i * nv + j], b = idx[(i + 1) * nv + j], c = idx[(i + 1) * nv + j + 1], d = idx[i * nv + j + 1];
-                    if (a < 0 || b < 0 || c < 0 || d < 0) continue;
-                    mesh.Faces.AddFace(a, b, c, d);
-                }
-            }
             if (mesh.Faces.Count == 0) return null;
             if (usedMin != double.MaxValue)
             {

@@ -218,9 +218,6 @@ namespace PatternEmboss
         readonly Timer _timer = new Timer();
         readonly List<Brep> _targets = new List<Brep>();
         PatternEmbossResult _result;
-        Mesh _qrResult;                  // 预览/生成复用的 QuadRemesh 重构结果
-        Mesh _qrSource;                  // 对应的原始网格（引用相等判定是否仍有效）
-        string _qrSig;                   // 生成时的 QuadRemesh 参数签名
         bool _closed;
 
         public PatternEmbossSession(RhinoDoc doc, PatternEmbossSettings settings, List<Brep> targets)
@@ -273,15 +270,6 @@ namespace PatternEmboss
             catch (Exception ex) { _panel.SetInfo("选择失败：" + ex.Message); }
         }
 
-        /// <summary>QuadRemesh 参数签名（判断预览时的重构结果是否仍适用于当前参数）</summary>
-        static string QrSignature(PatternEmbossSettings s)
-        {
-            return string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                "{0}|{1}|{2:0.####}|{3:0.####}|{4}|{5}|{6:0.######}",
-                s.QrTargetQuadCount, s.QrAdaptiveCount, s.QrAdaptiveSize,
-                s.QrTargetEdgeLength, s.QrSymmetryAxis, s.QrDetectHardEdges, s.MmToModel);
-        }
-
         void Rebuild()
         {
             if (_closed) return;
@@ -328,31 +316,18 @@ namespace PatternEmboss
                 _result.Note = notes.Count > 0 ? string.Join(" ", notes.ToArray()) : "";
                 if (_result.Faces > 0)
                 {
-                    try { merged.Faces.ConvertQuadsToTriangles(); } catch { }
                     try { merged.Vertices.CombineIdentical(true, true); } catch { }
                     try { merged.FaceNormals.ComputeFaceNormals(); } catch { }
                 }
 
-                // 一键平滑：先 QuadRemesh 四边形重构（预览与生成共用；参数变了自动失效）
-                _qrResult = null; _qrSource = null; _qrSig = null;
-                if (_result.Mesh != null && cur.SubDOutput)
-                {
-                    Mesh q = PatternEmbossCore.QuadRemesh(_result.Mesh, cur);
-                    if (q != null) { _qrResult = q; _qrSource = _result.Mesh; _qrSig = QrSignature(cur); }
-                }
-
                 if (_panel.LivePreview)
                 {
-                    _conduit.Mesh = _qrResult != null ? _qrResult : _result.Mesh;
+                    _conduit.Mesh = _result.Mesh;
                     try { _doc.Views.Redraw(); } catch { }
                 }
 
                 if (_result.Faces == 0) { _panel.SetInfo("没有生成网格（" + (string.IsNullOrEmpty(_result.Note) ? "检查目标与参数" : _result.Note) + "）"); return; }
-                string qrNote = "";
-                if (cur.SubDOutput)
-                    qrNote = _qrResult != null
-                        ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "\r\n一键平滑：QuadRemesh 重构 {0} 面 → SubD 细分曲面", _qrResult.Faces.Count)
-                        : "\r\n一键平滑：QuadRemesh 重构失败，生成时回退（SubD 直接转换 / 网格）";
+                string qrNote = cur.SubDOutput ? "\r\n一键平滑：图案化四边网直接转 SubD（拓扑沿图案）" : "";
                 _panel.SetInfo(string.Format(System.Globalization.CultureInfo.InvariantCulture,
                     "{0} 顶点 / {1} 面{2} · 高 {3:0.####}~{4:0.####} · 曲面积 {5:0.##} · {6} ms\r\n模式：{7} · 单元 {8:0.##} mm · 槽宽 {9:0.##} mm{10}{11}",
                     _result.Vertices, _result.Faces, _result.Solid ? "（已加厚）" : "",
@@ -387,23 +362,13 @@ namespace PatternEmboss
                         bool wrote = false;
                         if (_panel.Settings.SubDOutput)
                         {
-                            PatternEmbossSettings cur = _panel.Settings;
-                            // 复用预览时的重构结果（参数未变时不重复跑 QuadRemesh）
-                            Mesh q = (_qrResult != null && ReferenceEquals(_qrSource, _result.Mesh) && _qrSig == QrSignature(cur))
-                                ? _qrResult
-                                : PatternEmbossCore.QuadRemesh(_result.Mesh, cur);
-                            SubD subd = q != null ? PatternEmbossCore.ToSubD(q) : null;
-                            if (subd == null) subd = PatternEmbossCore.ToSubD(_result.Mesh);
+                            SubD subd = PatternEmbossCore.ToSubD(_result.Mesh);
                             if (subd != null && _doc.Objects.AddSubD(subd, attrs) != Guid.Empty)
                             {
-                                RhinoApp.WriteLine(q != null
-                                    ? string.Format("已生成图案压花 SubD 平滑细分曲面（QuadRemesh 重构 {0} 面 → 细分曲面；图层：图案压花）。", q.Faces.Count)
-                                    : "已生成图案压花 SubD 平滑细分曲面（QuadRemesh 不可用，直接用原网格转换；图层：图案压花）。");
+                                RhinoApp.WriteLine("已生成图案压花 SubD 细分曲面（图案化四边网直接转换；图层：图案压花）。");
                                 wrote = true;
                             }
-                            else RhinoApp.WriteLine(q == null
-                                ? "QuadRemesh 重构失败，回退网格输出。"
-                                : "SubD 转换失败，回退网格输出。");
+                            else RhinoApp.WriteLine("SubD 转换失败，回退网格输出。");
                         }
                         if (!wrote)
                         {
@@ -480,6 +445,8 @@ namespace PatternEmboss
                 }
                 string qr = null; kv.TryGetValue("qr", out qr);
                 if (!string.IsNullOrEmpty(qr)) { sb.AppendLine("== QuadRemesh 诊断 =="); QrDiag(sb); }
+                string stages = null; kv.TryGetValue("stages", out stages);
+                if (!string.IsNullOrEmpty(stages)) StageDump(doc, stages, sb);
             }
             catch (Exception ex) { sb.AppendLine("EXC: " + ex.Message); }
             try
@@ -492,20 +459,168 @@ namespace PatternEmboss
             try { RhinoApp.Exit(); } catch { }
         }
 
+        /// <summary>三阶段对比导出：原始网格 / 直接转 SubD / 加厚壳，并排 + 截图</summary>
+        static void StageDump(RhinoDoc doc, string path3dm, System.Text.StringBuilder sb)
+        {
+            try
+            {
+                string dir = Path.GetDirectoryName(path3dm);
+                if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+                var pl = new PolylineCurve(new Point3d[] { new Point3d(0, 0, 0), new Point3d(60, 0, 0), new Point3d(60, 40, 0), new Point3d(0, 40, 0), new Point3d(0, 0, 0) });
+                Brep[] bs = Brep.CreatePlanarBreps(new Curve[] { pl }, 1e-6);
+                Brep plate = bs != null && bs.Length > 0 ? bs[0] : null;
+                if (plate == null) { sb.AppendLine("stages: 平板构造失败"); return; }
+                var s = new PatternEmbossSettings();
+                string rep;
+                PatternEmbossResult r = PatternEmbossCore.Generate(plate, s, out rep);
+                Mesh raw = r.Mesh;
+                sb.AppendLine("stages: raw faces=" + (raw != null ? raw.Faces.Count : 0));
+                SubD sd = raw != null ? PatternEmbossCore.ToSubD(raw) : null;
+                sb.AppendLine("stages: direct-subd ok=" + (sd != null && sd.IsValid) + " err=" + PatternEmbossCore.LastSubDError);
+                Mesh subdMesh = null;
+                if (sd != null)
+                {
+                    try
+                    {
+                        // ToBrep 的签名随 SDK 版本变化（新版无参 / 老版 7.0.20314 需要 options）→ 反射调用
+                        Brep sbr = null;
+                        foreach (var mi in typeof(SubD).GetMethods())
+                        {
+                            if (mi.Name != "ToBrep") continue;
+                            var ps = mi.GetParameters();
+                            try
+                            {
+                                if (ps.Length == 0) { sbr = (Brep)mi.Invoke(sd, null); break; }
+                                if (ps.Length == 1) { sbr = (Brep)mi.Invoke(sd, new object[] { Activator.CreateInstance(ps[0].ParameterType) }); break; }
+                            }
+                            catch { }
+                        }
+                        Mesh[] mm = sbr != null ? Mesh.CreateFromBrep(sbr, MeshingParameters.Default) : null;
+                        var acc = new Mesh();
+                        if (mm != null) foreach (Mesh m in mm) acc.Append(m);
+                        subdMesh = acc.Faces.Count > 0 ? acc : null;
+                    }
+                    catch { }
+                }
+                var s2 = s.Clone(); s2.Thickness = 1.0;
+                PatternEmbossResult r2 = PatternEmbossCore.Generate(plate, s2, out rep);
+                Mesh shell = r2.Mesh;
+                sb.AppendLine("stages: shell faces=" + (shell != null ? shell.Faces.Count : 0) + " solid=" + r2.Solid);
+
+                int layer = PatternEmbossLauncher.EnsureLayer(doc, "emboss-stages", Color.Gray);
+                var at = new ObjectAttributes(); at.LayerIndex = layer;
+                var bb = BoundingBox.Empty;
+                double x = 0;
+                if (raw != null) { Mesh mm = raw.DuplicateMesh(); mm.Translate(x, 0, 0); at.Name = "A-raw"; if (doc.Objects.AddMesh(mm, at) != Guid.Empty) bb.Union(mm.GetBoundingBox(true)); x += 70; }
+                if (sd != null) { SubD sc = (SubD)sd.Duplicate(); sc.Translate(x, 0, 0); at.Name = "C-subd"; if (doc.Objects.AddSubD(sc, at) != Guid.Empty) { try { bb.Union(sc.GetBoundingBox(true)); } catch { } } x += 70; }
+                if (shell != null) { Mesh mm = shell.DuplicateMesh(); mm.Translate(x, 0, 0); at.Name = "D-shell"; if (doc.Objects.AddMesh(mm, at) != Guid.Empty) bb.Union(mm.GetBoundingBox(true)); x += 70; }
+                bool ok = doc.WriteFile(path3dm, new Rhino.FileIO.FileWriteOptions());
+                sb.AppendLine("stages: saved=" + ok + " -> " + path3dm);
+
+                string pngBase = path3dm.EndsWith(".3dm", StringComparison.OrdinalIgnoreCase) ? path3dm.Substring(0, path3dm.Length - 4) : path3dm;
+                try
+                {
+                    if (raw != null) WriteObj(pngBase + "-A-raw.obj", raw);
+                    if (subdMesh != null) WriteObj(pngBase + "-C-subd.obj", subdMesh);
+                    if (shell != null) WriteObj(pngBase + "-D-shell.obj", shell);
+                    sb.AppendLine("stages: obj exported");
+                }
+                catch (Exception ex) { sb.AppendLine("obj EXC: " + ex.Message); }
+                try
+                {
+                    var view = doc.Views.ActiveView;
+                    if (view == null) { sb.AppendLine("capture: 无活动视图"); return; }
+                    view.ActiveViewport.SetProjection(Rhino.Display.DefinedViewportProjection.Top, "Top", false);
+                    view.ActiveViewport.ZoomBoundingBox(bb);
+                    CaptureTo(view, pngBase + "-top-shaded.png", "Shaded", sb);
+                    CaptureTo(view, pngBase + "-top-wire.png", "Wireframe", sb);
+                    var c = bb.Center; double d = Math.Max(10.0, bb.Diagonal.Length * 0.9);
+                    view.ActiveViewport.SetProjection(Rhino.Display.DefinedViewportProjection.Perspective, "Persp", false);
+                    view.ActiveViewport.SetCameraTarget(c, false);
+                    view.ActiveViewport.SetCameraLocation(new Point3d(c.X + d * 0.55, c.Y - d * 0.75, c.Z + d * 0.55), false);
+                    view.ActiveViewport.ZoomBoundingBox(bb);
+                    CaptureTo(view, pngBase + "-iso-shaded.png", "Shaded", sb);
+                }
+                catch (Exception ex) { sb.AppendLine("capture EXC: " + ex.Message); }
+            }
+            catch (Exception ex) { sb.AppendLine("stages EXC: " + ex.Message); }
+        }
+
+        /// <summary>极简 OBJ 导出（顶点 + 三角/四边形面；只为本机诊断用）</summary>
+        static void WriteObj(string path, Mesh m)
+        {
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
+            var sb2 = new System.Text.StringBuilder(m.Vertices.Count * 24 + m.Faces.Count * 16);
+            for (int i = 0; i < m.Vertices.Count; i++)
+            {
+                Point3d p = m.Vertices.Point3dAt(i);
+                sb2.Append("v ").Append(p.X.ToString("R", ci)).Append(' ').Append(p.Y.ToString("R", ci)).Append(' ').Append(p.Z.ToString("R", ci)).Append('\n');
+            }
+            for (int i = 0; i < m.Faces.Count; i++)
+            {
+                MeshFace f = m.Faces[i];
+                if (f.IsQuad) sb2.Append("f ").Append(f.A + 1).Append(' ').Append(f.B + 1).Append(' ').Append(f.C + 1).Append(' ').Append(f.D + 1).Append('\n');
+                else sb2.Append("f ").Append(f.A + 1).Append(' ').Append(f.B + 1).Append(' ').Append(f.C + 1).Append('\n');
+            }
+            File.WriteAllText(path, sb2.ToString(), new System.Text.UTF8Encoding(false));
+        }
+
+        /// <summary>按英文名找显示模式（FindByName 在中文本地化环境查不到，须遍历 EnglishName）</summary>
+        static Rhino.Display.DisplayModeDescription FindDisplayMode(string english)
+        {
+            try
+            {
+                var all = Rhino.Display.DisplayModeDescription.GetDisplayModes();
+                if (all != null)
+                {
+                    foreach (var m in all)
+                        if (string.Equals(m.EnglishName, english, StringComparison.OrdinalIgnoreCase)) return m;
+                    foreach (var m in all)
+                        if (!string.IsNullOrEmpty(m.EnglishName) && m.EnglishName.IndexOf(english, StringComparison.OrdinalIgnoreCase) >= 0) return m;
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        static void CaptureTo(Rhino.Display.RhinoView view, string png, string mode, System.Text.StringBuilder sb)
+        {
+            try
+            {
+                var dm = FindDisplayMode(mode);
+                if (dm != null) { try { view.ActiveViewport.DisplayMode = dm; } catch { } }
+                view.Redraw();
+                System.Drawing.Bitmap bmp = view.CaptureToBitmap(new System.Drawing.Size(1280, 900));
+                if (bmp != null)
+                {
+                    bmp.Save(png, System.Drawing.Imaging.ImageFormat.Png);
+                    sb.AppendLine("capture: " + png + " (mode=" + mode + (dm == null ? ", 未找到模式!" : "") + ")");
+                }
+            }
+            catch (Exception ex) { sb.AppendLine("capture " + mode + " EXC: " + ex.Message); }
+        }
+
         /// <summary>QuadRemesh 诊断矩阵：不同网格 × 不同参数组合，记录 结果/异常</summary>
         static void QrDiag(System.Text.StringBuilder sb)
         {
             Mesh relief = null, sphere = null;
             try
             {
-                var pl = new PolylineCurve(new Point3d[] { new Point3d(0, 0, 0), new Point3d(60, 0, 0), new Point3d(60, 40, 0), new Point3d(0, 40, 0), new Point3d(0, 0, 0) });
-                Brep[] bs = Brep.CreatePlanarBreps(new Curve[] { pl }, 1e-6);
-                if (bs != null && bs.Length > 0)
-                {
-                    string rep;
-                    PatternEmbossResult r = PatternEmbossCore.Generate(bs[0], new PatternEmbossSettings(), out rep);
-                    relief = r.Mesh;
-                }
+                // 规则波浪网格（无极点）：图案化网格上 QR 会长时间不返回（已知），诊断只对安全网格有意义
+                var grid = new Mesh();
+                int nu = 81, nv = 61; double st = 0.5;
+                for (int i = 0; i < nu; i++)
+                    for (int j = 0; j < nv; j++)
+                        grid.Vertices.Add(i * st, j * st, 0.5 * Math.Sin(i * st * 0.25) * Math.Cos(j * st * 0.3));
+                for (int i = 0; i < nu - 1; i++)
+                    for (int j = 0; j < nv - 1; j++)
+                    {
+                        int a = i * nv + j, b = (i + 1) * nv + j, c = (i + 1) * nv + j + 1, d = i * nv + j + 1;
+                        grid.Faces.AddFace(a, b, c, d);
+                    }
+                grid.Faces.ConvertQuadsToTriangles();
+                try { grid.FaceNormals.ComputeFaceNormals(); } catch { }
+                relief = grid;
                 Mesh sph = new Mesh();
                 try
                 {
@@ -521,7 +636,7 @@ namespace PatternEmboss
             TryQr(sb, "A relief + count500/adaptive=false", relief, p => { p.TargetQuadCount = 500; p.AdaptiveQuadCount = false; });
             TryQr(sb, "B relief + count500/adaptive=true ", relief, p => { p.TargetQuadCount = 500; p.AdaptiveQuadCount = true; });
             TryQr(sb, "C relief + 默认参数          ", relief, p => { });
-            TryQr(sb, "D relief + edgeLen0.5        ", relief, p => { p.TargetEdgeLength = 0.5; });
+            TryQr(sb, "D relief + edgeLen0.5        ", relief, p => { PatternEmbossCore.SetTargetEdgeLength(p, 0.5); });
             TryQr(sb, "E sphere + count500          ", sphere, p => { p.TargetQuadCount = 500; });
             TryQr(sb, "F sphere + 默认参数          ", sphere, p => { });
 
@@ -542,24 +657,7 @@ namespace PatternEmboss
             catch { }
             TryQr(sb, "G 平板(无纹理) + count500    ", flat, p => { p.TargetQuadCount = 500; });
 
-            // H：低密度浮雕（~7.5k 面）
-            Mesh reliefLow = null;
-            try
-            {
-                var s6 = new PatternEmbossSettings(); s6.Density = 5;
-                var pl = new PolylineCurve(new Point3d[] { new Point3d(0, 0, 0), new Point3d(60, 0, 0), new Point3d(60, 40, 0), new Point3d(0, 40, 0), new Point3d(0, 0, 0) });
-                Brep[] bs = Brep.CreatePlanarBreps(new Curve[] { pl }, 1e-6);
-                if (bs != null && bs.Length > 0)
-                {
-                    string rep2;
-                    PatternEmbossResult r6 = PatternEmbossCore.Generate(bs[0], s6, out rep2);
-                    reliefLow = r6.Mesh;
-                }
-            }
-            catch { }
-            TryQr(sb, "H 浮雕 density5 + count500   ", reliefLow, p => { p.TargetQuadCount = 500; });
-
-            // I：浮雕修复（合并顶点 + 统一法向）
+            // I：网格修复（合并顶点 + 统一法向）
             Mesh repaired = null;
             try
             {
@@ -572,30 +670,13 @@ namespace PatternEmboss
             catch { }
             TryQr(sb, "I 浮雕修复后 + count500      ", repaired, p => { p.TargetQuadCount = 500; });
 
-            // J：浮雕网格诊断（裸边 / 封闭 / 有效性）
+            // J：网格诊断（裸边 / 封闭 / 有效性）
             if (relief != null)
             {
                 int naked = -1;
                 try { Polyline[] ne = relief.GetNakedEdges(); naked = ne != null ? ne.Length : -1; } catch { }
-                sb.AppendLine("J relief nakedEdges=" + naked + " closed=" + relief.IsClosed + " valid=" + relief.IsValid);
+                sb.AppendLine("J grid nakedEdges=" + naked + " closed=" + relief.IsClosed + " valid=" + relief.IsValid);
             }
-
-            // K：浮雕加厚壳（封闭）
-            Mesh shell = null;
-            try
-            {
-                var st = new PatternEmbossSettings(); st.Thickness = 1.0;
-                var pl = new PolylineCurve(new Point3d[] { new Point3d(0, 0, 0), new Point3d(60, 0, 0), new Point3d(60, 40, 0), new Point3d(0, 40, 0), new Point3d(0, 0, 0) });
-                Brep[] bs = Brep.CreatePlanarBreps(new Curve[] { pl }, 1e-6);
-                if (bs != null && bs.Length > 0)
-                {
-                    string rep2;
-                    PatternEmbossResult rs = PatternEmbossCore.Generate(bs[0], st, out rep2);
-                    shell = rs.Solid ? rs.Mesh : null;
-                }
-            }
-            catch { }
-            TryQr(sb, "K 浮雕加厚壳 + count500      ", shell, p => { p.TargetQuadCount = 500; });
 
             // L/M：手造 200×150 平面网格（L 全四边形 / M 全三角），验证 QR 对输入面型的偏好
             Mesh gridQ = null, gridT = null;

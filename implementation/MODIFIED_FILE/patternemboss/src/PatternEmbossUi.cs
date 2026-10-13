@@ -142,45 +142,23 @@ namespace PatternEmboss
 
             // ---- 一键平滑输出（QuadRemesh 重构 → SubD 细分曲面）
             {
-                var card = new CardPanel { Left = 12, Top = y, Width = W - 24, Title = "一键平滑输出（QuadRemesh → SubD）" };
+                var card = new CardPanel { Left = 12, Top = y, Width = W - 24, Title = "一键平滑输出（细分曲面）" };
                 AddScrollCard(card);
                 int cy = 26;
 
-                var smoothOn = new IvanCheck { Text = "启用一键平滑（QuadRemesh 重构 → 细分曲面）", Checked = Settings.SubDOutput };
+                var smoothOn = new IvanCheck { Text = "启用一键平滑（图案化四边网直接转 SubD）", Checked = Settings.SubDOutput };
                 smoothOn.SetBounds(12, cy, W - 48, 22);
                 smoothOn.CheckedChanged += (s2, e2) => { Settings.SubDOutput = smoothOn.Checked; Raise(); };
                 card.Controls.Add(smoothOn);
                 cy += 30;
 
-                AddRow(card, "目标四边形数", "", 200.0, 20000.0, 200000.0, 100.0, Settings.QrTargetQuadCount, ref cy, v => Settings.QrTargetQuadCount = (int)Math.Round(v));
-
-                var adaptive = new IvanCheck { Text = "自适应四边形数（忽略目标数）", Checked = Settings.QrAdaptiveCount };
-                adaptive.SetBounds(12, cy + 4, W - 48, 22);
-                adaptive.CheckedChanged += (s2, e2) => { Settings.QrAdaptiveCount = adaptive.Checked; Raise(); };
-                card.Controls.Add(adaptive);
-                cy += 30;
-
-                AddRow(card, "目标边长", "mm", 0.0, 10.0, 100.0, 0.05, Settings.QrTargetEdgeLength, ref cy, v => Settings.QrTargetEdgeLength = v);
-                AddRow(card, "自适应尺寸", "", 0.0, 1.0, 1.0, 0.05, Settings.QrAdaptiveSize, ref cy, v => Settings.QrAdaptiveSize = v);
-
-                card.Controls.Add(new Label
-                {
-                    Text = "对称轴", Left = 10, Top = cy + 6, Width = 84, Height = 18,
-                    TextAlign = ContentAlignment.MiddleLeft, ForeColor = Theme.InkSoft, Font = Theme.Body
-                });
-                var segSym = new IvanSegmented();
-                segSym.SetItems(new string[] { "无", "X", "Y", "Z" });
-                segSym.SelectedIndex = ClampIdx(Settings.QrSymmetryAxis, 4);
-                segSym.SetBounds(96, cy, 186, 26);
-                segSym.SelectedChanged += (s2, e2) => { Settings.QrSymmetryAxis = segSym.SelectedIndex; Raise(); };
-                card.Controls.Add(segSym);
-                cy += 32;
-
-                var hardEdges = new IvanCheck { Text = "检测硬边", Checked = Settings.QrDetectHardEdges };
-                hardEdges.SetBounds(12, cy + 4, W - 48, 22);
-                hardEdges.CheckedChanged += (s2, e2) => { Settings.QrDetectHardEdges = hardEdges.Checked; Raise(); };
-                card.Controls.Add(hardEdges);
-                cy += 30;
+                var subdHint = new Label();
+                subdHint.SetBounds(12, cy - 4, W - 48, 30);
+                subdHint.ForeColor = Theme.InkFaint;
+                subdHint.Font = Theme.Small;
+                subdHint.Text = "拓扑沿图案（每单元同心环四边面），直接转细分曲面输出";
+                card.Controls.Add(subdHint);
+                cy += 26;
 
                 card.Height = cy + 6;
                 y = card.Bottom + 8;

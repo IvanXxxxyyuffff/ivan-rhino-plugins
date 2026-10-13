@@ -13,7 +13,7 @@ Every plugin is "one command + one parameter panel + live preview + headless sel
 
 | Version | Download | Notes |
 |---|---|---|
-| **v1.4.4** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.4/IVAN-CENTER.exe) | Windows x64 installer (3.7 MB, md5 `627537ce8a52b31f73e85d14949d7089`) |
+| **v1.4.5** | [**IVAN-CENTER.exe**](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.4.5/IVAN-CENTER.exe) | Windows x64 installer (3.7 MB, md5 `0345e09a3828b6c2f2500c13f09743a7`) |
 | v1.1.0 | [IVAN-CENTER.exe](https://github.com/IvanXxxxyyuffff/ivan-rhino-plugins/releases/download/v1.1.0/IVAN-CENTER.exe) | Previous release (8 plugins, 2.9 MB, md5 `4a7932421e68dfc91d64618c63f9f648`) |
 
 1. **Close Rhino first**, then run the installer → installs to `%LOCALAPPDATA%\IVAN\plugins` (registers 10 plugins + writes the toolbar)
@@ -35,7 +35,7 @@ Every plugin is "one command + one parameter panel + live preview + headless sel
 | 7 | **DiamondFacet** | `DiamondFacet` | Faceted diamond relief inside a planar/closed-curve boundary: random triangulation + random vertex heights, optional locked boundary; output is either **wireframe only** or **faces**, where each triangle facet becomes its own mesh patch and can be subdivided |
 | 8 | **WaterRipple** | `WaterRipple` | Water ripples on a surface / polysurface (treated as one face) / closed planar boundary: three switchable wave modes (**organic, directional bands, concentric rings**) with wavelength, height, wave count, direction, spread and crest shape; **locked boundary** with blend width & smoothness; outputs a mesh, or a **SubD** via one-click smooth (boundary creased so corners stay sharp) |
 | 9 | **SurfaceUnify** | `SurfaceUnify` | Turns a complex polysurface (or surface / extrusion / mesh) into **one single open NURBS surface**: the boundary follows the original naked edges exactly, while the interior is fitted by ray-casting along the base-surface normal (grid count, fit strength, smoothness, max snap distance). Inner holes are projected and trimmed. Live preview with max / RMS / boundary deviation readout |
-| 10 | **PatternEmboss** | `PatternEmboss` | Emboss **hexagon (honeycomb) / square / diamond patterns** on surfaces and polysurfaces: cell size, height (positive = raised, negative = sunken), groove width, roundness, edge margin, sampling density and shell thickness are all adjustable; offsets a fine mesh along surface normals with live preview; "one-click smooth" runs a **QuadRemesh rebuild** and outputs a **SubD** (target quad count / target edge length / adaptive size / symmetry axis / detect hard edges adjustable) |
+| 10 | **PatternEmboss** | `PatternEmboss` | Emboss **hexagon (honeycomb) / square / diamond patterns** on surfaces and polysurfaces: cell size, height (positive = raised, negative = sunken), groove width, roundness, edge margin, sampling density and shell thickness are all adjustable; the mesh topology follows the pattern (concentric quad rings per cell); "one-click smooth" outputs a **SubD** directly |
 
 Each plugin ships a self-test command (e.g. `VoronoiSelfTest`, `DiamondFacetSelfTest`) that runs full geometric assertions headlessly.
 

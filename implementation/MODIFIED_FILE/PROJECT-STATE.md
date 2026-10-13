@@ -826,6 +826,14 @@ pwsh -File ..\DIAMOND-verify.ps1                   # 收尾核对（主题 md5 /
 - **验证**：全量自检 **ALL-PASS（183.7s）逐项与清理前一致**：150/0 · 55/0 · 23/0 · 37/1 · 14/0 · 86/0 · 101/0 · 130/9 · 42/0 · 3/0
 - **发布**：安装器 **3841536 bytes / md5 `627537ce8a52b31f73e85d14949d7089`** → **Release v1.4.4**（id=410542712，回下载 md5 一致）；README×4 更新；已全量安装（exit=0，payload↔已装 10/10）
 
+### 20.5（2026-10-13 上午）实测反馈两连修：Rh7 兼容 + 图案化拓扑 → v1.4.5
+- **反馈①（同事机 Rhino 7）**：PatternEmboss 报「无法载入 …… 该插件与这个版本的 Rhino 不兼容」（其余 9 插件正常）→ **根因**：v1.4.2 为 QuadRemesh 把 Rh7 构建的 RhinoCommon 引用升到 **7.38**（10 个插件中唯一）→ **修复**：回退最老基线 SDK **7.0.20314**（与其余 9 插件一致）+ `TargetEdgeLength` 反射按需设置（老 Rhino 7 自动跳过）；引用核验 rh7=7.0.20314.3000 / rh8=8.30.26103.11001 ✓
+- **反馈②（用户图：「波浪鳞片 / 很多锯齿 / 拓补结构不对」）**：**stages 探针**分阶段复现 + 高度场度量定位——①旧网格是"世界坐标均匀格子"：六边形斜边被栅格化成锯齿、拓扑不平图；②QuadRemesh 产物拓扑不沿图案（且对图案网格存在长时间不返回）→ **重写为图案化拓扑**：每单元 = 同心环四边面片（外环 = 单元格边界采样、相邻单元共享边环、中心 = 极点封盖）；**全四边（实测占比 1.0000）**、无退化面、确定性
+- **管线变更**：一键平滑 = 图案化四边网 **直接转 SubD**；QuadRemesh 从产品路径移除（UI 参数卡同步精简；实验职能仅保留内部诊断 `qr=diag`，只对规则网格）；`Mesh.Offset` 加厚在图案化网格上正常（壳 56344 面 Solid）
+- **并行修复**：平面面「界外点被 ClosestPoint 吸到边界」→ 距离复核（边界外图案不再误收、表面积虚增消失）；边缘渐隐网格步长减半；自检**每用例刷盘**；`run-emboss-check.ps1` 完成判定改为 `RESULT:` 标记（刷盘导致启动器提前读数杀进程的坑）
+- **验证**：自检 **47/0 PASS**；全量套件 **ALL-PASS**（150·55·23·37+1·14·86·101·130+9·47·3，219.8s）；最终证据渲染（raw / SubD / 壳 三阶段全部干净蜂窝，见 workspace `emboss-final-v2.png`）
+- **发布**：安装器 **3869696 bytes / md5 `0345e09a3828b6c2f2500c13f09743a7`** → **Release v1.4.5**（id=411205010，回下载一致）；README×4 更新（入口 + 第 10 行描述改为"拓扑沿图案/直出 SubD"）；全量安装 exit=0（payload↔已装 10/10）；桌面同步
+
 ## 19. 第 10 个插件「多边补面 PatchFill」（2026-10-10 第三轮）——**已于 2026-10-12 按用户指令移除**
 
 > **⚠ 移除记录（2026-10-12）**：用户实测「不好用」，指令「砍掉第 10 个插件，然后更新 GH」。执行内容：删 `MODIFIED_FILE/patchfill/`（源码/构建产物）、`implementation/patchfill-*.ps1`、`patchfill-bench/`、`PATCHFILL-BENCH.md`、`XNURBS-ANALYSIS.md`、`xnurbs-re/`、`BASELINE/MODIFIED-PatchFill*`、桌面配套 3dm 与对照基准；从 runner/install-and-verify/refresh-payload-and-center/iconmake/PanelTheme×9/center 项目 全部摘除；卸载本机安装（注册表键已删，安装目录改名 `PatchFill.removed-20261012` 待 Rhino 关闭后删）。**项目回到 9 插件**（= AGENTS.md 记载的九个插件）。安装器重建：IVAN-CENTER.exe 3527168 bytes / md5 `fd568a3e616b9d6d7bd16180cecf9404`（v1.3.2）。以下为历史记录（仅供追溯，勿再引用为现状）。
